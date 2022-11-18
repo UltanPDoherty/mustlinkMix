@@ -1,3 +1,15 @@
+#' Use the EM algorithm to fit a GMM that satisfies positive constraints.
+#'
+#' @param data Dataset as a data.frame or matrix.
+#' @param clust_num Number of components of GMM.
+#' @param chunk_labs Vector giving the chunklet label of each observation.
+#' @param maxit Maximum number of EM iterations
+#'
+#' @return A list.
+#' @export
+#'
+#' @examples
+#' constr_em2(iris[, 1:4], 3, 1:150)
 constr_em2 <- function(data, clust_num, chunk_labs, maxit = 30) {
   # Dataset & its dimensions
   data <- as.matrix(data)

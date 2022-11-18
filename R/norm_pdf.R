@@ -1,3 +1,15 @@
+#' Compute the pdf of a multivariate Normal distribution.
+#'
+#' @param x A numeric vector giving the value of a single observation or a
+#' matrix where each row is an observation.
+#' @param mu A numeric vector giving the mean of the distribution.
+#' @param sigma A matrix giving the covariance matrix of the distribution.
+#'
+#' @return A numeric vector with one entry per observation provided.
+#' @export
+#'
+#' @examples
+#' value <- norm_pdf(rep(0, 4), rep(0, 4), diag(4))
 norm_pdf <- function(x, mu, sigma) {
   if (is.vector(x)) {
     x <- t(x)
