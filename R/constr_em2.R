@@ -43,7 +43,7 @@ constr_em2 <- function(data, clust_num, chunk_labs, maxit = 30) {
     pp <- pp / rowSums(pp) %*% matrix(1, 1, clust_num)
 
     # M-step
-    prop <- chunk_size %*% pp / n
+    prop <- chunk$size %*% pp / n
     for (k in 1:clust_num) {
       # prop[k] <- sum(pp[, k]) / chunk$num
       weight  <- pp[, k] * chunk$size
