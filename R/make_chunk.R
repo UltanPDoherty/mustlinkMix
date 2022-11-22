@@ -7,8 +7,9 @@
 #' @export
 #'
 #' @examples
-#' make_chunks(iris[, 1:4], c(rep(1, 25), 26:50, rep(51, 25), 76:100, rep(101, 25), 126:150))
+#' make_chunk(iris[, 1:4], c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78))
 make_chunk <- function(data, chunk_labs) {
+  data       <- as.matrix(data)
   chunk_labs <- as.numeric(as.factor(chunk_labs))
   chunk_num  <- length(unique(chunk_labs))
   chunk_mean <- matrix(NA, chunk_num, ncol(data))
