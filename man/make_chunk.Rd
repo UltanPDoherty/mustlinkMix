@@ -18,5 +18,5 @@ A list.
 Compute chunklet number, means, and sizes from labels.
 }
 \examples{
-make_chunks(iris[, 1:4], c(rep(1, 25), 26:50, rep(51, 25), 76:100, rep(101, 25), 126:150))
+make_chunk(iris[, 1:4], c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78))
 }
