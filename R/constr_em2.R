@@ -25,7 +25,8 @@ constr_em2 <- function(data, clust_num, chunk_labs, maxit = 30) {
   # Initialise model parameters
   init  <- initialise_model(clust_num, p)
   prop  <- init$prop
-  mu    <- init$mu
+  mu    <- matrix(rep(colMeans(data), clust_num),
+                  nrow = clust_num, byrow = FALSE) + diag(cov(data)) * init$mu
   sigma <- init$sigma
 
   # EM algorithm
