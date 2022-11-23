@@ -10,6 +10,7 @@ constr_em2(
   chunk_labs,
   maxit = 100,
   eps = 1e-10,
+  start = "vanilla"
 )
 }
 \arguments{
@@ -21,6 +22,9 @@ constr_em2(
 
 \item{maxit}{Maximum number of EM iterations.}
 
+\item{eps}{Convergence criterion for relative difference in log-likelihood.}
+
+\item{start}{Initialisation option.}
 }
 \value{
 A list.

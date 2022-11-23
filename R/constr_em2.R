@@ -5,6 +5,7 @@
 #' @param chunk_labs Vector giving the chunklet label of each observation.
 #' @param maxit Maximum number of EM iterations.
 #' @param eps Convergence criterion for relative difference in log-likelihood.
+#' @param start Initialisation option.
 #'
 #' @return A list.
 #' @export
@@ -24,12 +25,9 @@ constr_em2 <- function(data, clust_num, chunk_labs, maxit = 100, eps = 1e-10, st
   weighted_pdf <- matrix(NA, chunk$num, clust_num)
 
   # Initialise model parameters
-  init  <- initialise_model(clust_num, p)
+  init  <- initialise_model(data, clust_num, start)
   prop  <- init$prop
-  mu    <- matrix(rep(colMeans(data), clust_num),
-                  nrow = clust_num, byrow = FALSE)
-  #mu    <- matrix(rep(colMeans(data), clust_num),
-  #                nrow = clust_num, byrow = FALSE) + diag(stats::cov(data)) * init$mu
+  mu    <- init$mu
   sigma <- init$sigma
 
   ll_crit <- 1

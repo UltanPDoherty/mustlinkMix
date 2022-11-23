@@ -4,12 +4,14 @@
 \alias{initialise_model}
 \title{Compute initial parameter values of a GMM.}
 \usage{
-initialise_model(clust_num, dimension)
+initialise_model(data, clust_num, start = "vanilla")
 }
 \arguments{
+\item{data}{Matrix or dataframe.}
+
 \item{clust_num}{Number of clusters.}
 
-\item{dimension}{Number of variables.}
+\item{start}{Initialisation option.}
 }
 \value{
 A list.
@@ -18,5 +20,5 @@ A list.
 Compute initial parameter values of a GMM.
 }
 \examples{
-initialise_model(3, 4)
+initialise_model(iris[, 1:4], 4)
 }
