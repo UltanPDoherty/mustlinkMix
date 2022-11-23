@@ -4,7 +4,13 @@
 \alias{constr_em2}
 \title{Use the EM algorithm to fit a GMM that satisfies positive constraints.}
 \usage{
-constr_em2(data, clust_num, chunk_labs, maxit = 30)
+constr_em2(
+  data,
+  clust_num,
+  chunk_labs,
+  maxit = 100,
+  eps = 1e-10,
+)
 }
 \arguments{
 \item{data}{Dataset as a data.frame or matrix.}
@@ -13,7 +19,8 @@ constr_em2(data, clust_num, chunk_labs, maxit = 30)
 
 \item{chunk_labs}{Vector giving the chunklet label of each observation.}
 
-\item{maxit}{Maximum number of EM iterations}
+\item{maxit}{Maximum number of EM iterations.}
+
 }
 \value{
 A list.

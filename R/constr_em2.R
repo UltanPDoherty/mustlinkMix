@@ -3,14 +3,15 @@
 #' @param data Dataset as a data.frame or matrix.
 #' @param clust_num Number of components of GMM.
 #' @param chunk_labs Vector giving the chunklet label of each observation.
-#' @param maxit Maximum number of EM iterations
+#' @param maxit Maximum number of EM iterations.
+#' @param eps Convergence criterion for relative difference in log-likelihood.
 #'
 #' @return A list.
 #' @export
 #'
 #' @examples
 #' constr_em2(iris[, 1:4], 3, 1:150)
-constr_em2 <- function(data, clust_num, chunk_labs, maxit = 30) {
+constr_em2 <- function(data, clust_num, chunk_labs, maxit = 100, eps = 1e-10, start = "vanilla") {
   # Dataset & its dimensions
   data <- as.matrix(data)
   n    <- nrow(data)
@@ -20,7 +21,7 @@ constr_em2 <- function(data, clust_num, chunk_labs, maxit = 30) {
 
   # Log-likelihood and posterior probability matrix
   ll <- c(-Inf)
-  pp <- matrix(NA, chunk$num, clust_num)
+  weighted_pdf <- matrix(NA, chunk$num, clust_num)
 
   # Initialise model parameters
   init  <- initialise_model(clust_num, p)
@@ -31,19 +32,29 @@ constr_em2 <- function(data, clust_num, chunk_labs, maxit = 30) {
   #                nrow = clust_num, byrow = FALSE) + diag(stats::cov(data)) * init$mu
   sigma <- init$sigma
 
+  ll_crit <- 1
+  it <- 0
   # EM algorithm
-  for (it in 1:maxit) {
-    cat(paste0("...", it))
+  while (ll_crit > eps & it < maxit) {
+    it <- it + 1
 
     # E-step
     for (l in 1:chunk$num) {
       for (k in 1:clust_num) {
         pdf_lk   <- norm_pdf(data[chunk$labs == l, ], mu[k, ], sigma[k, , ])
         like_lk  <- prod(pdf_lk)
-        pp[l, k] <- prop[k] * like_lk
+        weighted_pdf[l, k] <- prop[k] * like_lk
       }
     }
-    pp <- pp / rowSums(pp) %*% matrix(1, 1, clust_num)
+
+    ll  <- append(ll, log(prod(rowSums(weighted_pdf))))
+    if (ll[length(ll) - 1] != -Inf){
+      ll_crit <- (ll[length(ll)] - ll[length(ll) - 1])/abs(ll[length(ll) - 1])
+    } else {
+      ll_crit <- Inf
+    }
+
+    pp <- weighted_pdf / rowSums(weighted_pdf) %*% matrix(1, 1, clust_num)
 
     # M-step
     prop <- chunk$size %*% pp / n
@@ -60,6 +71,7 @@ constr_em2 <- function(data, clust_num, chunk_labs, maxit = 30) {
       sigma[k, , ] <- sigma_k / sum(pp[, k] * chunk$size)
     }
 
+    cat(paste0("...", it))
   }
   # End of EM
   cat("\n")
