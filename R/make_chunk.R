@@ -3,8 +3,8 @@
 #' @param data Dataset to be clustered.
 #' @param chunk_labs Vector of chunklet labels.
 #'
-#' @return A list consisting of chunklet labels, number of chunklets, a matrix of chunklet means, and
-#'         a vector of chunklet sizes.
+#' @return A list consisting of chunklet labels, number of chunklets,
+#'         a matrix of chunklet means, and a vector of chunklet sizes.
 #' @export
 #'
 #' @examples

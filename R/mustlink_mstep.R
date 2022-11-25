@@ -14,8 +14,9 @@
 #' chunks_of_25 <- c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78)
 #' chunk1  <- make_chunk(iris[, 1:4], chunk_labs = chunks_of_25)
 #' params1 <- initialise_model(iris[, 1:4], clust_num = 3)
-#' e_out1  <- mustlink_estep(as.matrix(iris[, 1:4]), chunk = chunk1, params = params1,
-#'                         obs_num = 150, var_num = 4, clust_num = 3)
+#' e_out1  <- mustlink_estep(as.matrix(iris[, 1:4]),
+#'                           chunk = chunk1, params = params1,
+#'                           obs_num = 150, var_num = 4, clust_num = 3)
 #' pp1 <- e_out1$pp
 #' mustlink_mstep(as.matrix(iris[, 1:4]), chunk = chunk1, pp <- pp1,
 #'              obs_num = 150, var_num = 4, clust_num = 3)
@@ -31,16 +32,20 @@ mustlink_mstep <- function(data, chunk, pp,
   prop   <- weight_sums / obs_num
   mu     <- t(weight) %*% chunk$mean / weight_sums
 
-  #chunk_logic <- lapply(1:chunk$num, function(l){chunk$labs == l})
-  chunk_list <- lapply(1:chunk$num, function(l){data[chunk$labs == l, , drop = FALSE]})
+  chunk_list <- lapply(1:chunk$num,
+                       function(l) {
+                         data[chunk$labs == l, , drop = FALSE]
+                         }
+                       )
 
 
   for (k in 1:clust_num) {
     sigma_k <- list()
     chunk_mu_k <- list()
     for (l in 1:chunk$num) {
-      chunk_mu_k[[l]]   <- chunk_list[[l]] - matrix(1, chunk$size[l], 1) %*% mu[k, ]
-      sigma_k[[l]] <- pp[l, k] * t(chunk_mu_k[[l]]) %*% chunk_mu_k[[l]]
+      chunk_mu_k[[l]] <- (chunk_list[[l]]
+                          - matrix(1, chunk$size[l], 1) %*% mu[k, ])
+      sigma_k[[l]]    <- pp[l, k] * t(chunk_mu_k[[l]]) %*% chunk_mu_k[[l]]
     }
     sigma[, , k] <- Reduce("+", sigma_k) / weight_sums[k]
   }

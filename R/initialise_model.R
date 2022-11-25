@@ -15,7 +15,7 @@ initialise_model <- function(data, clust_num, start = "vanilla") {
 
   sigma     <- array(NA, c(p, p, clust_num))
 
-  if (start == "vanilla"){
+  if (start == "vanilla") {
     prop      <- rep(1 / clust_num, clust_num)
     mu        <- matrix(rep(colMeans(data), clust_num),
                         nrow = clust_num, byrow = FALSE)
@@ -24,7 +24,7 @@ initialise_model <- function(data, clust_num, start = "vanilla") {
     }
   }
 
-  if (start == "k-Means"){
+  if (start == "k-Means") {
     km    <- stats::kmeans(x = data, centers = clust_num)
     prop  <- km$size / sum(km$size)
     mu    <- km$centers
@@ -33,8 +33,7 @@ initialise_model <- function(data, clust_num, start = "vanilla") {
     }
   }
 
-  if (start == "mclust"){
-    #library(mclust)
+  if (start == "mclust") {
     mc    <- mclust::Mclust(data, G = clust_num)
     prop  <- mc$parameters$pro
     mu    <- t(mc$parameters$mean)

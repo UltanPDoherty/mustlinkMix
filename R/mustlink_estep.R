@@ -7,7 +7,8 @@
 #' @param var_num Number of varibles in the dataset.
 #' @param clust_num Number of clusters pre-specified.
 #'
-#' @return A list containing a log-likelihood value and a posterior probability matrix.
+#' @return A list containing a log-likelihood value
+#'         and a posterior probability matrix.
 #' @export
 #'
 #' @examples
@@ -18,16 +19,21 @@
 #'              obs_num = 150, var_num = 4, clust_num = 3)
 mustlink_estep <- function(data, chunk, params,
                            obs_num = nrow(data), var_num = ncol(params$mu),
-                           clust_num = nrow(params$mu)){
+                           clust_num = nrow(params$mu)) {
   sigma_inv  <- apply(X = params$sigma, MARGIN = 3, simplify = FALSE,
                       FUN = solve)
   norm_const <- vapply(X = sigma_inv, FUN.VALUE = double(1),
-                      FUN = function(x){(log(det(x) )- var_num * log(2 * pi)) / 2})
+                      FUN = function(x) {
+                        (log(det(x)) - var_num * log(2 * pi)) / 2
+                        }
+                      )
 
   obs_pdf <- vapply(1:clust_num,
-                 FUN = function(k){ norm_const[k] + norm_pdf(data,
-                                                             params$mu[k, ],
-                                                             sigma_inv[[k]])},
+                 FUN = function(k) {
+                   norm_const[k] + norm_pdf(data,
+                                            params$mu[k, ],
+                                            sigma_inv[[k]])
+                   },
                  FUN.VALUE = double(obs_num)
                  )
 
@@ -36,7 +42,8 @@ mustlink_estep <- function(data, chunk, params,
     chunk_pdf[l, ] <- colSums(obs_pdf[chunk$labs == l, , drop = FALSE])
   }
 
-  chunk_pdf     <- sweep(x = chunk_pdf, MARGIN = 2, STATS = log(params$prop), FUN = "+")
+  chunk_pdf     <- sweep(x = chunk_pdf, MARGIN = 2,
+                         STATS = log(params$prop), FUN = "+")
   chunk_pdf_max <- max(chunk_pdf)
   chunk_pdf     <- chunk_pdf - chunk_pdf_max
 
