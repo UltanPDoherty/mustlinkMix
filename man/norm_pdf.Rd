@@ -4,7 +4,7 @@
 \alias{norm_pdf}
 \title{Compute the pdf of a multivariate Normal distribution.}
 \usage{
-norm_pdf(x, mu, sigma)
+norm_pdf(x, mu, sigma_inv)
 }
 \arguments{
 \item{x}{A numeric vector giving the value of a single observation or a
@@ -12,7 +12,7 @@ matrix where each row is an observation.}
 
 \item{mu}{A numeric vector giving the mean of the distribution.}
 
-\item{sigma}{A matrix giving the covariance matrix of the distribution.}
+\item{sigma_inv}{A matrix giving the inverse of the covariance matrix of the distribution.}
 }
 \value{
 A numeric vector with one entry per observation provided.
@@ -21,5 +21,5 @@ A numeric vector with one entry per observation provided.
 Compute the pdf of a multivariate Normal distribution.
 }
 \examples{
-value <- norm_pdf(rep(0, 4), rep(0, 4), diag(4))
+norm_pdf(matrix(rep(2, 4), nrow = 2), mu = rep(1, 2), sigma_inv = diag(2))
 }

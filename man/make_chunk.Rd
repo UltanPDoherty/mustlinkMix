@@ -12,11 +12,13 @@ make_chunk(data, chunk_labs)
 \item{chunk_labs}{Vector of chunklet labels.}
 }
 \value{
-A list.
+A list consisting of chunklet labels, number of chunklets, a matrix of chunklet means, and
+a vector of chunklet sizes.
 }
 \description{
 Compute chunklet number, means, and sizes from labels.
 }
 \examples{
-make_chunk(iris[, 1:4], c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78))
+chunks_of_25 <- c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78)
+make_chunk(iris[, 1:4], chunk_labs = chunks_of_25)
 }
