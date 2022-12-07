@@ -4,20 +4,23 @@
 \alias{initialise_model}
 \title{Compute initial parameter values of a GMM.}
 \usage{
-initialise_model(data, clust_num, start = "vanilla")
+initialise_model(data, clust_num, start = "central")
 }
 \arguments{
 \item{data}{Matrix or dataframe.}
 
 \item{clust_num}{Number of clusters.}
 
-\item{start}{Initialisation option.}
+\item{start}{Initialisation option. One of "central", "k-Means", or "mclust".}
 }
 \value{
-A list.
+A list consisting of a mixing proportions vector, a matrix of component means,
+and an array containing component covariance matrices.
 }
 \description{
-Compute initial parameter values of a GMM.
+Initialise a Gaussian Mixture Model either with equal proportions, mean
+vectors, and covariance matrices, or based on a k-Means clustering, or using
+parameters computed by mclust.
 }
 \examples{
 initialise_model(iris[, 1:4], 4)

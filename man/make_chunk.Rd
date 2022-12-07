@@ -2,7 +2,7 @@
 % Please edit documentation in R/make_chunk.R
 \name{make_chunk}
 \alias{make_chunk}
-\title{Compute chunklet number, means, and sizes from labels.}
+\title{Construct chunklet for positive / must-link constraints.}
 \usage{
 make_chunk(data, chunk_labs)
 }
@@ -12,8 +12,8 @@ make_chunk(data, chunk_labs)
 \item{chunk_labs}{Vector of chunklet labels.}
 }
 \value{
-A list consisting of chunklet labels, number of chunklets, a matrix of chunklet means, and
-a vector of chunklet sizes.
+A list consisting of chunklet labels, number of chunklets,
+a matrix of chunklet means, and a vector of chunklet sizes.
 }
 \description{
 Compute chunklet number, means, and sizes from labels.

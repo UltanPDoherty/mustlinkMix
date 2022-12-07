@@ -2,7 +2,7 @@
 % Please edit documentation in R/mustlink_estep.R
 \name{mustlink_estep}
 \alias{mustlink_estep}
-\title{Implement E-step of EM algorithm with positive constraints.}
+\title{E-Step for Must-link Constrained GMM.}
 \usage{
 mustlink_estep(
   data,
@@ -27,10 +27,11 @@ mustlink_estep(
 \item{clust_num}{Number of clusters pre-specified.}
 }
 \value{
-A list containing a log-likelihood value and a posterior probability matrix.
+A list containing a log-likelihood value
+and a posterior probability matrix.
 }
 \description{
-Implement E-step of EM algorithm with positive constraints.
+Implement E-step of EM algorithm for GMM with positive / must-link constraints.
 }
 \examples{
 chunks_of_25 <- c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78)

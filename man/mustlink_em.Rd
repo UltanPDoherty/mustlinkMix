@@ -2,7 +2,7 @@
 % Please edit documentation in R/mustlink_em.R
 \name{mustlink_em}
 \alias{mustlink_em}
-\title{Fit a GMM that satisfies positive constraints via the EM algorithm.}
+\title{Must-Link / Positive Constraint EM GMM.}
 \usage{
 mustlink_em(
   data,
@@ -10,7 +10,7 @@ mustlink_em(
   chunk_labs,
   maxit = 100,
   eps = 1e-10,
-  start = "vanilla"
+  start = "k-Means"
 )
 }
 \arguments{
@@ -28,13 +28,14 @@ mustlink_em(
 }
 \value{
 A list consisting of a vector of cluster labels,
-a matrix of posterior probabilities for chunklet to cluster assignment,
+a matrix of chunklet to cluster assignment probabilities,
 a list of model parameters,
 a vector of log-likelihood values,
 and a vector of times per iteration.
 }
 \description{
-Fit a GMM that satisfies positive constraints via the EM algorithm.
+Use the EM algorithm to fit a Gaussian Mixture Model that satisfies
+must-link / positive constraints.
 }
 \examples{
 chunks_of_25 <- c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78)

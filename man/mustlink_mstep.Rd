@@ -2,15 +2,15 @@
 % Please edit documentation in R/mustlink_mstep.R
 \name{mustlink_mstep}
 \alias{mustlink_mstep}
-\title{Implement M-step of EM algorithm with positive constraints.}
+\title{E-Step for Must-link Constrained GMM.}
 \usage{
 mustlink_mstep(
   data,
   chunk,
-  pp,
+  chunk_pp,
   obs_num = nrow(data),
   var_num = ncol(data),
-  clust_num = ncol(pp)
+  clust_num = ncol(chunk_pp)
 )
 }
 \arguments{
@@ -18,7 +18,7 @@ mustlink_mstep(
 
 \item{chunk}{Object from make_chunk.}
 
-\item{pp}{Posterior probability matrix.}
+\item{chunk_pp}{Posterior probability matrix.}
 
 \item{obs_num}{Number of observations in the dataset.}
 
@@ -30,15 +30,16 @@ mustlink_mstep(
 List containing prop, mu, sigma.
 }
 \description{
-Implement M-step of EM algorithm with positive constraints.
+Implement M-step of EM algorithm for GMM with positive / must-link constraints.
 }
 \examples{
 chunks_of_25 <- c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78)
 chunk1  <- make_chunk(iris[, 1:4], chunk_labs = chunks_of_25)
 params1 <- initialise_model(iris[, 1:4], clust_num = 3)
-e_out1  <- mustlink_estep(as.matrix(iris[, 1:4]), chunk = chunk1, params = params1,
-                        obs_num = 150, var_num = 4, clust_num = 3)
-pp1 <- e_out1$pp
-mustlink_mstep(as.matrix(iris[, 1:4]), chunk = chunk1, pp <- pp1,
+e_out1  <- mustlink_estep(as.matrix(iris[, 1:4]),
+                          chunk = chunk1, params = params1,
+                          obs_num = 150, var_num = 4, clust_num = 3)
+chunk_pp1 <- e_out1$chunk_pp
+mustlink_mstep(as.matrix(iris[, 1:4]), chunk = chunk1, chunk_pp <- chunk_pp1,
              obs_num = 150, var_num = 4, clust_num = 3)
 }
