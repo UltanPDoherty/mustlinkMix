@@ -1,4 +1,9 @@
-#' Fit a GMM that satisfies positive constraints via the EM algorithm.
+#' @title Must-Link / Positive Constraint EM GMM.
+#'
+#' @description
+#' Use the EM algorithm to fit a Gaussian Mixture Model that satisfies
+#' must-link / positive constraints.
+#'
 #'
 #' @param data Dataset as a data.frame or matrix.
 #' @param clust_num Number of components of GMM.
@@ -18,7 +23,7 @@
 #' chunks_of_25 <- c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78)
 #' mustlink_em(iris[, 1:4], clust_num = 3, chunk_labs = chunks_of_25)
 mustlink_em <- function(data, clust_num, chunk_labs,
-                        maxit = 100, eps = 1e-10, start = "vanilla") {
+                        maxit = 100, eps = 1e-10, start = "k-Means") {
   data <- as.matrix(data)
   chunk_time <- system.time({
     chunk <- make_chunk(data, chunk_labs)
@@ -39,8 +44,10 @@ mustlink_em <- function(data, clust_num, chunk_labs,
   obs_num <- nrow(data)
   var_num <- ncol(params$mu)
 
+  burnin <- 10
+
   # EM algorithm
-  while (ll_crit > eps && it < maxit) {
+  while (it <= min(burnin, maxit - 1) || (ll_crit > eps && it < maxit)) {
     it <- it + 1
 
     # E-step
@@ -51,9 +58,9 @@ mustlink_em <- function(data, clust_num, chunk_labs,
 
     mid_time[it] <- system.time({
       ll <- append(ll, e_out$ll)
-      pp <- e_out$pp
+      chunk_pp <- e_out$chunk_pp
 
-      if (it == 1) {
+      if (it <= burnin) {
         ll_crit <- Inf
       } else if (ll[it - 1] == -Inf) {
         ll_crit <- Inf
@@ -65,7 +72,7 @@ mustlink_em <- function(data, clust_num, chunk_labs,
 
     # M-step
     m_time[it] <- system.time({
-      params <- mustlink_mstep(data, chunk, pp,
+      params <- mustlink_mstep(data, chunk, chunk_pp,
                              obs_num, var_num, clust_num)
     })[3]
 
@@ -80,14 +87,14 @@ mustlink_em <- function(data, clust_num, chunk_labs,
   }
   # End of EM
 
-  # Cluster labels
+   # Cluster labels
   clust_labs <- rep(NA, nrow(data))
   for (l in 1:chunk$num) {
-    clust_labs[chunk$labs == l] <- which.max(pp[l, ])
+    clust_labs[chunk$labs == l] <- which.max(chunk_pp[l, ])
   }
 
   res <- list(clust_labs = clust_labs,
-              pp = pp,
+              pp = chunk_pp,
               params = params,
               ll = ll,
               time = cbind(e_time, mid_time, m_time, e_time + mid_time + m_time)

@@ -1,3 +1,6 @@
+#' @title Construct chunklet for positive / must-link constraints.
+#'
+#' @description
 #' Compute chunklet number, means, and sizes from labels.
 #'
 #' @param data Dataset to be clustered.
