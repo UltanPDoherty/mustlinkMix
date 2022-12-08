@@ -27,8 +27,7 @@ mustlink_mstep <- function(data, chunk, chunk_pp,
                            obs_num = nrow(data),
                            var_num = ncol(data),
                            clust_num = ncol(chunk_pp)) {
-
-  obs_pp <- matrix(NA, nrow = obs_num, ncol = clust_num)
+ obs_pp <- matrix(NA, nrow = obs_num, ncol = clust_num)
   for(l in 1:chunk$num) {
     obs_pp[chunk$labs == l, ] <- matrix(1, chunk$size[l], 1) %*% t(chunk_pp[l, ])
   }
@@ -55,5 +54,4 @@ mustlink_mstep <- function(data, chunk, chunk_pp,
               sigma = sigma
               )
          )
-
 }

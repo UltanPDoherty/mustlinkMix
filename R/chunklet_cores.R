@@ -12,7 +12,7 @@
 #' iris_tab   <- rbind(se = c(-1, +1, -1, -1),
 #'                     ve = c(00, -1, +1, +1),
 #'                     vi = c(+1, 00, +1, +1))
-#' iris_table_labs <- table_to_labs(iris_frame, type_marker = iris_tab)
+#' iris_table_labs <- table_to_label(iris_frame, type_marker = iris_tab)$labs
 #' iris_chunk_labs <- chunklet_cores(iris[, 1:4], table_labs = iris_table_labs)
 chunklet_cores <- function(data, table_labs) {
   chunk_num <- ncol(table_labs)
@@ -35,11 +35,11 @@ chunklet_cores <- function(data, table_labs) {
 
   core_mat <- Reduce(f = cbind, x = cores)
   core_mat_sums <- rowSums(core_mat)
-  non_cores <- core_mat_sums == 0
-  if (max(core_mat_sums) > 1) {warning("cores overlap")}
+  non_cores <- core_mat_sums != 1
+  if (max(core_mat_sums) > 1) {warning("Cores overlap. Points in intersection excluded from all cores.")}
 
   core_labs <- c()
-  core_labs[non_cores] <- 0
+  core_labs[non_cores]  <- 0
   core_labs[!non_cores] <- apply(X = core_mat[!non_cores, ], MARGIN = 1, FUN = which.max)
 
   for(l in 1:chunk_num) {

@@ -10,7 +10,8 @@ mustlink_em(
   chunk_labs,
   maxit = 100,
   eps = 1e-10,
-  start = "k-Means"
+  start = "k-Means",
+  init_seed = NULL
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ mustlink_em(
 \item{eps}{Convergence criterion for relative difference in log-likelihood.}
 
 \item{start}{Initialisation option.}
+
+\item{init_seed}{Seed.}
 }
 \value{
 A list consisting of a vector of cluster labels,
@@ -38,6 +41,11 @@ Use the EM algorithm to fit a Gaussian Mixture Model that satisfies
 must-link / positive constraints.
 }
 \examples{
-chunks_of_25 <- c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78)
-mustlink_em(iris[, 1:4], clust_num = 3, chunk_labs = chunks_of_25)
+iris_frame <- flowCore::flowFrame(exprs = as.matrix(iris[, 1:4]))
+iris_tab   <- rbind(se = c(-1, +1, -1, -1),
+                    ve = c(00, -1, +1, +1),
+                    vi = c(+1, 00, +1, +1))
+iris_table_labs <- table_to_label(iris_frame, type_marker = iris_tab)$labs
+iris_chunk_labs <- chunklet_cores(iris[, 1:4], table_labs = iris_table_labs)$chunks
+mustlink_em(iris[, 1:4], clust_num = 3, chunk_labs = iris_chunk_labs)
 }

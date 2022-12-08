@@ -16,7 +16,7 @@
 #' iris_tab   <- rbind(se = c(-1, +1, -1, -1),
 #'                     ve = c(00, -1, +1, +1),
 #'                     vi = c(+1, 00, +1, +1))
-#' out <- table_to_labs(iris_frame, type_marker = iris_tab)
+#' out <- table_to_label(iris_frame, type_marker = iris_tab)
 table_to_label <- function(frame, type_marker) {
   obs_num  <- nrow(frame)
   var_num  <- ncol(frame)

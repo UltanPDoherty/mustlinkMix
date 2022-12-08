@@ -23,6 +23,6 @@ iris_frame <- flowCore::flowFrame(exprs = as.matrix(iris[, 1:4]))
 iris_tab   <- rbind(se = c(-1, +1, -1, -1),
                     ve = c(00, -1, +1, +1),
                     vi = c(+1, 00, +1, +1))
-iris_table_labs <- table_to_labs(iris_frame, type_marker = iris_tab)
+iris_table_labs <- table_to_label(iris_frame, type_marker = iris_tab)$labs
 iris_chunk_labs <- chunklet_cores(iris[, 1:4], table_labs = iris_table_labs)
 }

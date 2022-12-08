@@ -17,15 +17,17 @@ make_chunk <- function(data, chunk_labs) {
   data       <- as.matrix(data)
   chunk_labs <- as.numeric(as.factor(chunk_labs))
   chunk_num  <- length(unique(chunk_labs))
-  chunk_mean <- matrix(NA, chunk_num, ncol(data))
-  chunk_size <- rep(NA, chunk_num)
-  for (l in 1:chunk_num) {
-    chunk_size[l] <- sum(chunk_labs == l)
-    if (chunk_size[l] > 1) {
+  var_num    <- ncol(data)
+  chunk_mean <- matrix(NA, chunk_num, var_num)
+
+  chunk_tab  <- table(chunk_labs)
+  chunk_size <- as.numeric(chunk_tab)
+  singles    <- is.element(chunk_labs, names(chunk_tab)[chunk_size == 1])
+
+  chunk_mean[chunk_size == 1, ] <- data[singles, ]
+
+  for (l in (1:chunk_num)[chunk_size != 1]) {
       chunk_mean[l, ] <- colMeans(data[chunk_labs == l, ])
-    } else {
-      chunk_mean[l, ] <- data[chunk_labs == l, ]
-    }
   }
 
   chunk <- list(labs = chunk_labs,

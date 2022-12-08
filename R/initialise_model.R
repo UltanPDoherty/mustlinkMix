@@ -8,6 +8,7 @@
 #' @param data Matrix or dataframe.
 #' @param clust_num Number of clusters.
 #' @param start Initialisation option. One of "central", "k-Means", or "mclust".
+#' @param init_seed Seed.
 #'
 #' @return A list consisting of a mixing proportions vector, a matrix of component means,
 #'         and an array containing component covariance matrices.
@@ -16,7 +17,7 @@
 #'
 #' @examples
 #' initialise_model(iris[, 1:4], 4)
-initialise_model <- function(data, clust_num, start = "central") {
+initialise_model <- function(data, clust_num, start = "central", init_seed = NULL) {
   p <- ncol(data)
 
   sigma     <- array(NA, c(p, p, clust_num))
@@ -24,6 +25,10 @@ initialise_model <- function(data, clust_num, start = "central") {
   start_options <- c("central", "k-Means", "mclust")
   stopifnot( "start must be one of \"central\", \"k-Means\", or \"mclust\"." =
                any(start == start_options))
+
+  if (!is.null(init_seed)) {
+    set.seed(init_seed)
+  }
 
   if (start == "central") {
     prop      <- rep(1 / clust_num, clust_num)

@@ -4,7 +4,7 @@
 \alias{initialise_model}
 \title{Compute initial parameter values of a GMM.}
 \usage{
-initialise_model(data, clust_num, start = "central")
+initialise_model(data, clust_num, start = "central", init_seed = NULL)
 }
 \arguments{
 \item{data}{Matrix or dataframe.}
@@ -12,6 +12,8 @@ initialise_model(data, clust_num, start = "central")
 \item{clust_num}{Number of clusters.}
 
 \item{start}{Initialisation option. One of "central", "k-Means", or "mclust".}
+
+\item{init_seed}{Seed.}
 }
 \value{
 A list consisting of a mixing proportions vector, a matrix of component means,
