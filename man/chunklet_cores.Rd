@@ -4,12 +4,14 @@
 \alias{chunklet_cores}
 \title{Convert +/- Table Labels into Chunklets}
 \usage{
-chunklet_cores(data, table_labs)
+chunklet_cores(data, table_labs, prob = 0.9)
 }
 \arguments{
 \item{data}{Dataset in matrix form.}
 
 \item{table_labs}{Output from table_to_labs.}
+
+\item{prob}{Probability cut-off for cores.}
 }
 \value{
 A list of two label vectors, labs with all non-core points labelled 0,
