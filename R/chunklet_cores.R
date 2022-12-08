@@ -2,6 +2,7 @@
 #'
 #' @param data Dataset in matrix form.
 #' @param table_labs Output from table_to_labs.
+#' @param prob Probability cut-off for cores.
 #'
 #' @return A list of two label vectors, labs with all non-core points labelled 0,
 #'         chunks with all non-core points given their own chunklet label.
@@ -14,7 +15,7 @@
 #'                     vi = c(+1, 00, +1, +1))
 #' iris_table_labs <- table_to_label(iris_frame, type_marker = iris_tab)$labs
 #' iris_chunk_labs <- chunklet_cores(iris[, 1:4], table_labs = iris_table_labs)
-chunklet_cores <- function(data, table_labs) {
+chunklet_cores <- function(data, table_labs, prob = 0.9) {
   chunk_num <- ncol(table_labs)
   obs_num   <- nrow(data)
 
@@ -30,7 +31,7 @@ chunklet_cores <- function(data, table_labs) {
     densities[[l]] <- mvtnorm::dmvnorm(data,
                                      mean = means[[l]],
                                      sigma = sigmas[[l]])
-    cores[[l]] <- densities[[l]] > stats::quantile(densities[[l]], 0.95)
+    cores[[l]] <- densities[[l]] > stats::quantile(densities[[l]], prob)
   }
 
   core_mat <- Reduce(f = cbind, x = cores)
