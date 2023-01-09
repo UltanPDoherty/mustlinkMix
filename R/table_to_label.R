@@ -22,28 +22,26 @@ table_to_label <- function(frame, type_marker) {
   var_num  <- ncol(frame)
   pop_num  <- nrow(type_marker)
 
-  type_marker[type_marker == 0] <- -3
-  type_marker <- (type_marker + 1) / 2
-
+  # create a vector of +/- thresholds to check every row of the data against
   thresholds <- vapply(1:var_num, FUN.VALUE = double(1),
                        FUN = function(p) {
                          flowDensity::deGate(frame, channel = p)
                        }
   )
 
-  obs_bool <- matrix(NA, nrow = obs_num, ncol = var_num)
-  obs_orthant <- obs_binary <- c()
+  # create a +1/-1 matrix the same size as the data flowFrame
+  obs_tab <- matrix(NA, nrow = obs_num, ncol = var_num)
   for(i in 1:obs_num) {
-    obs_bool[i, ]  <- as.integer(flowCore::exprs(frame)[i, ] > thresholds)
+    obs_tab[i, ]  <- 2*as.integer(flowCore::exprs(frame)[i, ] > thresholds) - 1
   }
 
   pops_labs <- list()
   for(j in 1:pop_num){
-    nonneutrals  <- type_marker[j, ] != -1
+    nonneutrals  <- type_marker[j, ] != 0
     nn_num <- sum(nonneutrals)
     pops_labs[[j]] <- vapply(X = 1:obs_num,
                              FUN = function(i) {
-                               sum(obs_bool[i, nonneutrals] == type_marker[j, nonneutrals]) == nn_num
+                               sum(obs_tab[i, nonneutrals] == type_marker[j, nonneutrals]) == nn_num
                              }, FUN.VALUE = logical(1))
   }
 
