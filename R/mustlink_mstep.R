@@ -27,17 +27,21 @@ mustlink_mstep <- function(data, chunk, chunk_pp,
                            obs_num = nrow(data),
                            var_num = ncol(data),
                            clust_num = ncol(chunk_pp)) {
+
+ # Expand the chunklet assignment posterior probability matrix to a datapoint
+ # assignment p.p. matrix by duplicating and rearranging rows.
  obs_pp <- matrix(NA, nrow = obs_num, ncol = clust_num)
   for(l in 1:chunk$num) {
     obs_pp[chunk$labs == l, ] <- matrix(1, chunk$size[l], 1) %*% t(chunk_pp[l, ])
   }
-
   obs_pp_sums <- colSums(obs_pp)
+
+  # Mean vector
   mu      <- t(obs_pp) %*% data / obs_pp_sums
 
+  # Covariance matrix
   sigma0 <- data_mu <- list()
   sigma  <- array(NA, dim = c(var_num, var_num, clust_num))
-
   for(k in 1:clust_num) {
     sigma0[[k]]  <- array(NA, dim = c(var_num, var_num, obs_num))
     data_mu[[k]] <- data - matrix(1, obs_num, 1) %*% t(mu[k, ])
@@ -47,6 +51,7 @@ mustlink_mstep <- function(data, chunk, chunk_pp,
     sigma[, , k] <- rowSums(sigma0[[k]], dims = 2) / obs_pp_sums[k]
   }
 
+  # Chunklet mixing proportions
   prop <- colSums(chunk_pp) / chunk$num
 
   return(list(prop = prop,
