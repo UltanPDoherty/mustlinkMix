@@ -18,37 +18,54 @@
 chunklet_cores <- function(data, table_labs, prob = 0.9) {
   chunk_num <- ncol(table_labs)
   obs_num   <- nrow(data)
+  var_num   <- ncol(data)
 
   regions <- densities <- list()
   means   <- matrix(NA, nrow = chunk_num, ncol = var_num)
   sigmas  <- array(NA, dim = c(var_num, var_num, chunk_num))
   cores   <- matrix(NA, nrow = obs_num, ncol = chunk_num)
   quants  <- vector("numeric", length = chunk_num)
+
+  # only points in region l can be assigned to chunklet l
+  # the highest Gaussian density points in region l are selected
   for(l in 1:chunk_num) {
     regions[[l]]   <- data[table_labs[, l],]
-    densities[[l]] <- mvtnorm::dmvnorm(data,
-                                     mean = means[[l]],
-                                     sigma = sigmas[[l]])
-    cores[[l]] <- densities[[l]] > stats::quantile(densities[[l]], prob)
-  }
 
-  core_mat <- Reduce(f = cbind, x = cores)
-  core_mat_sums <- rowSums(core_mat)
-  non_cores <- core_mat_sums != 1
-  if (max(core_mat_sums) > 1) {warning("Cores overlap. Points in intersection excluded from all cores.")}
     means[l, ]     <- colMeans(regions[[l]])
     sigmas[, , l]  <- stats::cov(regions[[l]])
 
-  core_labs <- c()
-  core_labs[non_cores]  <- 0
-  core_labs[!non_cores] <- apply(X = core_mat[!non_cores, ], MARGIN = 1, FUN = which.max)
+    densities[[l]] <- mvtnorm::dmvnorm(regions[[l]],
+                                       mean = means[l, ],
+                                       sigma = sigmas[, , l])
+    quants[l] <- stats::quantile(densities[[l]], prob)
 
-  for(l in 1:chunk_num) {
-    core_labs[core_labs == l] <- l * table_labs[core_labs == l, l]
+    cores[table_labs[, l], l]  <- densities[[l]] > quants[l]
+    cores[!table_labs[, l], l] <- FALSE
   }
 
-  core_chunks <- core_labs
-  core_chunks[core_chunks == 0] <- (chunk_num + 1):(chunk_num + sum(core_chunks == 0))
+  # regions may not be disjoint, so the cores could overlap, prevent this
+
+  cores_count   <- rowSums(cores)
+  cores_overlap <- cores_count > 1
+  cores_single  <- cores_count == 1
+
+  if (any(cores_overlap)) {
+    warning("Initial cores overlapped. Points in intersection were excluded from all cores.")
+    }
+
+  core_labs <- core_chunks <- vector("integer", length = obs_num)
+
+  core_labs[!cores_single]  <- 0L # overlap removed
+
+  core_labs[cores_single] <- apply(X = cores[cores_single, ],
+                                   MARGIN = 1, FUN = which.max)
+
+  # for(l in 1:chunk_num) {
+  #   core_labs[core_labs == l] <- l * table_labs[core_labs == l, l]
+  # }
+
+  core_chunks[cores_single]  <- core_labs[cores_single]
+  core_chunks[!cores_single] <- chunk_num + 1:sum(!cores_single)
 
   return(list(labs = core_labs,
               chunks = core_chunks))
