@@ -30,24 +30,20 @@ table_to_label <- function(frame, type_marker) {
   )
 
   # create a +1/-1 matrix the same size as the data flowFrame
-  obs_tab <- matrix(NA, nrow = obs_num, ncol = var_num)
-  for(i in 1:obs_num) {
-    obs_tab[i, ]  <- 2*as.integer(flowCore::exprs(frame)[i, ] > thresholds) - 1
-  }
+  obs_tab_01 <- t(apply(X = flowCore::exprs(frame), MARGIN = 1,
+                   FUN = function(vec) {vec > thresholds}))
+  obs_tab_pm <- 2*obs_tab_01 - 1
 
-  pops_labs <- list()
+  pops_labs <- matrix(NA, nrow = obs_num, ncol = pop_num,
+                      dimnames = list(NULL, rownames(type_marker)))
+  nonneutrals <- type_marker != 0
   for(j in 1:pop_num){
-    nonneutrals  <- type_marker[j, ] != 0
-    nn_num <- sum(nonneutrals)
-    pops_labs[[j]] <- vapply(X = 1:obs_num,
+    pops_labs[, j] <- vapply(X = 1:obs_num,
                              FUN = function(i) {
-                               sum(obs_tab[i, nonneutrals] == type_marker[j, nonneutrals]) == nn_num
+                               all(obs_tab_pm[i, nonneutrals[j, ]] == type_marker[j, nonneutrals[j, ]])
                              }, FUN.VALUE = logical(1))
   }
 
-  pops_labs2 <- Reduce(f = cbind, x = pops_labs)
-  colnames(pops_labs2) <- rownames(type_marker)
-
-  return(list(labs = pops_labs2,
+  return(list(labs = pops_labs,
               splits = thresholds))
 }
