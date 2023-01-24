@@ -31,7 +31,8 @@ A list containing a log-likelihood value
 and a posterior probability matrix.
 }
 \description{
-Implement E-step of EM algorithm for GMM with positive / must-link constraints.
+Implement E-step of EM algorithm for GMM
+with positive / must-link constraints.
 }
 \examples{
 chunks_of_25 <- c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78)

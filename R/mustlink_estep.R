@@ -1,7 +1,8 @@
 #' @title E-Step for Must-link Constrained GMM.
 #'
 #' @description
-#' Implement E-step of EM algorithm for GMM with positive / must-link constraints.
+#' Implement E-step of EM algorithm for GMM
+#' with positive / must-link constraints.
 #'
 #' @param data Dataset being clustered in matrix form.
 #' @param params List containing prop, mu, sigma.
@@ -26,31 +27,55 @@ mustlink_estep <- function(data, chunk, params,
 
   log_pdf <- vapply(1:clust_num, FUN.VALUE = double(obs_num),
                     FUN = function(k) {
-                      mvtnorm::dmvnorm(data, mean = params$mu[k, ], sigma = params$sigma[, , k],
-                                       log = TRUE)
-                    }
+                      mvtnorm::dmvnorm(data, log = TRUE,
+                                       mean = params$mu[k, ],
+                                       sigma = params$sigma[, , k])
+                      }
                     )
-   log_pdf_chunk <- matrix(NA, nrow = chunk$num, ncol = clust_num)
+
+  log_maxes <- ll_vec <- chunk_unnorm_sums <- vector(mode = "numeric", length = chunk$num)
+
+  lpdf_chunk <- chunk_unnorm <- chunk_pp <- matrix(NA,
+                                                   nrow = chunk$num,
+                                                   ncol = clust_num)
+  obs_pp <- matrix(NA, nrow = obs_num, ncol = clust_num)
+
+  singles_chunk <- chunk$size == 1
+  singles_obs   <- chunk$labs %in% (1:chunk$num)[singles_chunk]
+
+  lpdf_chunk[singles_chunk, ]  <- log_pdf[singles_obs, ]
+  lpdf_chunk[!singles_chunk, ] <- rowsum(log_pdf[!singles_obs, ],
+                                         group = chunk$labs[!singles_obs])
+
+  # log_maxes <- matrixStats::rowMaxs(x = lpdf_chunk)
+  #
+  # chunk_unnorm <- exp(eachrow(x = lpdf_chunk - log_maxes,
+  #                             y = log(params$prop),
+  #                             oper = "+")
+  #                     )
+  # chunk_unnorm_sums <- rowSums(chunk_unnorm)
+  #
+  # chunk_pp <- chunk_unnorm / chunk_unnorm_sums
+  #
+  # ll_vec <- log(chunk_unnorm_sums) + log_maxes
+
   for (l in 1:chunk$num) {
-       log_pdf_chunk[l, ] <- colSums(log_pdf[chunk$labs == l, , drop = FALSE])
+    log_maxes[l]      <- max(lpdf_chunk[l, ])
+    chunk_unnorm[l, ] <- exp(lpdf_chunk[l, ] - log_maxes[l] + log(params$prop))
+
+    chunk_unnorm_sums[l] <- sum(chunk_unnorm[l, ])
+
+    chunk_pp[l, ] <- chunk_unnorm[l, ] / chunk_unnorm_sums[l]
+
+    ll_vec[l] <- log(chunk_unnorm_sums[l]) + log_maxes[l]
   }
 
-   chunk_pp0 <- exp(sized_log_const + un_log_pdf_chunk)
+  ll  <- sum(ll_vec)
 
-  prop_mat    <- matrix(1, chunk$num, 1) %*% params$prop
-  log_maxes   <- matrixStats::rowMaxs(log_pdf_chunk)
-  log_max_mat <- log_maxes %*% matrix(1, 1, clust_num)
+  obs_pp <- chunk_pp[chunk$labs, ]
 
-  log_pdf_chunk2 <- log_pdf_chunk - log_max_mat
-
-  chunk_pp1 <- exp(log_pdf_chunk2 + log(prop_mat))
-
-  chunk_pp  <- chunk_pp1 / (rowSums(chunk_pp1) %*% matrix(1, 1, clust_num))
-
-  ll0 <- rowSums(exp(log_pdf_chunk + log(prop_mat) - log_max_mat))
-  ll1 <- log(ll0) + log_maxes
-  ll  <- sum(ll1)
 
   return(list(ll = ll,
-              chunk_pp = chunk_pp))
+              chunk_pp = chunk_pp,
+              obs_pp = obs_pp))
 }
