@@ -19,15 +19,13 @@ chunklet_cores <- function(data, table_labs, prob = 0.9) {
   chunk_num <- ncol(table_labs)
   obs_num   <- nrow(data)
 
-  regions <- list()
-  means <- list()
-  sigmas <- list()
-  densities <- list()
-  cores <- list()
+  regions <- densities <- list()
+  means   <- matrix(NA, nrow = chunk_num, ncol = var_num)
+  sigmas  <- array(NA, dim = c(var_num, var_num, chunk_num))
+  cores   <- matrix(NA, nrow = obs_num, ncol = chunk_num)
+  quants  <- vector("numeric", length = chunk_num)
   for(l in 1:chunk_num) {
     regions[[l]]   <- data[table_labs[, l],]
-    means[[l]]     <- colMeans(regions[[l]])
-    sigmas[[l]]    <- stats::cov(regions[[l]])
     densities[[l]] <- mvtnorm::dmvnorm(data,
                                      mean = means[[l]],
                                      sigma = sigmas[[l]])
@@ -38,6 +36,8 @@ chunklet_cores <- function(data, table_labs, prob = 0.9) {
   core_mat_sums <- rowSums(core_mat)
   non_cores <- core_mat_sums != 1
   if (max(core_mat_sums) > 1) {warning("Cores overlap. Points in intersection excluded from all cores.")}
+    means[l, ]     <- colMeans(regions[[l]])
+    sigmas[, , l]  <- stats::cov(regions[[l]])
 
   core_labs <- c()
   core_labs[non_cores]  <- 0
