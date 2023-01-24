@@ -7,6 +7,7 @@
 mustlink_mstep(
   data,
   chunk,
+  obs_pp,
   chunk_pp,
   obs_num = nrow(data),
   var_num = ncol(data),
@@ -18,7 +19,9 @@ mustlink_mstep(
 
 \item{chunk}{Object from make_chunk.}
 
-\item{chunk_pp}{Posterior probability matrix.}
+\item{obs_pp}{Expanded observation posterior probability matrix.}
+
+\item{chunk_pp}{Chunklet posterior probability matrix.}
 
 \item{obs_num}{Number of observations in the dataset.}
 
@@ -39,7 +42,9 @@ params1 <- initialise_model(iris[, 1:4], clust_num = 3)
 e_out1  <- mustlink_estep(as.matrix(iris[, 1:4]),
                           chunk = chunk1, params = params1,
                           obs_num = 150, var_num = 4, clust_num = 3)
+obs_pp1 <- e_out1$obs_pp
 chunk_pp1 <- e_out1$chunk_pp
-mustlink_mstep(as.matrix(iris[, 1:4]), chunk = chunk1, chunk_pp <- chunk_pp1,
-             obs_num = 150, var_num = 4, clust_num = 3)
+mustlink_mstep(as.matrix(iris[, 1:4]), chunk = chunk1,
+               obs_pp = obs_pp1, chunk_pp = chunk_pp1,
+               obs_num = 150, var_num = 4, clust_num = 3)
 }

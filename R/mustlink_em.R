@@ -65,7 +65,6 @@ mustlink_em <- function(data, clust_num, chunk_labs,
 
     # mid_time[it] <- system.time({
       ll <- append(ll, e_out$ll)
-      chunk_pp <- e_out$chunk_pp
 
       if (it <= burnin) {
         ll_crit <- Inf
@@ -79,8 +78,12 @@ mustlink_em <- function(data, clust_num, chunk_labs,
 
     # M-step
     m_time[it] <- system.time({
-      params <- mustlink_mstep(data, chunk, chunk_pp,
-                             obs_num, var_num, clust_num)
+      # params <- mustlink_mstep(data, chunk, obs_pp = e_out$obs_pp,
+      #                          chunk_pp = e_out$chunk_pp,
+      #                          obs_num, var_num, clust_num)
+      params <- mustlink_mstep_mclust(data, chunk_num = chunk$num,
+                                      obs_pp = e_out$obs_pp,
+                                      chunk_pp = e_out$chunk_pp)
     })[3]
 
     cat(paste0("...EM-", it, ",\t",
@@ -97,11 +100,11 @@ mustlink_em <- function(data, clust_num, chunk_labs,
    # Cluster labels
   clust_labs <- rep(NA, nrow(data))
   for (l in 1:chunk$num) {
-    clust_labs[chunk$labs == l] <- which.max(chunk_pp[l, ])
+    clust_labs[chunk$labs == l] <- which.max(e_out$chunk_pp[l, ])
   }
 
   res <- list(clust_labs = clust_labs,
-              pp = chunk_pp,
+              pp = e_out$chunk_pp,
               params = params,
               ll = ll,
               time = cbind(e_time, mid_time, m_time, e_time + mid_time + m_time)

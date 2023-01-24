@@ -5,7 +5,8 @@
 #'
 #' @param data Dataset being clustered in matrix form.
 #' @param chunk Object from make_chunk.
-#' @param chunk_pp Posterior probability matrix.
+#' @param obs_pp Expanded observation posterior probability matrix.
+#' @param chunk_pp Chunklet posterior probability matrix.
 #' @param obs_num Number of observations in the dataset.
 #' @param var_num Number of varibles in the dataset.
 #' @param clust_num Number of clusters pre-specified.
@@ -20,20 +21,19 @@
 #' e_out1  <- mustlink_estep(as.matrix(iris[, 1:4]),
 #'                           chunk = chunk1, params = params1,
 #'                           obs_num = 150, var_num = 4, clust_num = 3)
+#' obs_pp1 <- e_out1$obs_pp
 #' chunk_pp1 <- e_out1$chunk_pp
-#' mustlink_mstep(as.matrix(iris[, 1:4]), chunk = chunk1, chunk_pp <- chunk_pp1,
-#'              obs_num = 150, var_num = 4, clust_num = 3)
-mustlink_mstep <- function(data, chunk, chunk_pp,
+#' mustlink_mstep(as.matrix(iris[, 1:4]), chunk = chunk1,
+#'                obs_pp = obs_pp1, chunk_pp = chunk_pp1,
+#'                obs_num = 150, var_num = 4, clust_num = 3)
+mustlink_mstep <- function(data, chunk, obs_pp, chunk_pp,
                            obs_num = nrow(data),
                            var_num = ncol(data),
                            clust_num = ncol(chunk_pp)) {
 
- # Expand the chunklet assignment posterior probability matrix to a datapoint
- # assignment p.p. matrix by duplicating and rearranging rows.
- obs_pp <- matrix(NA, nrow = obs_num, ncol = clust_num)
-  for(l in 1:chunk$num) {
-    obs_pp[chunk$labs == l, ] <- matrix(1, chunk$size[l], 1) %*% t(chunk_pp[l, ])
-  }
+  # Chunklet mixing proportions
+  prop <- colSums(chunk_pp) / chunk$num
+
   obs_pp_sums <- colSums(obs_pp)
 
   # Mean vector
@@ -44,15 +44,13 @@ mustlink_mstep <- function(data, chunk, chunk_pp,
   sigma  <- array(NA, dim = c(var_num, var_num, clust_num))
   for(k in 1:clust_num) {
     sigma0[[k]]  <- array(NA, dim = c(var_num, var_num, obs_num))
-    data_mu[[k]] <- data - matrix(1, obs_num, 1) %*% t(mu[k, ])
+    data_mu[[k]] <- matrix(NA, nrow = obs_num, ncol = var_num)
     for(i in 1:obs_num) {
+      data_mu[[k]][i, ]  <- data[i, ] - mu[k, ]
       sigma0[[k]][, , i] <- obs_pp[i, k] * data_mu[[k]][i, ] %*% t(data_mu[[k]][i, ])
     }
     sigma[, , k] <- rowSums(sigma0[[k]], dims = 2) / obs_pp_sums[k]
   }
-
-  # Chunklet mixing proportions
-  prop <- colSums(chunk_pp) / chunk$num
 
   return(list(prop = prop,
               mu = mu,
