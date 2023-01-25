@@ -25,6 +25,8 @@ mustlink_estep <- function(data, chunk, params,
                            obs_num = nrow(data), var_num = ncol(params$mu),
                            clust_num = nrow(params$mu)) {
 
+  # log_pdf is an obs_num x clust_num matrix
+  # it is the log pdf for each component evaluated at every point
   log_pdf <- vapply(1:clust_num, FUN.VALUE = double(obs_num),
                     FUN = function(k) {
                       mvtnorm::dmvnorm(data, log = TRUE,
@@ -33,38 +35,31 @@ mustlink_estep <- function(data, chunk, params,
                       }
                     )
 
-  log_maxes <- ll_vec <- chunk_unnorm_sums <- vector(mode = "numeric", length = chunk$num)
-
-  lpdf_chunk <- chunk_unnorm <- chunk_pp <- matrix(NA,
-                                                   nrow = chunk$num,
-                                                   ncol = clust_num)
-  obs_pp <- matrix(NA, nrow = obs_num, ncol = clust_num)
-
+  # singles_chunk is a logical of length chunk$num
+  # it identifies which chunklets are singletons, i.e. unconstrained observations
   singles_chunk <- chunk$size == 1
+  # singles_obs is a logical of length obs_num
+  # it identifies which observations correspond to the singleton chunklets
   singles_obs   <- chunk$labs %in% (1:chunk$num)[singles_chunk]
 
+  # lpdf_chunk is the sum of log_pdf values within each chunklet
+  lpdf_chunk <- matrix(NA, nrow = chunk$num, ncol = clust_num)
   lpdf_chunk[singles_chunk, ]  <- log_pdf[singles_obs, ]
   lpdf_chunk[!singles_chunk, ] <- rowsum(log_pdf[!singles_obs, ],
                                          group = chunk$labs[!singles_obs])
 
-  # log_maxes <- matrixStats::rowMaxs(x = lpdf_chunk)
-  #
-  # chunk_unnorm <- exp(eachrow(x = lpdf_chunk - log_maxes,
-  #                             y = log(params$prop),
-  #                             oper = "+")
-  #                     )
-  # chunk_unnorm_sums <- rowSums(chunk_unnorm)
-  #
-  # chunk_pp <- chunk_unnorm / chunk_unnorm_sums
-  #
-  # ll_vec <- log(chunk_unnorm_sums) + log_maxes
-
+  # This for loop computes the chunklet posterior probability matrix, chunk_pp,
+  chunk_unnorm <- chunk_pp <- matrix(NA, nrow = chunk$num, ncol = clust_num)
+  log_maxes <- ll_vec <- chunk_unnorm_sums <- vector(mode = "numeric", length = chunk$num)
   for (l in 1:chunk$num) {
+
+    # Add the log mixing proportions and then un-log this sum with exp.
+    # Subtract lpdf_chunk row maxes to prevent exp mapping large values to Inf.
     log_maxes[l]      <- max(lpdf_chunk[l, ])
     chunk_unnorm[l, ] <- exp(lpdf_chunk[l, ] - log_maxes[l] + log(params$prop))
 
+    # Normalise rows of chunk_unnorm to obtain chunk_pp.
     chunk_unnorm_sums[l] <- sum(chunk_unnorm[l, ])
-
     chunk_pp[l, ] <- chunk_unnorm[l, ] / chunk_unnorm_sums[l]
 
     ll_vec[l] <- log(chunk_unnorm_sums[l]) + log_maxes[l]
@@ -73,7 +68,6 @@ mustlink_estep <- function(data, chunk, params,
   ll  <- sum(ll_vec)
 
   obs_pp <- chunk_pp[chunk$labs, ]
-
 
   return(list(ll = ll,
               chunk_pp = chunk_pp,
