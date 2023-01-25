@@ -35,21 +35,17 @@ mustlink_mstep <- function(data, chunk, obs_pp, chunk_pp,
   prop <- colSums(chunk_pp) / chunk$num
 
   obs_pp_sums <- colSums(obs_pp)
+  obs_pp2 <- sweep(x = obs_pp, MARGIN = 2, STATS = obs_pp_sums, FUN = "/")
 
   # Mean vector
-  mu      <- t(obs_pp) %*% data / obs_pp_sums
+  mu <- t(obs_pp2) %*% data
 
   # Covariance matrix
-  sigma0 <- data_mu <- list()
-  sigma  <- array(NA, dim = c(var_num, var_num, clust_num))
+  data_mu <- array(dim = c(obs_num, var_num, clust_num))
+  sigma   <- array(dim = c(var_num, var_num, clust_num))
   for(k in 1:clust_num) {
-    sigma0[[k]]  <- array(NA, dim = c(var_num, var_num, obs_num))
-    data_mu[[k]] <- matrix(NA, nrow = obs_num, ncol = var_num)
-    for(i in 1:obs_num) {
-      data_mu[[k]][i, ]  <- data[i, ] - mu[k, ]
-      sigma0[[k]][, , i] <- obs_pp[i, k] * data_mu[[k]][i, ] %*% t(data_mu[[k]][i, ])
-    }
-    sigma[, , k] <- rowSums(sigma0[[k]], dims = 2) / obs_pp_sums[k]
+    data_mu[, , k] <- sqrt(obs_pp2[, k]) * scale(data, center = mu[k, ], scale = FALSE)
+    sigma[, , k] <- crossprod(data_mu[, , k])
   }
 
   return(list(prop = prop,
