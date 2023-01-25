@@ -78,12 +78,12 @@ mustlink_em <- function(data, clust_num, chunk_labs,
 
     # M-step
     m_time[it] <- system.time({
-      # params <- mustlink_mstep(data, chunk, obs_pp = e_out$obs_pp,
-      #                          chunk_pp = e_out$chunk_pp,
-      #                          obs_num, var_num, clust_num)
-      params <- mustlink_mstep_mclust(data, chunk_num = chunk$num,
-                                      obs_pp = e_out$obs_pp,
-                                      chunk_pp = e_out$chunk_pp)
+      params <- mustlink_mstep(data, chunk, obs_pp = e_out$obs_pp,
+                               chunk_pp = e_out$chunk_pp,
+                               obs_num, var_num, clust_num)
+      # params <- mustlink_mstep_mclust(data, chunk_num = chunk$num,
+      #                                 obs_pp = e_out$obs_pp,
+      #                                 chunk_pp = e_out$chunk_pp)
     })[3]
 
     cat(paste0("...EM-", it, ",\t",
