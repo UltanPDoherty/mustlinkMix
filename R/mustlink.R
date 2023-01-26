@@ -41,7 +41,8 @@ mustlink <- function(data, type_marker, clust_num, prob,
                                  type_marker = type_marker)$labs
 
     chunk_labs <- chunklet_cores(data = data,
-                                 table_labs = table_labs)$chunk
+                                 table_labs = table_labs,
+                                 prob = prob)$chunk
   }
 
   mustlink_em(data = data,
