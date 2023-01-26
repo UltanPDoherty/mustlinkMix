@@ -1,6 +1,6 @@
 #' Convert +/- Table Labels into Chunklets
 #'
-#' @param data Dataset in matrix form.
+#' @param data Dataset in matrix or data.frame form.
 #' @param table_labs Output from table_to_labs.
 #' @param prob Probability cut-off for cores.
 #'
@@ -9,13 +9,13 @@
 #' @export
 #'
 #' @examples
-#' iris_frame <- flowCore::flowFrame(exprs = as.matrix(iris[, 1:4]))
 #' iris_tab   <- rbind(se = c(-1, +1, -1, -1),
 #'                     ve = c(00, -1, +1, +1),
 #'                     vi = c(+1, 00, +1, +1))
-#' iris_table_labs <- table_to_label(iris_frame, type_marker = iris_tab)$labs
+#' iris_table_labs <- table_to_label(iris[, 1:4], type_marker = iris_tab)$labs
 #' iris_chunk_labs <- chunklet_cores(iris[, 1:4], table_labs = iris_table_labs)
 chunklet_cores <- function(data, table_labs, prob = 0.9) {
+
   chunk_num <- ncol(table_labs)
   obs_num   <- nrow(data)
   var_num   <- ncol(data)
