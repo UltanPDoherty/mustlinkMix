@@ -12,12 +12,17 @@
 #' @param eps Convergence criterion for relative difference in log-likelihood.
 #' @param start Initialisation option.
 #' @param init_seed Seed.
+#' @param print_freq Controls how frequently the log-likelihood and time are
+#' printed in the EM loop.
+#' @param burnin Controls how many loops are completed before testing for
+#' likelihood convergence.
+#' @param no_print If TRUE, no output is printed.
 #'
 #' @return A list consisting of a vector of cluster labels,
 #'         a matrix of chunklet to cluster assignment probabilities,
 #'         a list of model parameters,
 #'         a vector of log-likelihood values,
-#'         and a vector of times per iteration.
+#'         and a vector of times.
 #' @export
 #'
 #' @examples
@@ -33,6 +38,8 @@ mustlink_em <- function(data, clust_num, chunk_labs,
                         init_seed = NULL) {
   data <- as.matrix(data)
   chunk_time <- system.time({
+                        init_seed = NULL, print_freq = 10,
+                        burnin = 10, no_print = FALSE) {
     if (!is.matrix(data)) {
       if (inherits(data, "flowFrame")) {
         data <- flowCore::exprs(data)
