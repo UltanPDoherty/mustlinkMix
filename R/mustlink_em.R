@@ -97,11 +97,9 @@ mustlink_em <- function(data, clust_num, chunk_labs,
   }
   # End of EM
 
-   # Cluster labels
-  clust_labs <- rep(NA, nrow(data))
-  for (l in 1:chunk$num) {
-    clust_labs[chunk$labs == l] <- which.max(e_out$chunk_pp[l, ])
-  }
+  label_time <- system.time({
+    chunk_to_clust <- apply(X = e_out$chunk_pp, MARGIN = 1, FUN = which.max)
+    clust_labs     <- chunk_to_clust[chunk$labs]
 
   res <- list(clust_labs = clust_labs,
               pp = e_out$chunk_pp,
