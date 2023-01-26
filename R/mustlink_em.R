@@ -33,6 +33,13 @@ mustlink_em <- function(data, clust_num, chunk_labs,
                         init_seed = NULL) {
   data <- as.matrix(data)
   chunk_time <- system.time({
+    if (!is.matrix(data)) {
+      if (inherits(data, "flowFrame")) {
+        data <- flowCore::exprs(data)
+      } else {
+        data <- as.matrix(data)
+      }
+    }
     chunk <- make_chunk(data, chunk_labs)
   })
   init_time <- system.time({
