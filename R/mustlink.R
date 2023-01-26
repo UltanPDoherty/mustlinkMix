@@ -34,11 +34,15 @@ mustlink <- function(data, type_marker, clust_num, prob,
                      init_seed = NULL, print_freq = 10,
                      burnin = 10, no_print = FALSE) {
 
-  table_labs <- table_to_label(data = data,
-                               type_marker = type_marker)$labs
+  if (is.null(type_marker)) {
+    chunk_labs <- 1:nrow(data)
+  } else {
+    table_labs <- table_to_label(data = data,
+                                 type_marker = type_marker)$labs
 
-  chunk_labs <- chunklet_cores(data = data,
-                               table_labs = table_labs)$chunk
+    chunk_labs <- chunklet_cores(data = data,
+                                 table_labs = table_labs)$chunk
+  }
 
   mustlink_em(data = data,
               clust_num = clust_num,
