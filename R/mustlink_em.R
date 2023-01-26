@@ -54,8 +54,8 @@ mustlink_em <- function(data, clust_num, chunk_labs,
   burnin <- 10
 
   # EM algorithm
-  while (it <= min(burnin, maxit - 1) || (ll_crit > eps && it < maxit)) {
-    it <- it + 1
+    repeat {
+      it <- it + 1
 
     # E-step
     e_time[it] <- system.time({
@@ -92,6 +92,18 @@ mustlink_em <- function(data, clust_num, chunk_labs,
       #                                 obs_pp = e_out$obs_pp,
       #                                 chunk_pp = e_out$chunk_pp)
     })[3]
+      if (it == maxit) {
+        warning(paste0("EM algorithm did not converge before ", maxit, " iterations."))
+        if (!no_print) {
+          cat(paste0("...EM stopped at ", Sys.time(), "\n"))
+        }
+        break
+      } else if (!is.na(ll_crit) & ll_crit < eps) {
+        if (!no_print) {
+          cat(paste0("...EM converged at ", Sys.time(), "\n"))
+        }
+        break
+      }
 
     cat(paste0("...EM-", it, ",\t",
                "e_time: ",   round(e_time[it], digits = 2), ",\t",
