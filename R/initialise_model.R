@@ -48,7 +48,7 @@ initialise_model <- function(data, clust_num, start = "central", init_seed = NUL
     mc    <- mclust::Mclust(data, G = clust_num, modelNames = c("VVV"))
     prop  <- mc$parameters$pro
     mu    <- t(mc$parameters$mean)
-    sigma[, , k] <- mc$parameters$variance$sigma[, , k]
+    sigma <- mc$parameters$variance$sigma
   } else {
     stop("start must be one of \"central\", \"k-Means\", or \"mclust\".")
   }
