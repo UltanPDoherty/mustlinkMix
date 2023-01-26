@@ -3,6 +3,7 @@
 export(chunklet_cores)
 export(initialise_model)
 export(make_chunk)
+export(mustlink)
 export(mustlink_em)
 export(mustlink_estep)
 export(mustlink_mstep)

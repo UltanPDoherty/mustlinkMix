@@ -4,10 +4,10 @@
 \alias{table_to_label}
 \title{Construct positive / negative region labels.}
 \usage{
-table_to_label(frame, type_marker)
+table_to_label(data, type_marker)
 }
 \arguments{
-\item{frame}{flowFrame object}
+\item{data}{Dataset in matrix or data.frame format.}
 
 \item{type_marker}{Matrix, rows for populations, columns for variables.}
 }
@@ -20,9 +20,8 @@ Convert a cell type vs marker table into a logical vector of region
 membership for each observation.
 }
 \examples{
-iris_frame <- flowCore::flowFrame(exprs = as.matrix(iris[, 1:4]))
 iris_tab   <- rbind(se = c(-1, +1, -1, -1),
                     ve = c(00, -1, +1, +1),
                     vi = c(+1, 00, +1, +1))
-out <- table_to_label(iris_frame, type_marker = iris_tab)
+out <- table_to_label(iris[, 1:4], type_marker = iris_tab)
 }
