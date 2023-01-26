@@ -66,12 +66,19 @@ mustlink_em <- function(data, clust_num, chunk_labs,
     # mid_time[it] <- system.time({
       ll <- append(ll, e_out$ll)
 
-      if (it <= burnin) {
-        ll_crit <- Inf
-      } else if (ll[it - 1] == -Inf) {
-        ll_crit <- Inf
-      } else {
-        ll_crit <- (ll[it] - ll[it - 1]) / abs(ll[it - 1])
+      # ll_crit is the relative increase in the log-likelihood.
+      # if tree accounts for the log-likelihoods being Inf or -Inf.
+      if (it >= burnin) {
+        ll_diff <- ll[it] - ll[it - 1]
+        if (ll[it - 1] == Inf) { ## (Inf, R), (Inf, +Inf), (Inf, -Inf)
+          ll_crit <- NA
+        } else if (ll[it - 1] == -Inf & ll[it] == -Inf) { ## (-Inf, -Inf)
+          ll_crit <- NA
+        } else if (ll_diff == Inf) { ## (-Inf, R), (-Inf, +Inf), (R, +Inf)
+          ll_crit <- Inf
+        }  else { ## (R, R), (R, +Inf)
+          ll_crit <- ll_diff / abs(ll[it - 1])
+        }
       }
     # })[3]
 
