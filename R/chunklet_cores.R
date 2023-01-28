@@ -29,7 +29,7 @@ chunklet_cores <- function(data, table_labs, prob = 0.9) {
   # only points in region l can be assigned to chunklet l
   # the highest Gaussian density points in region l are selected
   for(l in 1:chunk_num) {
-    regions[[l]]   <- data[table_labs[, l],]
+    regions[[l]]   <- data[table_labs[, l], ]
 
     means[l, ]     <- colMeans(regions[[l]])
     sigmas[, , l]  <- stats::cov(regions[[l]])
@@ -49,8 +49,15 @@ chunklet_cores <- function(data, table_labs, prob = 0.9) {
   cores_overlap <- cores_count > 1
   cores_single  <- cores_count == 1
 
+  find_overlap <- apply(X = cores[cores_overlap, ], MARGIN = 1,
+                        FUN = function(x) {colnames(table_labs)[x]})
+  overlap_names <- unique(apply(X = find_overlap, MARGIN = 2,
+                         FUN = function(x) {paste(x, collapse = "-")}))
+
   if (any(cores_overlap)) {
-    warning("Initial cores overlapped. Points in intersection were excluded from all cores.")
+    message(paste0("Initial cores overlapped for the following pair(s): ",
+                   paste(overlap_names, sep = ", "), ".\n",
+                   "Points in intersection were excluded from all cores."))
     }
 
   core_labs <- core_chunks <- vector("integer", length = obs_num)
