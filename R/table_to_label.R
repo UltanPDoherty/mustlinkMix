@@ -21,6 +21,27 @@ table_to_label <- function(data, type_marker) {
   obs_num  <- nrow(data)
   var_num  <- ncol(data)
   pop_num  <- nrow(type_marker)
+  pop_names <- rownames(type_marker)
+
+  # check if the regions overlap
+  if (is.null(pop_names)) { pop_names <- 1:pop_num}
+  pairs <- combn(1:pop_num, 2)
+  pair_names <- matrix(pop_names[pairs], nrow = 2)
+
+  rowdiffs <- abs(type_marker[pairs[1, ], ] - type_marker[pairs[2, ], ])
+  rownames(rowdiffs) <- apply(X = pair_names, MARGIN = 2,
+                              FUN = function(x) {paste(x, collapse = "-")})
+
+  maxdiffs <- apply(X = rowdiffs, MARGIN = 1, FUN = max)
+  if (any(maxdiffs == 0)){
+    stop(paste0("The following pair(s) of population regions are identical: ",
+                  paste(names(maxdiffs)[which(maxdiffs == 0)], sep = ", "), ".\n"))
+  }
+  if (any(maxdiffs == 1)){
+    message(paste0("The following pair(s) of population regions overlap: ",
+                  paste(names(maxdiffs)[which(maxdiffs == 1)], sep = ", "), ".\n"))
+  }
+
 
   # create a vector of +/- thresholds to check every row of the data against
   thresholds <- vapply(1:var_num, FUN.VALUE = double(1),
@@ -35,7 +56,7 @@ table_to_label <- function(data, type_marker) {
   obs_tab_pm <- 2*obs_tab_01 - 1
 
   pops_labs <- matrix(NA, nrow = obs_num, ncol = pop_num,
-                      dimnames = list(NULL, rownames(type_marker)))
+                      dimnames = list(NULL, pop_names))
   nonneutrals <- type_marker != 0
   for(j in 1:pop_num){
     pops_labs[, j] <- vapply(X = 1:obs_num,
@@ -45,5 +66,7 @@ table_to_label <- function(data, type_marker) {
   }
 
   return(list(labs = pops_labs,
-              splits = thresholds))
+              splits = thresholds
+              )
+         )
 }
