@@ -25,7 +25,7 @@ table_to_label <- function(data, type_marker) {
 
   # check if the regions overlap
   if (is.null(pop_names)) { pop_names <- 1:pop_num}
-  pairs <- combn(1:pop_num, 2)
+  pairs <- utils::combn(1:pop_num, 2)
   pair_names <- matrix(pop_names[pairs], nrow = 2)
 
   rowdiffs <- abs(type_marker[pairs[1, ], ] - type_marker[pairs[2, ], ])
