@@ -27,9 +27,9 @@
 #' iris_tab   <- rbind(se = c(-1, +1, -1, -1),
 #'                     ve = c(00, -1, +1, +1),
 #'                     vi = c(+1, 00, +1, +1))
-#' mustlink(iris[, 1:4], iris_tab, 3)
+#' mustlink(iris[, 1:4], type_marker = iris_tab, clust_num = 3, prob = 0.9)
 
-mustlink <- function(data, type_marker, clust_num, prob,
+mustlink <- function(data, type_marker, clust_num, prob = 0.9,
                      maxit = 100, eps = 1e-10, start = "k-Means",
                      init_seed = NULL, print_freq = 10,
                      burnin = 10, no_print = FALSE) {
@@ -45,10 +45,32 @@ mustlink <- function(data, type_marker, clust_num, prob,
                                  prob = prob)$chunk
   }
 
-  mustlink_em(data = data,
-              clust_num = clust_num,
-              chunk_labs = chunk_labs,
-              maxit = maxit, eps = eps, start = start,
-              init_seed = init_seed, print_freq = print_freq,
-              burnin = burnin, no_print = no_print)
+  if (!is.matrix(data)) {
+    if (inherits(data, "flowFrame")) {
+      data <- flowCore::exprs(data)
+    } else {
+      data <- as.matrix(data)
+    }
+  }
+
+  #chunk <- make_chunk(data, chunk_labs)
+
+  params  <- initialise_model(data, clust_num = clust_num,
+                              start = start, init_seed = init_seed)
+
+  obs_num <- nrow(data)
+  var_num <- ncol(params$mu)
+
+  em_out <- mustlink_em(data = data, chunk_labs = chunk_labs,
+                        params = params, clust_num = clust_num,
+                        maxit = maxit, eps = eps, burnin = burnin,
+                        print_freq = print_freq, no_print = no_print)
+
+  chunk_to_clust <- apply(X = em_out$chunk_pp, MARGIN = 1, FUN = which.max)
+  clust_labs     <- chunk_to_clust[chunk_labs]
+
+  res <- list(clust_labs = clust_labs,
+              em_out = em_out
+              )
+
 }
