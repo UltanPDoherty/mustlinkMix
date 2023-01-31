@@ -7,6 +7,7 @@
 #'
 #' @param data Matrix or dataframe.
 #' @param clust_num Number of clusters.
+#' @param labels Set of initial labels.
 #' @param start Initialisation option. One of "central", "k-Means", or "mclust".
 #' @param init_seed Seed.
 #'
@@ -17,10 +18,29 @@
 #'
 #' @examples
 #' initialise_model(iris[, 1:4], 4)
-initialise_model <- function(data, clust_num, start = "central", init_seed = NULL) {
-  p <- ncol(data)
+initialise_model <- function(data, clust_num,
+                             labels = NULL, start = "k-Means", init_seed = NULL) {
+  var_num <- ncol(data)
+  obs_num <- nrow(data)
 
-  sigma     <- array(NA, c(p, p, clust_num))
+  if (!is.null(labels)) {
+    clust_num <- length(unique(labels))
+  }
+
+  init <- list(prop  = vector("numeric", length = clust_num),
+               mu    = matrix(NA, nrow = clust_num, ncol = var_num),
+               sigma = array(NA, c(var_num, var_num, clust_num)))
+
+  if (!is.null(labels)) {
+    names     <- sort(unique(labels))
+    sizes     <- as.numeric(table(labels))
+    init$prop <- sizes / obs_num
+    init$mu   <- rowsum(data, group = labels) / sizes
+    for (k in 1:clust_num) {
+      init$sigma[, , k] <- stats::cov(data[labels == names[k], ])
+    }
+    return(init)
+  }
 
   start_options <- c("central", "k-Means", "mclust")
   stopifnot( "start must be one of \"central\", \"k-Means\", or \"mclust\"." =
@@ -31,30 +51,27 @@ initialise_model <- function(data, clust_num, start = "central", init_seed = NUL
   }
 
   if (start == "central") {
-    prop      <- rep(1 / clust_num, clust_num)
-    mu        <- matrix(rep(colMeans(data), clust_num),
-                        nrow = clust_num, byrow = FALSE)
+    init$prop      <- rep(1 / clust_num, clust_num)
+    init$mu        <- matrix(rep(colMeans(data), clust_num),
+                             nrow = clust_num, byrow = FALSE)
     for (k in 1:clust_num) {
-      sigma[, , k] <- diag(p)
+      init$sigma[, , k] <- diag(var_num)
     }
   } else if (start == "k-Means") {
-    km    <- stats::kmeans(x = data, centers = clust_num)
-    prop  <- km$size / sum(km$size)
-    mu    <- km$centers
+    km <- stats::kmeans(x = data, centers = clust_num)
+    init$prop  <- km$size / sum(km$size)
+    init$mu    <- km$centers
     for (k in 1:clust_num) {
-      sigma[, , k] <- stats::cov(data[km$cluster == k, ])
+      init$sigma[, , k] <- stats::cov(data[km$cluster == k, ])
     }
   } else if (start == "mclust") {
-    mc    <- mclust::Mclust(data, G = clust_num, modelNames = c("VVV"))
-    prop  <- mc$parameters$pro
-    mu    <- t(mc$parameters$mean)
-    sigma <- mc$parameters$variance$sigma
+    mc <- mclust::Mclust(data, G = clust_num, modelNames = c("VVV"))
+    init$prop  <- mc$parameters$pro
+    init$mu    <- t(mc$parameters$mean)
+    init$sigma <- mc$parameters$variance$sigma
   } else {
     stop("start must be one of \"central\", \"k-Means\", or \"mclust\".")
   }
 
-  init <- list(prop = prop,
-               mu = mu,
-               sigma = sigma)
   return(init)
 }
