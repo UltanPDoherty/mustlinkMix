@@ -2,12 +2,9 @@
 
 export(chunklet_cores)
 export(initialise_model)
-export(make_chunk)
 export(mustlink)
 export(mustlink_em)
 export(mustlink_estep)
 export(mustlink_mstep)
-export(mustlink_mstep_mclust)
 export(table_to_label)
-export(unnorm_log_pdf)
 import(mclust)

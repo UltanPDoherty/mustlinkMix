@@ -8,7 +8,7 @@ mustlink(
   data,
   type_marker,
   clust_num,
-  prob,
+  prob = 0.9,
   maxit = 100,
   eps = 1e-10,
   start = "k-Means",
@@ -57,5 +57,5 @@ Only requires flowFrame dataset, cell type - marker table, and number of cluster
 iris_tab   <- rbind(se = c(-1, +1, -1, -1),
                     ve = c(00, -1, +1, +1),
                     vi = c(+1, 00, +1, +1))
-mustlink(iris[, 1:4], iris_tab, 3)
+mustlink(iris[, 1:4], type_marker = iris_tab, clust_num = 3, prob = 0.9)
 }

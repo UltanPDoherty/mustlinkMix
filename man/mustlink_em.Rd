@@ -6,50 +6,41 @@
 \usage{
 mustlink_em(
   data,
-  clust_num,
   chunk_labs,
-  maxit = 100,
-  eps = 1e-10,
-  start = "k-Means",
-  init_seed = NULL,
-  print_freq = 10,
+  params,
+  clust_num,
   burnin = 10,
-  no_print = FALSE
+  maxit = 1000,
+  eps = 1e-10,
+  no_print = FALSE,
+  print_freq = 1
 )
 }
 \arguments{
-\item{data}{Dataset as a data.frame or matrix.}
+\item{data}{Dataset in matrix form.}
 
-\item{clust_num}{Number of components of GMM.}
+\item{chunk_labs}{Output from chunklet_cores.}
 
-\item{chunk_labs}{Vector giving the chunklet label of each observation.}
+\item{params}{Model parameters, for example, output from initialise_model.}
+
+\item{clust_num}{Number of clusters.}
+
+\item{burnin}{Number of iterations before likelihood convergence criterion is checked.}
 
 \item{maxit}{Maximum number of EM iterations.}
 
-\item{eps}{Convergence criterion for relative difference in log-likelihood.}
+\item{eps}{Likelihood convergence criterion threshold.}
 
-\item{start}{Initialisation option.}
+\item{no_print}{If TRUE, no printing takes place.}
 
-\item{init_seed}{Seed.}
-
-\item{print_freq}{Controls how frequently the log-likelihood and time are
-printed in the EM loop.}
-
-\item{burnin}{Controls how many loops are completed before testing for
-likelihood convergence.}
-
-\item{no_print}{If TRUE, no output is printed.}
+\item{print_freq}{Number of iterations between print statements during EM.}
 }
 \value{
-A list consisting of a vector of cluster labels,
-a matrix of chunklet to cluster assignment probabilities,
-a list of model parameters,
-a vector of log-likelihood values,
-and a vector of times.
+List of chunklet posterior probability matrix, model parameters, and
+vector of log-likelihood values for each iteration.
 }
 \description{
-Use the EM algorithm to fit a Gaussian Mixture Model that satisfies
-must-link / positive constraints.
+Must-Link / Positive Constraint EM GMM.
 }
 \examples{
 iris_tab   <- rbind(se = c(-1, +1, -1, -1),
@@ -57,5 +48,7 @@ iris_tab   <- rbind(se = c(-1, +1, -1, -1),
                     vi = c(+1, 00, +1, +1))
 iris_table_labs <- table_to_label(iris[, 1:4], type_marker = iris_tab)$labs
 iris_chunk_labs <- chunklet_cores(iris[, 1:4], table_labs = iris_table_labs)$chunks
-mustlink_em(iris[, 1:4], clust_num = 3, chunk_labs = iris_chunk_labs)
+iris_init <- initialise_model(iris[, 1:4], clust_num = 3, start = "k-Means", init_seed = 123)
+mustlink_em(as.matrix(iris[, 1:4]), clust_num = 3,
+             chunk_labs = iris_chunk_labs, params = iris_init)
 }

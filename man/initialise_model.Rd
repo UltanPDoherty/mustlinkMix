@@ -4,12 +4,20 @@
 \alias{initialise_model}
 \title{Compute initial parameter values of a GMM.}
 \usage{
-initialise_model(data, clust_num, start = "central", init_seed = NULL)
+initialise_model(
+  data,
+  clust_num,
+  labels = NULL,
+  start = "k-Means",
+  init_seed = NULL
+)
 }
 \arguments{
 \item{data}{Matrix or dataframe.}
 
 \item{clust_num}{Number of clusters.}
+
+\item{labels}{Set of initial labels.}
 
 \item{start}{Initialisation option. One of "central", "k-Means", or "mclust".}
 

@@ -15,8 +15,10 @@
 #' @export
 #'
 #' @examples
-#' chunks_of_25 <- c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78)
-#' chunk1  <- make_chunk(iris[, 1:4], chunk_labs = chunks_of_25)
+#' chunk_labs1 <- c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78)
+#' chunk1 <- list(labs = chunk_labs1,
+#'                num = length(unique(chunk_labs1)),
+#'                size = as.numeric(table(chunk_labs1)))
 #' params1 <- initialise_model(iris[, 1:4], clust_num = 3)
 #' e_out1  <- mustlink_estep(as.matrix(iris[, 1:4]),
 #'                           chunk = chunk1, params = params1,
