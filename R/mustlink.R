@@ -79,6 +79,7 @@ mustlink <- function(data, type_marker, clust_num, prob = 0.9,
   rownames(times) <- c("setup", "em", "label")
 
   res <- list(clust_labs = clust_labs,
+              chunk_labs = chunk_labs,
               em = em,
               times = times
               )
