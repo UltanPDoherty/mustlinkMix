@@ -34,43 +34,53 @@ mustlink <- function(data, type_marker, clust_num, prob = 0.9,
                      init_seed = NULL, print_freq = 10,
                      burnin = 10, no_print = FALSE) {
 
-  if (is.null(type_marker)) {
-    chunk_labs <- 1:nrow(data)
-  } else {
-    table_labs <- table_to_label(data = data,
-                                 type_marker = type_marker)$labs
-
-    chunk_labs <- chunklet_cores(data = data,
-                                 table_labs = table_labs,
-                                 prob = prob)$chunk
-  }
-
-  if (!is.matrix(data)) {
-    if (inherits(data, "flowFrame")) {
-      data <- flowCore::exprs(data)
+  setup_time <- system.time({
+    if (is.null(type_marker)) {
+      chunk_labs <- 1:nrow(data)
     } else {
-      data <- as.matrix(data)
+      table_labs <- table_to_label(data = data,
+                                   type_marker = type_marker)$labs
+
+      chunk_labs <- chunklet_cores(data = data,
+                                   table_labs = table_labs,
+                                   prob = prob)$chunk
     }
-  }
 
-  #chunk <- make_chunk(data, chunk_labs)
+    if (!is.matrix(data)) {
+      if (inherits(data, "flowFrame")) {
+        data <- flowCore::exprs(data)
+      } else {
+        data <- as.matrix(data)
+      }
+    }
 
-  params  <- initialise_model(data, clust_num = clust_num,
-                              start = start, init_seed = init_seed)
+    #chunk <- make_chunk(data, chunk_labs)
 
-  obs_num <- nrow(data)
-  var_num <- ncol(params$mu)
+    params  <- initialise_model(data, clust_num = clust_num,
+                                start = start, init_seed = init_seed)
 
-  em_out <- mustlink_em(data = data, chunk_labs = chunk_labs,
-                        params = params, clust_num = clust_num,
-                        maxit = maxit, eps = eps, burnin = burnin,
-                        print_freq = print_freq, no_print = no_print)
+    obs_num <- nrow(data)
+    var_num <- ncol(params$mu)
+  })
 
-  chunk_to_clust <- apply(X = em_out$chunk_pp, MARGIN = 1, FUN = which.max)
-  clust_labs     <- chunk_to_clust[chunk_labs]
+  em_time <- system.time({
+    em <- mustlink_em(data = data, chunk_labs = chunk_labs,
+                      params = params, clust_num = clust_num,
+                      maxit = maxit, eps = eps, burnin = burnin,
+                      print_freq = print_freq, no_print = no_print)
+  })
+
+  label_time <- system.time({
+    chunk_to_clust <- apply(X = em$chunk_pp, MARGIN = 1, FUN = which.max)
+    clust_labs     <- chunk_to_clust[chunk_labs]
+  })
+
+  times <- rbind(setup_time, em_time, label_time)
+  rownames(times) <- c("setup", "em", "label")
 
   res <- list(clust_labs = clust_labs,
-              em_out = em_out
+              em = em,
+              times = times
               )
 
 }
