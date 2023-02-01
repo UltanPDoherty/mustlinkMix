@@ -49,12 +49,12 @@ chunklet_cores <- function(data, table_labs, prob = 0.9) {
   cores_overlap <- cores_count > 1
   cores_single  <- cores_count == 1
 
-  find_overlap <- apply(X = cores[cores_overlap, ], MARGIN = 1,
-                        FUN = function(x) {colnames(table_labs)[x]})
-  overlap_names <- unique(apply(X = find_overlap, MARGIN = 2,
-                         FUN = function(x) {paste(x, collapse = "-")}))
-
   if (any(cores_overlap)) {
+    find_overlap <- apply(X = cores[cores_overlap, ], MARGIN = 1,
+                          FUN = function(x) {colnames(table_labs)[x]})
+    overlap_names <- unique(apply(X = find_overlap, MARGIN = 2,
+                                  FUN = function(x) {paste(x, collapse = "-")}))
+
     message(paste0("Initial cores overlapped for the following pair(s): ",
                    paste(overlap_names, sep = ", "), ".\n",
                    "Points in intersection were excluded from all cores."))
