@@ -20,13 +20,13 @@ label_zones <- function(data, type_marker) {
 
   obs_num  <- nrow(data)
   var_num  <- ncol(data)
-  pop_num  <- nrow(type_marker)
-  pop_names <- rownames(type_marker)
+  zone_num  <- nrow(type_marker)
+  zone_names <- rownames(type_marker)
 
   # check if the regions overlap
-  if (is.null(pop_names)) { pop_names <- 1:pop_num}
-  pairs <- utils::combn(1:pop_num, 2)
-  pair_names <- matrix(pop_names[pairs], nrow = 2)
+  if (is.null(zone_names)) { zone_names <- 1:zone_num}
+  pairs <- utils::combn(1:zone_num, 2)
+  pair_names <- matrix(zone_names[pairs], nrow = 2)
 
   rowdiffs <- abs(type_marker[pairs[1, ], ] - type_marker[pairs[2, ], ])
   rownames(rowdiffs) <- apply(X = pair_names, MARGIN = 2,
@@ -55,17 +55,17 @@ label_zones <- function(data, type_marker) {
                    FUN = function(vec) {vec > thresholds}))
   obs_tab_pm <- 2*obs_tab_01 - 1
 
-  pops_labs <- matrix(NA, nrow = obs_num, ncol = pop_num,
-                      dimnames = list(NULL, pop_names))
+  zone_labs <- matrix(NA, nrow = obs_num, ncol = zone_num,
+                      dimnames = list(NULL, zone_names))
   nonneutrals <- type_marker != 0
-  for(j in 1:pop_num){
-    pops_labs[, j] <- vapply(X = 1:obs_num,
+  for(j in 1:zone_num){
+    zone_labs[, j] <- vapply(X = 1:obs_num,
                              FUN = function(i) {
                                all(obs_tab_pm[i, nonneutrals[j, ]] == type_marker[j, nonneutrals[j, ]])
                              }, FUN.VALUE = logical(1))
   }
 
-  return(list(labs = pops_labs,
+  return(list(labs = zone_labs,
               splits = thresholds
               )
          )
