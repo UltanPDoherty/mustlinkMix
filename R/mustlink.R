@@ -41,9 +41,11 @@ mustlink <- function(data, type_marker, clust_num, prob = 0.9,
       zone_labs <- label_zones(data = data,
                                    type_marker = type_marker)$labs
 
-                                   prob = prob)$chunk
       chunklets <- label_chunklets(data = data,
                                    zone_labs = zone_labs,
+                                   prob = prob)
+      chunk_labs <- chunklets$chunk
+      core_labs  <- chunklets$core
     }
 
     if (!is.matrix(data)) {

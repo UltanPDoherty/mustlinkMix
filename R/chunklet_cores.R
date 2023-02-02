@@ -60,7 +60,7 @@ label_chunklets <- function(data, zone_labs, prob = 0.9) {
                    "Points in intersection were excluded from all cores."))
     }
 
-  core_labs <- core_chunks <- vector("integer", length = obs_num)
+  core_labs <- chunk_labs <- vector("integer", length = obs_num)
 
   core_labs[!cores_single]  <- 0L # overlap removed
 
@@ -71,9 +71,9 @@ label_chunklets <- function(data, zone_labs, prob = 0.9) {
   #   core_labs[core_labs == l] <- l * zone_labs[core_labs == l, l]
   # }
 
-  core_chunks[cores_single]  <- core_labs[cores_single]
-  core_chunks[!cores_single] <- chunk_num + 1:sum(!cores_single)
+  chunk_labs[cores_single]  <- core_labs[cores_single]
+  chunk_labs[!cores_single] <- chunk_num + 1:sum(!cores_single)
 
-  return(list(labs = core_labs,
-              chunks = core_chunks))
+  return(list(core = core_labs,
+              chunk = chunk_labs))
 }
