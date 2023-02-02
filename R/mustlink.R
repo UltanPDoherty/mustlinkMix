@@ -38,12 +38,12 @@ mustlink <- function(data, type_marker, clust_num, prob = 0.9,
     if (is.null(type_marker)) {
       chunk_labs <- 1:nrow(data)
     } else {
-      table_labs <- table_to_label(data = data,
+      zone_labs <- label_zones(data = data,
                                    type_marker = type_marker)$labs
 
       chunk_labs <- chunklet_cores(data = data,
-                                   table_labs = table_labs,
                                    prob = prob)$chunk
+                                   zone_labs = zone_labs,
     }
 
     if (!is.matrix(data)) {

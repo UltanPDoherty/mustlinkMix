@@ -20,6 +20,7 @@
 #'                     vi = c(+1, 00, +1, +1))
 #' iris_table_labs <- table_to_label(iris[, 1:4], type_marker = iris_tab)$labs
 #' iris_chunk_labs <- chunklet_cores(iris[, 1:4], table_labs = iris_table_labs)$chunks
+#' iris_zone_labs <- label_zones(iris[, 1:4], type_marker = iris_tab)$labs
 #' iris_init <- initialise_model(iris[, 1:4], clust_num = 3, start = "k-Means", init_seed = 123)
 #' mustlink_em(as.matrix(iris[, 1:4]), clust_num = 3,
 #'              chunk_labs = iris_chunk_labs, params = iris_init)

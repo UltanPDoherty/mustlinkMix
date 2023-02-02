@@ -1,7 +1,7 @@
 #' Convert +/- Table Labels into Chunklets
 #'
 #' @param data Dataset in matrix or data.frame form.
-#' @param table_labs Output from table_to_labs.
+#' @param zone_labs Output from table_to_labs.
 #' @param prob Probability cut-off for cores.
 #'
 #' @return A list of two label vectors, labs with all non-core points labelled 0,
@@ -16,7 +16,7 @@
 #' iris_chunk_labs <- chunklet_cores(iris[, 1:4], table_labs = iris_table_labs)
 chunklet_cores <- function(data, table_labs, prob = 0.9) {
 
-  chunk_num <- ncol(table_labs)
+  chunk_num <- ncol(zone_labs)
   obs_num   <- nrow(data)
   var_num   <- ncol(data)
 
@@ -29,7 +29,7 @@ chunklet_cores <- function(data, table_labs, prob = 0.9) {
   # only points in region l can be assigned to chunklet l
   # the highest Gaussian density points in region l are selected
   for(l in 1:chunk_num) {
-    regions[[l]]   <- data[table_labs[, l], ]
+    regions[[l]]   <- data[zone_labs[, l], ]
 
     means[l, ]     <- colMeans(regions[[l]])
     sigmas[, , l]  <- stats::cov(regions[[l]])
@@ -39,8 +39,8 @@ chunklet_cores <- function(data, table_labs, prob = 0.9) {
                                        sigma = sigmas[, , l])
     quants[l] <- stats::quantile(densities[[l]], prob)
 
-    cores[table_labs[, l], l]  <- densities[[l]] > quants[l]
-    cores[!table_labs[, l], l] <- FALSE
+    cores[zone_labs[, l], l]  <- densities[[l]] > quants[l]
+    cores[!zone_labs[, l], l] <- FALSE
   }
 
   # regions may not be disjoint, so the cores could overlap, prevent this
@@ -51,7 +51,7 @@ chunklet_cores <- function(data, table_labs, prob = 0.9) {
 
   if (any(cores_overlap)) {
     find_overlap <- apply(X = cores[cores_overlap, ], MARGIN = 1,
-                          FUN = function(x) {colnames(table_labs)[x]})
+                          FUN = function(x) {colnames(zone_labs)[x]})
     overlap_names <- unique(apply(X = find_overlap, MARGIN = 2,
                                   FUN = function(x) {paste(x, collapse = "-")}))
 
@@ -68,7 +68,7 @@ chunklet_cores <- function(data, table_labs, prob = 0.9) {
                                    MARGIN = 1, FUN = which.max)
 
   # for(l in 1:chunk_num) {
-  #   core_labs[core_labs == l] <- l * table_labs[core_labs == l, l]
+  #   core_labs[core_labs == l] <- l * zone_labs[core_labs == l, l]
   # }
 
   core_chunks[cores_single]  <- core_labs[cores_single]
