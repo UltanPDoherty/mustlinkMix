@@ -41,7 +41,7 @@ read_mustlink <- function(file_prefix,
   }
 
   if (em_chunk_pp) {
-    out$em$chunk_pp <- utils::read.table(file = paste0(file_prefix, "_pp.txt"))
+    out$em$chunk_pp <- utils::read.table(file = paste0(file_prefix, "_chunk_pp.txt"))
   }
 
   if (em_params) {
