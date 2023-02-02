@@ -12,9 +12,9 @@
 #' iris_tab   <- rbind(se = c(-1, +1, -1, -1),
 #'                     ve = c(00, -1, +1, +1),
 #'                     vi = c(+1, 00, +1, +1))
-#' iris_table_labs <- table_to_label(iris[, 1:4], type_marker = iris_tab)$labs
 #' iris_chunk_labs <- chunklet_cores(iris[, 1:4], table_labs = iris_table_labs)
 chunklet_cores <- function(data, table_labs, prob = 0.9) {
+#' iris_zone_labs <- label_zones(iris[, 1:4], type_marker = iris_tab)$labs
 
   chunk_num <- ncol(zone_labs)
   obs_num   <- nrow(data)
