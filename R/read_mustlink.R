@@ -20,11 +20,11 @@ read_mustlink <- function(file_prefix,
   out <- list()
 
   if (clust_labs) {
-    out$clust_labs <- utils::read.table(file = paste0(file_prefix, "_clust_labs.txt"))
+    out$clust_labs <- utils::read.table(file = paste0(file_prefix, "_clust_labs.txt"))$V1
   }
 
   if (chunk_labs) {
-    out$chunk_labs <- utils::read.table(file = paste0(file_prefix, "_chunk_labs.txt"))
+    out$chunk_labs <- utils::read.table(file = paste0(file_prefix, "_chunk_labs.txt"))$V1
   }
 
   if (times) {
@@ -37,7 +37,7 @@ read_mustlink <- function(file_prefix,
   }
 
   if (em_ll) {
-    out$em$ll <- utils::read.table(file =paste0(file_prefix, "_loglike.txt"))
+    out$em$ll <- utils::read.table(file =paste0(file_prefix, "_loglike.txt"))$V1
   }
 
   if (em_chunk_pp) {
