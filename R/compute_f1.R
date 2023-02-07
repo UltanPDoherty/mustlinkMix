@@ -2,12 +2,39 @@
 #'
 #' @param clust_labs Vector of cluster labels to evaluate.
 #' @param true_labs Vector of true / reference labels to compare to.
+#' @param exclude_from_true Vector of true labels to be excluded.
+#'                           Ignored if NULL.
+#' @param prec_vec Logical: Should vectors of precision and recall values,
+#'                 with assignment based on f1, be returned?
 #'
 #' @return List of mean f1, mean precision, mean recall, and f1 matrix.
 #' @export
 #'
 #' @examples
-compute_f1 <- function(clust_labs, true_labs){
+#' iris_tab   <- rbind(se = c(-1, +1, -1, -1),
+#'                     ve = c(00, -1, +1, +1),
+#'                     vi = c(+1, 00, +1, +1))
+#' iris_out <- mustlink(iris[, 1:4], type_marker = iris_tab,
+#'                      clust_num = 3, prob = 0.9)
+#' compute_f1(clust_labs = iris_out$clust_labs,
+#'            true_labs = iris$Species,
+#'            excluded_from_true = "setosa")
+
+compute_f1 <- function(clust_labs, true_labs,
+                       exclude_from_true = NULL,
+                       prec_rec = FALSE){
+
+  if (!is.null(exclude_from_true)) {
+    excluded   <- true_labs %in% exclude_from_true
+    true_labs  <- true_labs[!excluded]
+    clust_labs <- clust_labs[!excluded]
+    if (is.factor(true_labs)) {
+      true_labs <- droplevels(true_labs)
+    }
+    if (is.factor(clust_labs)) {
+      clust_labs <- droplevels(clust_labs)
+    }
+  }
 
   true_num  <- length(unique(true_labs))
   clust_num <- length(unique(clust_labs))
@@ -50,10 +77,13 @@ compute_f1 <- function(clust_labs, true_labs){
   matched_vals <- c(sum(f1_vec), sum(pr_vec), sum(re_vec)) / sum(!is.na(true_to_clust))
   names(matched_vals) <- c("f1", "pr", "re")
 
-  return(list(mean_f1 = mean(f1_vec),
-              mean_pr = mean(pr_vec),
-              mean_re = mean(re_vec),
-              f1_mat = f1_mat2
-              )
-         )
+  out <- list(f1_mat = f1_mat2,
+              f1_vec = f1_vec)
+
+  if (prec_rec) {
+    out$pr_vec <- pr_vec
+    out$re_vec <- re_vec
+  }
+
+  return(out)
 }

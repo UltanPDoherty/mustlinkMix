@@ -4,12 +4,15 @@
 \alias{compute_f1}
 \title{Compute f1 given two vectors of labels}
 \usage{
-compute_f1(clust_labs, true_labs)
+compute_f1(clust_labs, true_labs, excluded_true_labs = FALSE, prec_rec = FALSE)
 }
 \arguments{
 \item{clust_labs}{Vector of cluster labels to evaluate.}
 
 \item{true_labs}{Vector of true / reference labels to compare to.}
+
+\item{prec_vec}{Logical: Should vectors of precision and recall values,
+with assignment based on f1, be returned?}
 }
 \value{
 List of mean f1, mean precision, mean recall, and f1 matrix.
