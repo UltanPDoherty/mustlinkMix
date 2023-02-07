@@ -86,4 +86,5 @@ mustlink <- function(data, type_marker, clust_num, prob = 0.9,
               times = times
               )
 
+  return(res)
 }

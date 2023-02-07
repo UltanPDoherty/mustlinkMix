@@ -10,8 +10,6 @@
 #'
 #' @return Same format as mustlink function.
 #' @export
-#'
-#'
 
 read_mustlink <- function(file_prefix,
                         clust_labs = TRUE, chunk_labs = TRUE, times = TRUE,
