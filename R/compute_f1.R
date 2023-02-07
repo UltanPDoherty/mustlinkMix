@@ -14,8 +14,8 @@ compute_f1 <- function(clust_labs, true_labs){
 
   tab <- table(true_labs, clust_labs)
 
-  re_mat <- sweep(tab, STAT = rowSums(tab), FUN = "/", MARGIN = 1)
-  pr_mat <- sweep(tab, STAT = colSums(tab), FUN = "/", MARGIN = 2)
+  re_mat <- sweep(tab, STATS = rowSums(tab), FUN = "/", MARGIN = 1)
+  pr_mat <- sweep(tab, STATS = colSums(tab), FUN = "/", MARGIN = 2)
 
   f1_mat <- 2 * re_mat * pr_mat / (re_mat + pr_mat)
   f1_mat[f1_mat == "NaN"] <- 0
