@@ -18,7 +18,7 @@
 #'                      clust_num = 3, prob = 0.9)
 #' compute_f1(clust_labs = iris_out$clust_labs,
 #'            true_labs = iris$Species,
-#'            excluded_from_true = "setosa")
+#'            exclude_from_true = "setosa")
 
 compute_f1 <- function(clust_labs, true_labs,
                        exclude_from_true = NULL,

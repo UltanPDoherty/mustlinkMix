@@ -34,11 +34,11 @@ label_zones <- function(data, type_marker) {
 
   maxdiffs <- apply(X = rowdiffs, MARGIN = 1, FUN = max)
   if (any(maxdiffs == 0)){
-    stop(paste0("The following pair(s) of population regions are identical: ",
+    stop(paste0("The following pair(s) of population zones are identical: ",
                   paste(names(maxdiffs)[which(maxdiffs == 0)], sep = ", "), ".\n"))
   }
   if (any(maxdiffs == 1)){
-    message(paste0("The following pair(s) of population regions overlap: ",
+    message(paste0("The following pair(s) of population zones overlap: ",
                   paste(names(maxdiffs)[which(maxdiffs == 1)], sep = ", "), ".\n"))
   }
 
