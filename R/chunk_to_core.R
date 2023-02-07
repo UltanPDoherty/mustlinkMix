@@ -6,7 +6,7 @@
 #' @export
 chunk_to_core <- function(chunk_labs) {
 
-  obs_num <- nrow(chunk_labs)
+  obs_num <- length(chunk_labs)
 
   chunk_tab <- table(chunk_labs)
   core_num <- sum( chunk_tab > 1)
