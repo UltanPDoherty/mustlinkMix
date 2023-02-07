@@ -20,4 +20,5 @@ Imports:
     flowDensity,
     mclust,
     mvtnorm,
-    stats
+    stats,
+    clue
