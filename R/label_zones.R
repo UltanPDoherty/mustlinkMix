@@ -42,11 +42,12 @@ label_zones <- function(data, type_marker) {
                   paste(names(maxdiffs)[which(maxdiffs == 1)], sep = ", "), ".\n"))
   }
 
-  to_be_split <- vapply(X = 1:var_num, FUN.VALUE = logical(1),
-                        FUN = function(p) {
-                          any(type_marker[, p] != 0)
-                          }
-                        )
+  to_be_split <- which(vapply(X = 1:var_num, FUN.VALUE = logical(1),
+                              FUN = function(p) {
+                                any(type_marker[, p] != 0)
+                                }
+                              )
+                       )
 
   # create a vector of +/- thresholds to check every row of the data against
   thresholds <- rep(NA, var_num)
