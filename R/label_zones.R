@@ -42,13 +42,19 @@ label_zones <- function(data, type_marker) {
                   paste(names(maxdiffs)[which(maxdiffs == 1)], sep = ", "), ".\n"))
   }
 
+  to_be_split <- vapply(X = 1:var_num, FUN.VALUE = logical(1),
+                        FUN = function(p) {
+                          any(type_marker[, p] != 0)
+                          }
+                        )
 
   # create a vector of +/- thresholds to check every row of the data against
-  thresholds <- vapply(1:var_num, FUN.VALUE = double(1),
-                       FUN = function(p) {
-                         flowDensity::deGate(data[, p])
-                       }
-  )
+  thresholds <- rep(NA, var_num)
+  thresholds[to_be_split] <- vapply(to_be_split, FUN.VALUE = double(1),
+                                    FUN = function(p) {
+                                      flowDensity::deGate(data[, p])
+                                      }
+                                    )
 
   # create a +1/-1 matrix the same size as the data flowFrame
   obs_tab_01 <- t(apply(X = data, MARGIN = 1,
