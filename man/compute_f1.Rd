@@ -4,14 +4,17 @@
 \alias{compute_f1}
 \title{Compute f1 given two vectors of labels}
 \usage{
-compute_f1(clust_labs, true_labs, excluded_true_labs = FALSE, prec_rec = FALSE)
+compute_f1(clust_labs, true_labs, exclude_from_true = NULL, prec_rec = FALSE)
 }
 \arguments{
 \item{clust_labs}{Vector of cluster labels to evaluate.}
 
 \item{true_labs}{Vector of true / reference labels to compare to.}
 
-\item{prec_vec}{Logical: Should vectors of precision and recall values,
+\item{exclude_from_true}{Vector of true labels to be excluded.
+Ignored if NULL.}
+
+\item{prec_rec}{Logical: Should vectors of precision and recall values,
 with assignment based on f1, be returned?}
 }
 \value{
@@ -19,4 +22,14 @@ List of mean f1, mean precision, mean recall, and f1 matrix.
 }
 \description{
 Compute f1 given two vectors of labels
+}
+\examples{
+iris_tab   <- rbind(se = c(-1, +1, -1, -1),
+                    ve = c(00, -1, +1, +1),
+                    vi = c(+1, 00, +1, +1))
+iris_out <- mustlink(iris[, 1:4], type_marker = iris_tab,
+                     clust_num = 3, prob = 0.9)
+compute_f1(clust_labs = iris_out$clust_labs,
+           true_labs = iris$Species,
+           exclude_from_true = "setosa")
 }

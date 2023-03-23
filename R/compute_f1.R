@@ -4,7 +4,7 @@
 #' @param true_labs Vector of true / reference labels to compare to.
 #' @param exclude_from_true Vector of true labels to be excluded.
 #'                           Ignored if NULL.
-#' @param prec_vec Logical: Should vectors of precision and recall values,
+#' @param prec_rec Logical: Should vectors of precision and recall values,
 #'                 with assignment based on f1, be returned?
 #'
 #' @return List of mean f1, mean precision, mean recall, and f1 matrix.
