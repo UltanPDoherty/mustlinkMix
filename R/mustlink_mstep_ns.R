@@ -20,14 +20,14 @@
 #'                num = length(unique(chunk_labs1)),
 #'                size = as.numeric(table(chunk_labs1)))
 #' params1 <- initialise_model(iris[, 1:4], clust_num = 3)
-#' e_out1  <- mustlink_estep(as.matrix(iris[, 1:4]),
-#'                           chunk = chunk1, params = params1,
-#'                           obs_num = 150, var_num = 4, clust_num = 3)
+#' e_out1  <- mustlink_estep_ns(as.matrix(iris[, 1:4]),
+#'                              chunk = chunk1, params = params1,
+#'                              obs_num = 150, var_num = 4, clust_num = 3)
 #' obs_pp1 <- e_out1$obs_pp
 #' chunk_pp1 <- e_out1$chunk_pp
-#' mustlink_mstep(as.matrix(iris[, 1:4]),
-#'                obs_pp = obs_pp1, chunk_pp = chunk_pp1)
-mustlink_mstep <- function(data, obs_pp, chunk_pp,
+#' mustlink_mstep_ns(as.matrix(iris[, 1:4]),
+#'                   obs_pp = obs_pp1, chunk_pp = chunk_pp1)
+mustlink_mstep_ns <- function(data, obs_pp, chunk_pp,
                            chunk_num = nrow(chunk_pp),
                            clust_num = ncol(chunk_pp),
                            obs_num = nrow(data),

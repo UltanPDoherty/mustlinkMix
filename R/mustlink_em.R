@@ -85,10 +85,11 @@ mustlink_em <- function(data, chunk_labs, params, clust_num,
       break
     }
 
-    params <- mustlink_mstep(data,
-                             obs_pp = e_out$obs_pp, chunk_pp = e_out$chunk_pp,
-                             chunk_num = chunk$num, clust_num = clust_num,
-                             obs_num = obs_num, var_num = var_num)
+    params <- mustlink_mstep_ns(data,
+                                obs_pp = e_out$obs_pp,
+                                chunk_pp = e_out$chunk_pp,
+                                chunk_num = chunk$num, clust_num = clust_num,
+                                obs_num = obs_num, var_num = var_num)
   }
 
   return(list(chunk_pp = e_out$chunk_pp,
