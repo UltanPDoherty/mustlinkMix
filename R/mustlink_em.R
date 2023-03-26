@@ -41,9 +41,9 @@ mustlink_em <- function(data, chunk_labs, params, clust_num,
   repeat {
     it <- it + 1
 
-    e_out <- mustlink_estep(data, chunk = chunk, params = params,
-                            obs_num = obs_num, var_num = var_num,
-                            clust_num = clust_num)
+    e_out <- mustlink_estep_ns(data, chunk = chunk, params = params,
+                               obs_num = obs_num, var_num = var_num,
+                               clust_num = clust_num)
 
     ll <- append(ll, e_out$ll)
 

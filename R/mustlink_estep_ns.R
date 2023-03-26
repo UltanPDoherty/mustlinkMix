@@ -21,9 +21,9 @@
 #'                num = length(unique(chunk_labs1)),
 #'                size = as.numeric(table(chunk_labs1)))
 #' params1 <- initialise_model(iris[, 1:4], clust_num = 3)
-#' mustlink_estep(as.matrix(iris[, 1:4]), chunk = chunk1, params = params1,
-#'              obs_num = 150, var_num = 4, clust_num = 3)
-mustlink_estep <- function(data, chunk, params,
+#' mustlink_estep_ns(as.matrix(iris[, 1:4]), chunk = chunk1, params = params1,
+#'                   obs_num = 150, var_num = 4, clust_num = 3)
+mustlink_estep_ns <- function(data, chunk, params,
                            obs_num = nrow(data), var_num = ncol(params$mu),
                            clust_num = nrow(params$mu)) {
 
