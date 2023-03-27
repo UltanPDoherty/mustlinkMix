@@ -57,9 +57,9 @@ mustlink_estep_vm <- function(data, chunk, params,
 
     # Add the log mixing proportions and then un-log this sum with exp.
     # Subtract lpdf_chunk row maxes to prevent exp mapping large values to Inf.
-    log_maxes[l]      <- max(lpdf_chunk[l, ])
-    chunk_unnorm[l, ] <- (exp(lpdf_chunk[l, ] - log_maxes[l]
-                              + chunk$size[l]*log(params$prop)))
+    log_maxes[l]      <- max(lpdf_chunk[l, ] + chunk$size[l]*log(params$prop))
+    chunk_unnorm[l, ] <- exp(lpdf_chunk[l, ] + chunk$size[l]*log(params$prop)
+                             - log_maxes[l])
 
     # Normalise rows of chunk_unnorm to obtain chunk_pp.
     chunk_unnorm_sums[l] <- sum(chunk_unnorm[l, ])
