@@ -15,6 +15,8 @@
 #' @param burnin Controls how many loops are completed before testing for
 #' likelihood convergence.
 #' @param no_print If TRUE, no output is printed.
+#' @param model Model to be used. Either "vm" for Melnykov et al. or "ns" for
+#' Shental et al.
 #'
 #' @return A list consisting of a vector of cluster labels,
 #'         a matrix of chunklet to cluster assignment probabilities,
@@ -32,7 +34,8 @@
 mustlink <- function(data, type_marker, clust_num, prob = 0.9,
                      maxit = 100, eps = 1e-10, start = "k-Means",
                      init_seed = NULL, print_freq = 10,
-                     burnin = 10, no_print = FALSE) {
+                     burnin = 10, no_print = FALSE,
+                     model = "vm") {
 
   setup_time <- system.time({
     if (is.null(type_marker)) {

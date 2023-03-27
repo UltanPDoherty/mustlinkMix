@@ -9,6 +9,8 @@
 #' @param print_freq Number of iterations between print statements during EM.
 #' @param maxit Maximum number of EM iterations.
 #' @param eps Likelihood convergence criterion threshold.
+#' @param model Model to be used. Either "vm" for Melnykov et al. or "ns" for
+#' Shental et al.
 #'
 #' @return List of chunklet posterior probability matrix, model parameters, and
 #' vector of log-likelihood values for each iteration.
@@ -25,8 +27,9 @@
 #'              chunk_labs = iris_chunk_labs, params = iris_init)
 
 mustlink_em <- function(data, chunk_labs, params, clust_num,
-                         burnin = 10, maxit = 1000, eps = 1e-10,
-                         no_print = FALSE, print_freq = 1) {
+                        burnin = 10, maxit = 1000, eps = 1e-10,
+                        no_print = FALSE, print_freq = 1,
+                        model = "vm") {
   it <- 0
   ll <- c()
   ll_crit <- NA
@@ -41,12 +44,15 @@ mustlink_em <- function(data, chunk_labs, params, clust_num,
   repeat {
     it <- it + 1
 
-    # e_out <- mustlink_estep_ns(data, chunk = chunk, params = params,
-    #                            obs_num = obs_num, var_num = var_num,
-    #                            clust_num = clust_num)
-    e_out <- mustlink_estep_vm(data, chunk = chunk, params = params,
-                               obs_num = obs_num, var_num = var_num,
-                               clust_num = clust_num)
+    if (model = "ns") {
+      e_out <- mustlink_estep_ns(data, chunk = chunk, params = params,
+                                 obs_num = obs_num, var_num = var_num,
+                                 clust_num = clust_num)
+    } else if (model = "vm") {
+      e_out <- mustlink_estep_vm(data, chunk = chunk, params = params,
+                                 obs_num = obs_num, var_num = var_num,
+                                 clust_num = clust_num)
+    }
 
     ll <- append(ll, e_out$ll)
 
@@ -88,16 +94,19 @@ mustlink_em <- function(data, chunk_labs, params, clust_num,
       break
     }
 
-    # params <- mustlink_mstep_ns(data,
-    #                             obs_pp = e_out$obs_pp,
-    #                             chunk_pp = e_out$chunk_pp,
-    #                             chunk_num = chunk$num, clust_num = clust_num,
-    #                             obs_num = obs_num, var_num = var_num)
-    params <- mustlink_mstep_vm(data,
-                                obs_pp = e_out$obs_pp,
-                                chunk_pp = e_out$chunk_pp,
-                                chunk_num = chunk$num, clust_num = clust_num,
-                                obs_num = obs_num, var_num = var_num)
+    if(model = "ns") {
+      params <- mustlink_mstep_ns(data,
+                                  obs_pp = e_out$obs_pp,
+                                  chunk_pp = e_out$chunk_pp,
+                                  chunk_num = chunk$num, clust_num = clust_num,
+                                  obs_num = obs_num, var_num = var_num)
+    } else if (model = "vm") {
+      params <- mustlink_mstep_vm(data,
+                                  obs_pp = e_out$obs_pp,
+                                  chunk_pp = e_out$chunk_pp,
+                                  chunk_num = chunk$num, clust_num = clust_num,
+                                  obs_num = obs_num, var_num = var_num)
+    }
   }
 
   return(list(chunk_pp = e_out$chunk_pp,
