@@ -13,7 +13,8 @@ mustlink_em(
   maxit = 1000,
   eps = 1e-10,
   no_print = FALSE,
-  print_freq = 1
+  print_freq = 1,
+  model = "vm"
 )
 }
 \arguments{
@@ -34,6 +35,9 @@ mustlink_em(
 \item{no_print}{If TRUE, no printing takes place.}
 
 \item{print_freq}{Number of iterations between print statements during EM.}
+
+\item{model}{Model to be used. Either "vm" for Melnykov et al. or "ns" for
+Shental et al.}
 }
 \value{
 List of chunklet posterior probability matrix, model parameters, and

@@ -72,7 +72,8 @@ mustlink <- function(data, type_marker, clust_num, prob = 0.9,
     em <- mustlink_em(data = data, chunk_labs = chunk_labs,
                       params = params, clust_num = clust_num,
                       maxit = maxit, eps = eps, burnin = burnin,
-                      print_freq = print_freq, no_print = no_print)
+                      print_freq = print_freq, no_print = no_print,
+                      model = model)
   })
 
   label_time <- system.time({

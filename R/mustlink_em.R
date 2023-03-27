@@ -44,11 +44,11 @@ mustlink_em <- function(data, chunk_labs, params, clust_num,
   repeat {
     it <- it + 1
 
-    if (model = "ns") {
+    if (model == "ns") {
       e_out <- mustlink_estep_ns(data, chunk = chunk, params = params,
                                  obs_num = obs_num, var_num = var_num,
                                  clust_num = clust_num)
-    } else if (model = "vm") {
+    } else if (model == "vm") {
       e_out <- mustlink_estep_vm(data, chunk = chunk, params = params,
                                  obs_num = obs_num, var_num = var_num,
                                  clust_num = clust_num)
@@ -94,13 +94,13 @@ mustlink_em <- function(data, chunk_labs, params, clust_num,
       break
     }
 
-    if(model = "ns") {
+    if(model == "ns") {
       params <- mustlink_mstep_ns(data,
                                   obs_pp = e_out$obs_pp,
                                   chunk_pp = e_out$chunk_pp,
                                   chunk_num = chunk$num, clust_num = clust_num,
                                   obs_num = obs_num, var_num = var_num)
-    } else if (model = "vm") {
+    } else if (model == "vm") {
       params <- mustlink_mstep_vm(data,
                                   obs_pp = e_out$obs_pp,
                                   chunk_pp = e_out$chunk_pp,

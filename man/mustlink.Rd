@@ -15,7 +15,8 @@ mustlink(
   init_seed = NULL,
   print_freq = 10,
   burnin = 10,
-  no_print = FALSE
+  no_print = FALSE,
+  model = "vm"
 )
 }
 \arguments{
@@ -42,6 +43,9 @@ printed in the EM loop.}
 likelihood convergence.}
 
 \item{no_print}{If TRUE, no output is printed.}
+
+\item{model}{Model to be used. Either "vm" for Melnykov et al. or "ns" for
+Shental et al.}
 }
 \value{
 A list consisting of a vector of cluster labels,
