@@ -68,11 +68,19 @@ mustlink <- function(data, type_marker, clust_num, zone_percent,
   })
 
   em_time <- system.time({
-    em <- mustlink_em(data = data, chunk_labs = chunk_labs,
-                      params = params, clust_num = clust_num,
-                      maxit = maxit, eps = eps, burnin = burnin,
-                      print_freq = print_freq, no_print = no_print,
-                      model = model)
+    if (model == "vm") {
+      em <- mustlink_em_vm(data = data, chunk_labs = chunk_labs,
+                           params = params, clust_num = clust_num,
+                           maxit = maxit, eps = eps, burnin = burnin,
+                           print_freq = print_freq, no_print = no_print)
+    } else if (model == "ns") {
+      em <- mustlink_em_ns(data = data, chunk_labs = chunk_labs,
+                           params = params, clust_num = clust_num,
+                           maxit = maxit, eps = eps, burnin = burnin,
+                           print_freq = print_freq, no_print = no_print)
+    } else {
+      stop("Model must be either 'ns' or 'vm'.")
+    }
   })
 
   label_time <- system.time({
