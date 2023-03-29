@@ -28,7 +28,7 @@ iris_tab   <- rbind(se = c(-1, +1, -1, -1),
                     ve = c(00, -1, +1, +1),
                     vi = c(+1, 00, +1, +1))
 iris_out <- mustlink(iris[, 1:4], type_marker = iris_tab,
-                     clust_num = 3, prob = 0.9)
+                     clust_num = 3, zone_percent = 90)
 compute_f1(clust_labs = iris_out$clust_labs,
            true_labs = iris$Species,
            exclude_from_true = "setosa")

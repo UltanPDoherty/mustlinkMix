@@ -4,15 +4,16 @@
 \alias{label_chunklets}
 \title{Convert +/- Table Labels into Chunklets}
 \usage{
-label_chunklets(data, zone_labs, prob = 0.9)
+label_chunklets(data, zone_labs, zone_percent)
 }
 \arguments{
 \item{data}{Dataset in matrix or data.frame form.}
 
 \item{zone_labs}{Output from table_to_labs.}
 
-\item{prob}{Probability cut-off for cores, either one value for all chunklets
-or one value per chunklet.}
+\item{zone_percent}{Percentage of events in zone to be included in each
+chunklet, either one value for all chunklets or one value
+per chunklet.}
 }
 \value{
 A list of two label vectors, labs with all non-core points labelled 0,
@@ -26,5 +27,6 @@ iris_tab   <- rbind(se = c(-1, +1, -1, -1),
                     ve = c(00, -1, +1, +1),
                     vi = c(+1, 00, +1, +1))
 iris_zone_labs <- label_zones(iris[, 1:4], type_marker = iris_tab)$labs
-iris_chunk_labs <- label_chunklets(iris[, 1:4], zone_labs = iris_zone_labs)
+iris_chunk_labs <- label_chunklets(iris[, 1:4], zone_labs = iris_zone_labs,
+                                   zone_percent = 90)
 }

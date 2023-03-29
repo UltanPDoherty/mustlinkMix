@@ -2,8 +2,9 @@
 #'
 #' @param data Dataset in matrix or data.frame form.
 #' @param zone_labs Output from table_to_labs.
-#' @param prob Probability cut-off for cores, either one value for all chunklets
-#'             or one value per chunklet.
+#' @param zone_percent Percentage of events in zone to be included in each
+#'                     chunklet, either one value for all chunklets or one value
+#'                     per chunklet.
 #'
 #' @return A list of two label vectors, labs with all non-core points labelled 0,
 #'         chunks with all non-core points given their own chunklet label.
@@ -14,8 +15,9 @@
 #'                     ve = c(00, -1, +1, +1),
 #'                     vi = c(+1, 00, +1, +1))
 #' iris_zone_labs <- label_zones(iris[, 1:4], type_marker = iris_tab)$labs
-#' iris_chunk_labs <- label_chunklets(iris[, 1:4], zone_labs = iris_zone_labs)
-label_chunklets <- function(data, zone_labs, prob = 0.9) {
+#' iris_chunk_labs <- label_chunklets(iris[, 1:4], zone_labs = iris_zone_labs,
+#'                                    zone_percent = 90)
+label_chunklets <- function(data, zone_labs, zone_percent) {
 
   chunk_num <- ncol(zone_labs)
   obs_num   <- nrow(data)
@@ -27,11 +29,17 @@ label_chunklets <- function(data, zone_labs, prob = 0.9) {
   cores   <- matrix(NA, nrow = obs_num, ncol = chunk_num)
   quants  <- vector("numeric", length = chunk_num)
 
-  if (length(prob) == 1) {
-    prob <- rep(prob, times = chunk_num)
-  } else if (length(prob) != chunk_num) {
-      stop("prob must either be a vector with one entry per chunklet
+  if (length(zone_percent) == 1) {
+    zone_percent <- rep(zone_percent, times = chunk_num)
+  } else if (length(zone_percent) != chunk_num) {
+    stop("zone_percent must either be a vector with one entry per chunklet
            or a single value to be used for all chunklets.")
+  }
+
+  if (any(zone_percent < 0 | zone_percent > 100)) {
+    stop("zone_percent must not be less than 0 or greater than 100")
+  } else {
+    prob <- (100 - zone_percent) / 100
   }
 
   # only points in region l can be assigned to chunklet l

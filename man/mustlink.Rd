@@ -8,7 +8,7 @@ mustlink(
   data,
   type_marker,
   clust_num,
-  prob = 0.9,
+  zone_percent,
   maxit = 100,
   eps = 1e-10,
   start = "k-Means",
@@ -26,7 +26,9 @@ mustlink(
 
 \item{clust_num}{Number of clusters / components.}
 
-\item{prob}{Probability density quantile threshold for chunklet core construction.}
+\item{zone_percent}{Percentage of events in zone to be included in each
+chunklet, either one value for all chunklets or one value
+per chunklet.}
 
 \item{maxit}{Maximum number of EM iterations.}
 
@@ -61,5 +63,5 @@ Only requires flowFrame dataset, cell type - marker table, and number of cluster
 iris_tab   <- rbind(se = c(-1, +1, -1, -1),
                     ve = c(00, -1, +1, +1),
                     vi = c(+1, 00, +1, +1))
-mustlink(iris[, 1:4], type_marker = iris_tab, clust_num = 3, prob = 0.9)
+mustlink(iris[, 1:4], type_marker = iris_tab, clust_num = 3, zone_percent = 90)
 }

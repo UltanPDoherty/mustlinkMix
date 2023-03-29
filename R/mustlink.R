@@ -5,7 +5,9 @@
 #' @param data Dataset in matrix or data.frame format.
 #' @param type_marker Matrix with entries +/-/0, rows for populations, columns for variables.
 #' @param clust_num Number of clusters / components.
-#' @param prob Probability density quantile threshold for chunklet core construction.
+#' @param zone_percent Percentage of events in zone to be included in each
+#'                     chunklet, either one value for all chunklets or one value
+#'                     per chunklet.
 #' @param maxit Maximum number of EM iterations.
 #' @param eps Convergence criterion for relative difference in log-likelihood.
 #' @param start Initialisation option.
@@ -29,9 +31,9 @@
 #' iris_tab   <- rbind(se = c(-1, +1, -1, -1),
 #'                     ve = c(00, -1, +1, +1),
 #'                     vi = c(+1, 00, +1, +1))
-#' mustlink(iris[, 1:4], type_marker = iris_tab, clust_num = 3, prob = 0.9)
+#' mustlink(iris[, 1:4], type_marker = iris_tab, clust_num = 3, zone_percent = 90)
 
-mustlink <- function(data, type_marker, clust_num, prob = 0.9,
+mustlink <- function(data, type_marker, clust_num, zone_percent,
                      maxit = 100, eps = 1e-10, start = "k-Means",
                      init_seed = NULL, print_freq = 10,
                      burnin = 10, no_print = FALSE,
@@ -46,7 +48,7 @@ mustlink <- function(data, type_marker, clust_num, prob = 0.9,
 
       chunklets <- label_chunklets(data = data,
                                    zone_labs = zone_labs,
-                                   prob = prob)
+                                   zone_percent = zone_percent)
       chunk_labs <- chunklets$chunk
       core_labs  <- chunklets$core
     }

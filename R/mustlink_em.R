@@ -21,7 +21,9 @@
 #'                     ve = c(00, -1, +1, +1),
 #'                     vi = c(+1, 00, +1, +1))
 #' iris_zone_labs <- label_zones(iris[, 1:4], type_marker = iris_tab)$labs
-#' iris_chunk_labs <- label_chunklets(iris[, 1:4], zone_labs = iris_zone_labs)$chunk
+#' iris_chunk_labs <- label_chunklets(iris[, 1:4],
+#'                                    zone_labs = iris_zone_labs,
+#'                                    zone_percent = 90)$chunk
 #' iris_init <- initialise_model(iris[, 1:4], clust_num = 3, start = "k-Means", init_seed = 123)
 #' mustlink_em(as.matrix(iris[, 1:4]), clust_num = 3,
 #'              chunk_labs = iris_chunk_labs, params = iris_init)
