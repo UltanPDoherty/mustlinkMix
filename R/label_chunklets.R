@@ -47,7 +47,7 @@ label_chunklets <- function(data, zone_labs, prob = 0.9) {
                                        sigma = sigmas[, , l])
     quants[l] <- stats::quantile(densities[[l]], prob[l])
 
-    cores[zone_labs[, l], l]  <- densities[[l]] > quants[l]
+    cores[zone_labs[, l], l]  <- densities[[l]] >= quants[l]
     cores[!zone_labs[, l], l] <- FALSE
   }
 
