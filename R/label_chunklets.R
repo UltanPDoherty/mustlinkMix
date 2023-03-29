@@ -2,7 +2,8 @@
 #'
 #' @param data Dataset in matrix or data.frame form.
 #' @param zone_labs Output from table_to_labs.
-#' @param prob Probability cut-off for cores.
+#' @param prob Probability cut-off for cores, either one value for all chunklets
+#'             or one value per chunklet.
 #'
 #' @return A list of two label vectors, labs with all non-core points labelled 0,
 #'         chunks with all non-core points given their own chunklet label.
@@ -26,6 +27,13 @@ label_chunklets <- function(data, zone_labs, prob = 0.9) {
   cores   <- matrix(NA, nrow = obs_num, ncol = chunk_num)
   quants  <- vector("numeric", length = chunk_num)
 
+  if (length(prob) == 1) {
+    prob <- rep(prob, times = chunk_num)
+  } else if (length(prob) != chunk_num) {
+      stop("prob must either be a vector with one entry per chunklet
+           or a single value to be used for all chunklets.")
+  }
+
   # only points in region l can be assigned to chunklet l
   # the highest Gaussian density points in region l are selected
   for(l in 1:chunk_num) {
@@ -37,7 +45,7 @@ label_chunklets <- function(data, zone_labs, prob = 0.9) {
     densities[[l]] <- mvtnorm::dmvnorm(regions[[l]],
                                        mean = means[l, ],
                                        sigma = sigmas[, , l])
-    quants[l] <- stats::quantile(densities[[l]], prob)
+    quants[l] <- stats::quantile(densities[[l]], prob[l])
 
     cores[zone_labs[, l], l]  <- densities[[l]] > quants[l]
     cores[!zone_labs[, l], l] <- FALSE

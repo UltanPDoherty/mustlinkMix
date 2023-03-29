@@ -11,7 +11,8 @@ label_chunklets(data, zone_labs, prob = 0.9)
 
 \item{zone_labs}{Output from table_to_labs.}
 
-\item{prob}{Probability cut-off for cores.}
+\item{prob}{Probability cut-off for cores, either one value for all chunklets
+or one value per chunklet.}
 }
 \value{
 A list of two label vectors, labs with all non-core points labelled 0,
