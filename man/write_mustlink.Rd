@@ -28,7 +28,8 @@ write_mustlink(
 
 \item{em_ll}{Logical: should log-likelihood values be written to a file?}
 
-\item{em_chunk_pp}{Logical: should posterior probability matrix be written to a file?}
+\item{em_chunk_pp}{Logical: should posterior probability matrix be written to
+a file?}
 
 \item{em_params}{Logical: should model parameters be written to a file?}
 }

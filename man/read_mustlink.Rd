@@ -25,7 +25,8 @@ read_mustlink(
 
 \item{em_ll}{Logical: should log-likelihood values be read from a file?}
 
-\item{em_chunk_pp}{Logical: should posterior probability matrix be read from a file?}
+\item{em_chunk_pp}{Logical: should posterior probability matrix be read from
+a file?}
 
 \item{em_params}{Logical: should model parameters be read from a file?}
 }

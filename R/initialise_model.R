@@ -11,15 +11,16 @@
 #' @param start Initialisation option. One of "central", "k-Means", or "mclust".
 #' @param init_seed Seed.
 #'
-#' @return A list consisting of a mixing proportions vector, a matrix of component means,
-#'         and an array containing component covariance matrices.
+#' @return A list consisting of a mixing proportions vector, a matrix of
+#'         component means, and an array containing component covariance
+#'         matrices.
 #' @export
 #' @import mclust
 #'
 #' @examples
 #' initialise_model(iris[, 1:4], 4)
-initialise_model <- function(data, clust_num,
-                             labels = NULL, start = "k-Means", init_seed = NULL) {
+initialise_model <- function(data, clust_num, labels = NULL,
+                             start = "k-Means", init_seed = NULL) {
   var_num <- ncol(data)
   obs_num <- nrow(data)
 
@@ -43,7 +44,7 @@ initialise_model <- function(data, clust_num,
   }
 
   start_options <- c("central", "k-Means", "mclust")
-  stopifnot( "start must be one of \"central\", \"k-Means\", or \"mclust\"." =
+  stopifnot("start must be one of \"central\", \"k-Means\", or \"mclust\"." =
                any(start == start_options))
 
   if (!is.null(init_seed)) {

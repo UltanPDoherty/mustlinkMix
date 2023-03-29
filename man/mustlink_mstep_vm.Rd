@@ -33,7 +33,8 @@ mustlink_mstep_vm(
 List containing prop, mu, sigma.
 }
 \description{
-Implement M-step of EM algorithm for GMM with positive / must-link constraints.
+Implement M-step of EM algorithm for GMM with positive / must-link
+constraints.
 }
 \examples{
 chunk_labs1 <- c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78)

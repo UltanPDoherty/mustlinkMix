@@ -6,7 +6,8 @@
 #' @param chunk_labs Logical: should chunklet labels be written to a file?
 #' @param times Logical: should runtimes be written to a file?
 #' @param em_ll Logical: should log-likelihood values be written to a file?
-#' @param em_chunk_pp Logical: should posterior probability matrix be written to a file?
+#' @param em_chunk_pp Logical: should posterior probability matrix be written to
+#'                    a file?
 #' @param em_params Logical: should model parameters be written to a file?
 #'
 #' @return Function does not have a return value.

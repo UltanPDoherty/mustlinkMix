@@ -16,8 +16,8 @@ chunklet, either one value for all chunklets or one value
 per chunklet.}
 }
 \value{
-A list of two label vectors, labs with all non-core points labelled 0,
-chunks with all non-core points given their own chunklet label.
+A list of two label vectors, labs with all non-core points labelled
+0, chunks with all non-core points given their own chunklet label.
 }
 \description{
 Convert +/- Table Labels into Chunklets

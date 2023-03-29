@@ -24,8 +24,9 @@ initialise_model(
 \item{init_seed}{Seed.}
 }
 \value{
-A list consisting of a mixing proportions vector, a matrix of component means,
-and an array containing component covariance matrices.
+A list consisting of a mixing proportions vector, a matrix of
+component means, and an array containing component covariance
+matrices.
 }
 \description{
 Initialise a Gaussian Mixture Model either with equal proportions, mean

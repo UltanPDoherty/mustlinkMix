@@ -6,8 +6,8 @@
 #'                     chunklet, either one value for all chunklets or one value
 #'                     per chunklet.
 #'
-#' @return A list of two label vectors, labs with all non-core points labelled 0,
-#'         chunks with all non-core points given their own chunklet label.
+#' @return A list of two label vectors, labs with all non-core points labelled
+#'         0, chunks with all non-core points given their own chunklet label.
 #' @export
 #'
 #' @examples
@@ -44,7 +44,7 @@ label_chunklets <- function(data, zone_labs, zone_percent) {
 
   # only points in region l can be assigned to chunklet l
   # the highest Gaussian density points in region l are selected
-  for(l in 1:chunk_num) {
+  for (l in 1:chunk_num) {
     regions[[l]]   <- data[zone_labs[, l], ]
 
     means[l, ]     <- colMeans(regions[[l]])
@@ -67,9 +67,16 @@ label_chunklets <- function(data, zone_labs, zone_percent) {
 
   if (any(cores_overlap)) {
     find_overlap <- apply(X = cores[cores_overlap, ], MARGIN = 1,
-                          FUN = function(x) {colnames(zone_labs)[x]})
+                          FUN = function(x) {
+                            colnames(zone_labs)[x]
+                            }
+                          )
     overlap_names <- unique(apply(X = find_overlap, MARGIN = 2,
-                                  FUN = function(x) {paste(x, collapse = "-")}))
+                                  FUN = function(x) {
+                                    paste(x, collapse = "-")
+                                    }
+                                  )
+                            )
 
     message(paste0("Initial cores overlapped for the following pair(s): ",
                    paste(overlap_names, sep = ", "), ".\n",
@@ -78,14 +85,11 @@ label_chunklets <- function(data, zone_labs, zone_percent) {
 
   core_labs <- chunk_labs <- vector("integer", length = obs_num)
 
-  core_labs[!cores_single]  <- 0L # overlap removed
+  # remove overlap
+  core_labs[!cores_single]  <- 0L
 
   core_labs[cores_single] <- apply(X = cores[cores_single, ],
                                    MARGIN = 1, FUN = which.max)
-
-  # for(l in 1:chunk_num) {
-  #   core_labs[core_labs == l] <- l * zone_labs[core_labs == l, l]
-  # }
 
   chunk_labs[cores_single]  <- core_labs[cores_single]
   chunk_labs[!cores_single] <- chunk_num + 1:sum(!cores_single)

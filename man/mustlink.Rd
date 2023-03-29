@@ -22,7 +22,8 @@ mustlink(
 \arguments{
 \item{data}{Dataset in matrix or data.frame format.}
 
-\item{type_marker}{Matrix with entries +/-/0, rows for populations, columns for variables.}
+\item{type_marker}{Matrix with entries +/-/0, rows for populations, columns
+for variables.}
 
 \item{clust_num}{Number of clusters / components.}
 
@@ -57,11 +58,13 @@ a vector of log-likelihood values,
 and a vector of times.
 }
 \description{
-Only requires flowFrame dataset, cell type - marker table, and number of clusters.
+Only requires flowFrame dataset, cell type - marker table, number of
+clusters, and size of chunklets.
 }
 \examples{
 iris_tab   <- rbind(se = c(-1, +1, -1, -1),
                     ve = c(00, -1, +1, +1),
                     vi = c(+1, 00, +1, +1))
-mustlink(iris[, 1:4], type_marker = iris_tab, clust_num = 3, zone_percent = 90)
+mustlink(iris[, 1:4], type_marker = iris_tab,
+         clust_num = 3, zone_percent = 90)
 }

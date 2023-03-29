@@ -22,7 +22,7 @@
 
 compute_f1 <- function(clust_labs, true_labs,
                        exclude_from_true = NULL,
-                       prec_rec = FALSE){
+                       prec_rec = FALSE) {
 
   if (!is.null(exclude_from_true)) {
     excluded   <- true_labs %in% exclude_from_true
@@ -48,11 +48,13 @@ compute_f1 <- function(clust_labs, true_labs,
   f1_mat[f1_mat == "NaN"] <- 0
 
   if (true_num <= clust_num) {
-    true_to_clust <- as.numeric(clue::solve_LSAP(f1_mat[1:true_num, ], maximum = TRUE))
+    true_to_clust <- as.numeric(clue::solve_LSAP(f1_mat[1:true_num, ],
+                                                 maximum = TRUE))
     other_clust   <- setdiff(1:clust_num, true_to_clust)
     true_to_clust <- c(true_to_clust, other_clust)
   } else {
-    clust_to_true <- as.numeric(clue::solve_LSAP(t(f1_mat[1:true_num, ]), maximum = TRUE))
+    clust_to_true <- as.numeric(clue::solve_LSAP(t(f1_mat[1:true_num, ]),
+                                                 maximum = TRUE))
     other_true    <- setdiff(1:true_num, clust_to_true)
     true_to_clust <- (1:true_num)[order(c(clust_to_true, other_true))]
     true_to_clust[true_to_clust > clust_num] <- NA
@@ -74,7 +76,8 @@ compute_f1 <- function(clust_labs, true_labs,
     }
   }
 
-  matched_vals <- c(sum(f1_vec), sum(pr_vec), sum(re_vec)) / sum(!is.na(true_to_clust))
+  vec_sums <- c(sum(f1_vec), sum(pr_vec), sum(re_vec))
+  matched_vals <- vec_sums / sum(!is.na(true_to_clust))
   names(matched_vals) <- c("f1", "pr", "re")
 
   out <- list(f1_mat = f1_mat2,

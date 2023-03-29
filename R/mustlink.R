@@ -1,9 +1,11 @@
 #' All-inclusive function for must-link GMM.
 #'
-#' Only requires flowFrame dataset, cell type - marker table, and number of clusters.
+#' Only requires flowFrame dataset, cell type - marker table, number of
+#' clusters, and size of chunklets.
 #'
 #' @param data Dataset in matrix or data.frame format.
-#' @param type_marker Matrix with entries +/-/0, rows for populations, columns for variables.
+#' @param type_marker Matrix with entries +/-/0, rows for populations, columns
+#'                    for variables.
 #' @param clust_num Number of clusters / components.
 #' @param zone_percent Percentage of events in zone to be included in each
 #'                     chunklet, either one value for all chunklets or one value
@@ -31,7 +33,8 @@
 #' iris_tab   <- rbind(se = c(-1, +1, -1, -1),
 #'                     ve = c(00, -1, +1, +1),
 #'                     vi = c(+1, 00, +1, +1))
-#' mustlink(iris[, 1:4], type_marker = iris_tab, clust_num = 3, zone_percent = 90)
+#' mustlink(iris[, 1:4], type_marker = iris_tab,
+#'          clust_num = 3, zone_percent = 90)
 
 mustlink <- function(data, type_marker, clust_num, zone_percent,
                      maxit = 100, eps = 1e-10, start = "k-Means",
@@ -41,7 +44,7 @@ mustlink <- function(data, type_marker, clust_num, zone_percent,
 
   setup_time <- system.time({
     if (is.null(type_marker)) {
-      chunk_labs <- 1:nrow(data)
+      chunk_labs <- seq_len(nrow(data))
     } else {
       zone_labs <- label_zones(data = data,
                                    type_marker = type_marker)$labs
@@ -50,7 +53,6 @@ mustlink <- function(data, type_marker, clust_num, zone_percent,
                                    zone_labs = zone_labs,
                                    zone_percent = zone_percent)
       chunk_labs <- chunklets$chunk
-      core_labs  <- chunklets$core
     }
 
     if (!is.matrix(data)) {
@@ -61,13 +63,8 @@ mustlink <- function(data, type_marker, clust_num, zone_percent,
       }
     }
 
-    #chunk <- make_chunk(data, chunk_labs)
-
     params  <- initialise_model(data, clust_num = clust_num,
                                 start = start, init_seed = init_seed)
-
-    obs_num <- nrow(data)
-    var_num <- ncol(params$mu)
   })
 
   em_time <- system.time({

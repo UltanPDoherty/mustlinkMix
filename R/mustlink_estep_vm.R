@@ -38,7 +38,8 @@ mustlink_estep_vm <- function(data, chunk, params,
   )
 
   # singles_chunk is a logical of length chunk$num
-  # it identifies which chunklets are singletons, i.e. unconstrained observations
+  # it identifies which chunklets are singletons,
+  # i.e. unconstrained observations
   singles_chunk <- chunk$size == 1
   # singles_obs is a logical of length obs_num
   # it identifies which observations correspond to the singleton chunklets
@@ -52,13 +53,13 @@ mustlink_estep_vm <- function(data, chunk, params,
 
   # This for loop computes the chunklet posterior probability matrix, chunk_pp,
   chunk_unnorm <- chunk_pp <- matrix(NA, nrow = chunk$num, ncol = clust_num)
-  log_maxes <- ll_vec <- chunk_unnorm_sums <- vector(mode = "numeric", length = chunk$num)
+  log_maxes <- ll_vec <- chunk_unnorm_sums <- vector(mode = "numeric",
+                                                     length = chunk$num)
   for (l in 1:chunk$num) {
-
     # Add the log mixing proportions and then un-log this sum with exp.
     # Subtract lpdf_chunk row maxes to prevent exp mapping large values to Inf.
-    log_maxes[l]      <- max(lpdf_chunk[l, ] + chunk$size[l]*log(params$prop))
-    chunk_unnorm[l, ] <- exp(lpdf_chunk[l, ] + chunk$size[l]*log(params$prop)
+    log_maxes[l]      <- max(lpdf_chunk[l, ] + chunk$size[l] * log(params$prop))
+    chunk_unnorm[l, ] <- exp(lpdf_chunk[l, ] + chunk$size[l] * log(params$prop)
                              - log_maxes[l])
 
     # Normalise rows of chunk_unnorm to obtain chunk_pp.

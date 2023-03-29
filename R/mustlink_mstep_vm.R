@@ -1,7 +1,8 @@
 #' @title E-Step for Must-link Constrained GMM.
 #'
 #' @description
-#' Implement M-step of EM algorithm for GMM with positive / must-link constraints.
+#' Implement M-step of EM algorithm for GMM with positive / must-link
+#' constraints.
 #'
 #' @param data Dataset being clustered in matrix form.
 #' @param obs_pp Expanded observation posterior probability matrix.
@@ -45,8 +46,9 @@ mustlink_mstep_vm <- function(data, obs_pp, chunk_pp,
   # Covariance matrix
   data_mu <- array(dim = c(obs_num, var_num, clust_num))
   sigma   <- array(dim = c(var_num, var_num, clust_num))
-  for(k in 1:clust_num) {
-    data_mu[, , k] <- sqrt(obs_pp2[, k]) * scale(data, center = mu[k, ], scale = FALSE)
+  for (k in 1:clust_num){
+    data_mu[, , k] <- sqrt(obs_pp2[, k]) * scale(data, center = mu[k, ],
+                                                 scale = FALSE)
     sigma[, , k] <- crossprod(data_mu[, , k])
   }
 

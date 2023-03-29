@@ -9,7 +9,6 @@ chunk_to_core <- function(chunk_labs) {
   obs_num <- length(chunk_labs)
 
   chunk_tab <- table(chunk_labs)
-  core_num <- sum( chunk_tab > 1)
 
   core_labs <- vector("integer", length = obs_num)
   core_labs[chunk_tab[chunk_labs] > 1] <- chunk_labs[chunk_tab[chunk_labs] > 1]
