@@ -66,21 +66,19 @@ label_chunklets <- function(data, zone_labs, zone_percent) {
   cores_single  <- cores_count == 1
 
   if (any(cores_overlap)) {
-    find_overlap <- apply(X = cores[cores_overlap, ], MARGIN = 1,
-                          FUN = function(x) {
-                            colnames(zone_labs)[x]
-                            }
-                          )
-    overlap_names <- unique(apply(X = find_overlap, MARGIN = 2,
-                                  FUN = function(x) {
-                                    paste(x, collapse = "-")
-                                    }
-                                  )
-                            )
+    find_overlap <- apply(X = cores[cores_overlap, ],
+                          MARGIN = 1, simplify = FALSE,
+                          FUN = function(x) colnames(zone_labs)[x])
+    overlap_names <- unlist(unique(lapply(X = find_overlap,
+                                          FUN = function(x) {
+                                            paste(x, collapse = "-")
+                                            })))
 
-    message(paste0("Initial cores overlapped for the following pair(s): ",
-                   paste(overlap_names, sep = ", "), ".\n",
-                   "Points in intersection were excluded from all cores."))
+    message(paste0("Initial chunklets overlapped for the following
+                   populations: ", paste(overlap_names, sep = ", "),
+                   ".\n",
+                   "Points in intersection were excluded from all chunklets.",
+                   "\n \n"))
     }
 
   core_labs <- chunk_labs <- vector("integer", length = obs_num)
