@@ -74,8 +74,8 @@ label_chunklets <- function(data, zone_labs, zone_percent) {
                                             paste(x, collapse = "-")
                                             })))
 
-    message(paste0("Initial chunklets overlapped for the following
-                   populations: ", paste(overlap_names, sep = ", "),
+    message(paste0("Initial chunklets overlapped for these populations: ",
+                   paste(overlap_names, sep = ", "),
                    ".\n",
                    "Points in intersection were excluded from all chunklets.",
                    "\n \n"))
