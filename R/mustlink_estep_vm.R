@@ -47,14 +47,15 @@ mustlink_estep_vm <- function(data, chunk, params,
 
   # lpdf_chunk is the sum of log_pdf values within each chunklet
   lpdf_chunk <- matrix(NA, nrow = chunk$num, ncol = clust_num)
-  lpdf_chunk[singles_chunk, ]  <- log_pdf[singles_obs, ]
-  lpdf_chunk[!singles_chunk, ] <- rowsum(log_pdf[!singles_obs, ],
+  lpdf_chunk[chunk$labs[singles_chunk], ]  <- log_pdf[singles_obs, ]
+  lpdf_chunk[chunk$labs[!singles_chunk], ] <- rowsum(log_pdf[!singles_obs, ],
                                          group = chunk$labs[!singles_obs])
 
   # This for loop computes the chunklet posterior probability matrix, chunk_pp,
   chunk_unnorm <- chunk_pp <- matrix(NA, nrow = chunk$num, ncol = clust_num)
   log_maxes <- ll_vec <- chunk_unnorm_sums <- vector(mode = "numeric",
                                                      length = chunk$num)
+
   for (l in 1:chunk$num) {
     # Add the log mixing proportions and then un-log this sum with exp.
     # Subtract lpdf_chunk row maxes to prevent exp mapping large values to Inf.
