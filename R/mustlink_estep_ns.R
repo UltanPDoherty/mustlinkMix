@@ -45,11 +45,14 @@ mustlink_estep_ns <- function(data, chunk, params,
   # it identifies which observations correspond to the singleton chunklets
   singles_obs   <- chunk$labs %in% (1:chunk$num)[singles_chunk]
 
+  nonsingle_chunknum <- (1:chunk$num)[!singles_chunk]
+  single_chunknum   <- chunk$labs[singles_obs]
+
   # lpdf_chunk is the sum of log_pdf values within each chunklet
   lpdf_chunk <- matrix(NA, nrow = chunk$num, ncol = clust_num)
-  lpdf_chunk[chunk$labs[singles_chunk], ] <- log_pdf[singles_obs, ]
-  lpdf_chunk[chunk$labs[!singles_chunk], ] <- rowsum(log_pdf[!singles_obs, ],
-                                         group = chunk$labs[!singles_obs])
+  lpdf_chunk[single_chunknum, ] <- log_pdf[singles_obs, ]
+  lpdf_chunk[nonsingle_chunknum, ] <- rowsum(log_pdf[!singles_obs, ],
+                                               group = chunk$labs[!singles_obs])
 
   # This for loop computes the chunklet posterior probability matrix, chunk_pp,
   chunk_unnorm <- chunk_pp <- matrix(NA, nrow = chunk$num, ncol = clust_num)
