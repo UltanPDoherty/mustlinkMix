@@ -36,8 +36,8 @@
 #' mustlink(iris[, 1:4], type_marker = iris_tab,
 #'          clust_num = 3, zone_percent = 90)
 
-mustlink <- function(data, type_marker, clust_num, zone_percent,
-                     maxit = 100, eps = 1e-10, start = "k-Means",
+mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
+                     maxit = 1e4, eps = 1e-10, start = "k-Means",
                      init_seed = NULL, print_freq = 10,
                      burnin = 10, no_print = FALSE,
                      model = "vm") {
