@@ -31,7 +31,7 @@
 #'              chunk_labs = iris_chunk_labs, params = iris_init)
 
 mustlink_em_vm <- function(data, chunk_labs, params, clust_num,
-                        burnin = 10, maxit = 1000, eps = 1e-10,
+                        burnin = 10, maxit = 1e4, eps = 1e-10,
                         no_print = FALSE, print_freq = 1,
                         model = "vm") {
   it <- 0
