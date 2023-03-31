@@ -10,7 +10,7 @@ mustlink_em_vm(
   params,
   clust_num,
   burnin = 10,
-  maxit = 1000,
+  maxit = 10000,
   eps = 1e-10,
   no_print = FALSE,
   print_freq = 1,

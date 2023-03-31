@@ -6,17 +6,17 @@
 \usage{
 mustlink(
   data,
-  type_marker,
+  type_marker = NULL,
   clust_num,
-  zone_percent,
-  maxit = 100,
+  zone_percent = 100,
+  maxit = 10000,
   eps = 1e-10,
-  start = "k-Means",
   init_seed = NULL,
+  init_method = c("Must-Link k-Means++", "k-Means++", "k-Means", "Mclust", "use_labels"),
   print_freq = 10,
   burnin = 10,
   no_print = FALSE,
-  model = "vm"
+  model = c("vm", "ns")
 )
 }
 \arguments{
@@ -35,8 +35,6 @@ per chunklet.}
 
 \item{eps}{Convergence criterion for relative difference in log-likelihood.}
 
-\item{start}{Initialisation option.}
-
 \item{init_seed}{Seed.}
 
 \item{print_freq}{Controls how frequently the log-likelihood and time are
@@ -49,6 +47,8 @@ likelihood convergence.}
 
 \item{model}{Model to be used. Either "vm" for Melnykov et al. or "ns" for
 Shental et al.}
+
+\item{start}{Initialisation option.}
 }
 \value{
 A list consisting of a vector of cluster labels,

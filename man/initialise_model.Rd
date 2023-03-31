@@ -7,9 +7,10 @@
 initialise_model(
   data,
   clust_num,
-  labels = NULL,
-  start = "k-Means",
-  init_seed = NULL
+  constraint_labels = NULL,
+  init_labels = NULL,
+  init_seed = NULL,
+  init_method = c("Must-Link k-Means++", "k-Means++", "k-Means", "Mclust", "use_labels")
 )
 }
 \arguments{
@@ -17,11 +18,15 @@ initialise_model(
 
 \item{clust_num}{Number of clusters.}
 
-\item{labels}{Set of initial labels.}
+\item{constraint_labels}{Label indicating which constrained set an event
+belongs to, 0 for unconstrained events.}
 
-\item{start}{Initialisation option. One of "central", "k-Means", or "mclust".}
+\item{init_labels}{Set of initial labels.}
 
 \item{init_seed}{Seed.}
+
+\item{init_method}{Initialisation option. One of "Must-Link k-Means++",
+"k-Means++", "k-Means", "Mclust", or "use_labels".}
 }
 \value{
 A list consisting of a mixing proportions vector, a matrix of
