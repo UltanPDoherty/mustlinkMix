@@ -40,7 +40,8 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
                      maxit = 1e4, eps = 1e-10, start = "k-Means",
                      init_seed = NULL, print_freq = 10,
                      burnin = 10, no_print = FALSE,
-                     model = "vm") {
+                     model = c("vm", "ns")) {
+  model <- rlang::arg_match(model)
 
   setup_time <- system.time({
     if (is.null(type_marker)) {
@@ -66,19 +67,17 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
   })
 
   em_time <- system.time({
-    if (model == "vm") {
-      em <- mustlink_em_vm(data = data, chunk_labs = chunk_labs,
-                           params = params, clust_num = clust_num,
-                           maxit = maxit, eps = eps, burnin = burnin,
-                           print_freq = print_freq, no_print = no_print)
-    } else if (model == "ns") {
-      em <- mustlink_em_ns(data = data, chunk_labs = chunk_labs,
-                           params = params, clust_num = clust_num,
-                           maxit = maxit, eps = eps, burnin = burnin,
-                           print_freq = print_freq, no_print = no_print)
-    } else {
-      stop("Model must be either 'ns' or 'vm'.")
-    }
+    em <- switch(model,
+                 vm = mustlink_em_vm(data = data, chunk_labs = chunk_labs,
+                                     params = params, clust_num = clust_num,
+                                     maxit = maxit, eps = eps, burnin = burnin,
+                                     print_freq = print_freq,
+                                     no_print = no_print),
+                 ns = mustlink_em_ns(data = data, chunk_labs = chunk_labs,
+                                     params = params, clust_num = clust_num,
+                                     maxit = maxit, eps = eps, burnin = burnin,
+                                     print_freq = print_freq,
+                                     no_print = no_print))
   })
 
   label_time <- system.time({
