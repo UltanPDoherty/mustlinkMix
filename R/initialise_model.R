@@ -7,8 +7,11 @@
 #'
 #' @param data Matrix or dataframe.
 #' @param clust_num Number of clusters.
-#' @param labels Set of initial labels.
-#' @param start Initialisation option. One of "central", "k-Means", or "mclust".
+#' @param constraint_labels Label indicating which constrained set an event
+#' belongs to, 0 for unconstrained events.
+#' @param init_labels Set of initial labels.
+#' @param init_method Initialisation option. One of "Must-Link k-Means++",
+#' "k-Means++", "k-Means", "Mclust", or "use_labels".
 #' @param init_seed Seed.
 #'
 #' @return A list consisting of a mixing proportions vector, a matrix of
@@ -19,60 +22,83 @@
 #'
 #' @examples
 #' initialise_model(iris[, 1:4], 4)
-initialise_model <- function(data, clust_num, labels = NULL,
-                             start = "k-Means", init_seed = NULL) {
+initialise_model <- function(data, clust_num, constraint_labels = NULL,
+                             init_labels = NULL, init_seed = NULL,
+                             init_method = c("Must-Link k-Means++",
+                                             "k-Means++", "k-Means",
+                                             "Mclust", "use_labels")) {
+
+  init_method <- rlang::arg_match(init_method)
+
   var_num <- ncol(data)
   obs_num <- nrow(data)
+  params <- list()
 
-  if (!is.null(labels)) {
-    clust_num <- length(unique(labels))
+  set.seed(init_seed)
+
+  if (init_method == "Must-Link k-Means++") {
+    constr_num <- length(unique(constraint_labels[constraint_labels != 0]))
+    kmpp <- ClusterR::KMeans_rcpp(data[constraint_labels == 0, ],
+                                  clusters = clust_num - constr_num)
+
+    combined_labels <- integer(obs_num)
+    combined_labels <- constraint_labels
+    combined_labels[constraint_labels == 0] <- kmpp$clusters + constr_num
+
+    sizes        <- as.numeric(table(combined_labels))
+    params$prop  <- sizes / sum(sizes)
+    params$mu    <- rowsum(data, group = combined_labels) / sizes
+    params$sigma <- array(NA, c(var_num, var_num, clust_num))
+    for (k in 1:clust_num) {
+      params$sigma[, , k] <- stats::cov(data[combined_labels == k, ])
+    }
   }
 
-  init <- list(prop  = vector("numeric", length = clust_num),
-               mu    = matrix(NA, nrow = clust_num, ncol = var_num),
-               sigma = array(NA, c(var_num, var_num, clust_num)))
-
-  if (!is.null(labels)) {
-    names     <- sort(unique(labels))
-    sizes     <- as.numeric(table(labels))
-    init$prop <- sizes / obs_num
-    init$mu   <- rowsum(data, group = labels) / sizes
+  if (init_method == "k-Means++") {
+    kmpp <- ClusterR::KMeans_rcpp(data, clusters = clust_num)
+    sizes        <- as.numeric(table(kmpp$clusters))
+    params$prop  <- sizes / sum(sizes)
+    params$mu    <- kmpp$centroids
+    params$sigma <- array(NA, c(var_num, var_num, clust_num))
     for (k in 1:clust_num) {
-      init$sigma[, , k] <- stats::cov(data[labels == names[k], ])
+      params$sigma[, , k] <- stats::cov(data[kmpp$clusters == k, ])
     }
-    return(init)
   }
 
-  start_options <- c("central", "k-Means", "mclust")
-  stopifnot("start must be one of \"central\", \"k-Means\", or \"mclust\"." =
-               any(start == start_options))
-
-  if (!is.null(init_seed)) {
-    set.seed(init_seed)
+  if (init_method == "k-Means") {
+    km <- stats::kmeans(data, centers = clust_num)
+    params$prop  <- km$size / sum(km$size)
+    params$mu    <- km$centers
+    params$sigma <- array(NA, c(var_num, var_num, clust_num))
+    for (k in 1:clust_num) {
+      params$sigma[, , k] <- stats::cov(data[km$cluster == k, ])
+    }
   }
 
-  if (start == "central") {
-    init$prop      <- rep(1 / clust_num, clust_num)
-    init$mu        <- matrix(rep(colMeans(data), clust_num),
-                             nrow = clust_num, byrow = FALSE)
-    for (k in 1:clust_num) {
-      init$sigma[, , k] <- diag(var_num)
-    }
-  } else if (start == "k-Means") {
-    km <- stats::kmeans(x = data, centers = clust_num)
-    init$prop  <- km$size / sum(km$size)
-    init$mu    <- km$centers
-    for (k in 1:clust_num) {
-      init$sigma[, , k] <- stats::cov(data[km$cluster == k, ])
-    }
-  } else if (start == "mclust") {
+  if (init_method == "Mclust") {
     mc <- mclust::Mclust(data, G = clust_num, modelNames = c("VVV"))
-    init$prop  <- mc$parameters$pro
-    init$mu    <- t(mc$parameters$mean)
-    init$sigma <- mc$parameters$variance$sigma
-  } else {
-    stop("start must be one of \"central\", \"k-Means\", or \"mclust\".")
+    params$prop  <- mc$parameters$pro
+    params$mu    <- t(mc$parameters$mean)
+    params$sigma <- mc$parameters$variance$sigma
   }
 
-  return(init)
+  if (init_method == "use_labels") {
+    sizes      <- as.numeric(table(init_labels))
+
+    stopifnot(!is.null(init_labels),
+              length(init_labels) == nrow(data),
+              min(table(init_labels)) > 1)
+
+    params$prop  <- sizes / obs_num
+    params$mu    <- rowsum(data, group = init_labels) / sizes
+
+    clust_num  <- length(unique(init_labels))
+    params$sigma <- array(NA, c(var_num, var_num, clust_num))
+    names      <- sort(unique(init_labels))
+    for (k in 1:clust_num) {
+      params$sigma[, , k] <- stats::cov(data[init_labels == names[k], ])
+    }
+  }
+
+  return(params)
 }

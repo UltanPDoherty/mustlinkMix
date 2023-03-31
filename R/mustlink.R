@@ -37,11 +37,14 @@
 #'          clust_num = 3, zone_percent = 90)
 
 mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
-                     maxit = 1e4, eps = 1e-10, start = "k-Means",
-                     init_seed = NULL, print_freq = 10,
-                     burnin = 10, no_print = FALSE,
+                     maxit = 1e4, eps = 1e-10, init_seed = NULL,
+                     init_method = c("Must-Link k-Means++", "k-Means++",
+                                     "k-Means", "Mclust", "use_labels"),
+                     print_freq = 10, burnin = 10, no_print = FALSE,
                      model = c("vm", "ns")) {
+
   model <- rlang::arg_match(model)
+  init_method <- rlang::arg_match(init_method)
 
   setup_time <- system.time({
     if (is.null(type_marker)) {
@@ -63,7 +66,9 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
     }
 
     params  <- initialise_model(data, clust_num = clust_num,
-                                start = start, init_seed = init_seed)
+                                constraint_labels = chunk_to_core(chunk_labs),
+                                init_method = init_method,
+                                init_seed = init_seed)
   })
 
   em_time <- system.time({
