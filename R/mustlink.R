@@ -46,11 +46,9 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
     if (is.null(type_marker)) {
       chunk_labs <- seq_len(nrow(data))
     } else {
-      zone_labs <- label_zones(data = data,
-                                   type_marker = type_marker)$labs
+      zone_labs <- label_zones(data = data, type_marker = type_marker)$labs
 
-      chunklets <- label_chunklets(data = data,
-                                   zone_labs = zone_labs,
+      chunklets <- label_chunklets(data = data, zone_labs = zone_labs,
                                    zone_percent = zone_percent)
       chunk_labs <- chunklets$chunk
     }

@@ -36,8 +36,6 @@ compute_f1 <- function(clust_labs, true_labs,
     }
   }
 
-  # true_num  <- length(unique(na.omit(true_labs)))
-  # clust_num <- length(unique(na.omit(clust_labs)))
   true_num  <- length(unique(true_labs))
   clust_num <- length(unique(clust_labs))
 
