@@ -3,6 +3,8 @@
 export(check_ll_convergence)
 export(chunk_to_core)
 export(compute_f1)
+export(initial_parameters)
+export(initial_partition)
 export(initialise_model)
 export(label_chunklets)
 export(label_zones)

@@ -12,7 +12,8 @@ mustlink(
   maxit = 10000,
   eps = 1e-10,
   init_seed = NULL,
-  init_method = c("Must-Link k-Means++", "k-Means++", "k-Means", "Mclust", "use_labels"),
+  init_method = c("Must-Link k-Means++", "k-Means++", "k-Means"),
+  init_labels = NULL,
   print_freq = 10,
   burnin = 10,
   no_print = FALSE,
@@ -37,6 +38,10 @@ per chunklet.}
 
 \item{init_seed}{Seed.}
 
+\item{init_method}{Initialisation option.}
+
+\item{init_labels}{Initial labels.}
+
 \item{print_freq}{Controls how frequently the log-likelihood and time are
 printed in the EM loop.}
 
@@ -47,8 +52,6 @@ likelihood convergence.}
 
 \item{model}{Model to be used. Either "vm" for Melnykov et al. or "ns" for
 Shental et al.}
-
-\item{start}{Initialisation option.}
 }
 \value{
 A list consisting of a vector of cluster labels,
