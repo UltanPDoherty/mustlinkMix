@@ -24,12 +24,12 @@
 #' mustlink_estep_vm(as.matrix(iris[, 1:4]), chunk = chunk1, params = params1,
 #'                   obs_num = 150, var_num = 4, clust_num = 3)
 mustlink_estep_vm <- function(data, chunk, params,
-                              obs_num = nrow(data), var_num = ncol(params$mu),
+                              event_num = nrow(data), var_num = ncol(params$mu),
                               clust_num = nrow(params$mu)) {
 
   # log_pdf is an obs_num x clust_num matrix
   # it is the log pdf for each component evaluated at every point
-  log_pdf <- vapply(1:clust_num, FUN.VALUE = double(obs_num),
+  lpdf_event <- vapply(1:clust_num, FUN.VALUE = double(event_num),
                     FUN = function(k) {
                       mvtnorm::dmvnorm(data, log = TRUE,
                                        mean = params$mu[k, ],
