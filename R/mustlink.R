@@ -68,7 +68,7 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
       }
     }
 
-    if (!is.null(init_labels)) {
+    if (is.null(init_labels)) {
       init_labels <- initial_partition(data, clust_num = clust_num,
                                        constraint_labels = core_labs,
                                        init_seed = init_seed,
@@ -108,7 +108,7 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
   res <- list(clust_labs = clust_labs,
               init_labels = init_labels,
               chunk_labs = chunk_labs,
-              core_labels = core_labels,
+              core_labels = core_labs,
               em = em,
               times = times
               )
