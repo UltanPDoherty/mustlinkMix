@@ -2,8 +2,8 @@
 #'
 #' @param mustlink_out Output from mustlink function.
 #' @param file_prefix Desired file_prefix.
-#' @param clust_labs Logical: should cluster labels be written to a file?
-#' @param chunk_labs Logical: should chunklet labels be written to a file?
+#' @param clust_labels Logical: should cluster labels be written to a file?
+#' @param chunk_labels Logical: should chunklet labels be written to a file?
 #' @param times Logical: should runtimes be written to a file?
 #' @param em_ll Logical: should log-likelihood values be written to a file?
 #' @param em_chunk_pp Logical: should posterior probability matrix be written to
@@ -14,18 +14,18 @@
 #' @export
 #'
 write_mustlink <- function(mustlink_out, file_prefix,
-                           clust_labs = TRUE, chunk_labs = TRUE, times = TRUE,
+                           clust_labels = TRUE, chunk_labels = TRUE, times = TRUE,
                            em_ll = TRUE, em_chunk_pp = TRUE, em_params = TRUE) {
 
-  if (clust_labs) {
-    utils::write.table(mustlink_out$clust_labs,
-                       file = paste0(file_prefix, "_clust_labs.txt"),
+  if (clust_labels) {
+    utils::write.table(mustlink_out$clust_labels,
+                       file = paste0(file_prefix, "_clust_labels.txt"),
                        row.names = FALSE, col.names = FALSE)
   }
 
-  if (chunk_labs) {
-    utils::write.table(mustlink_out$chunk_labs,
-                       file = paste0(file_prefix, "_chunk_labs.txt"),
+  if (chunk_labels) {
+    utils::write.table(mustlink_out$chunk_labels,
+                       file = paste0(file_prefix, "_chunk_labels.txt"),
                        row.names = FALSE, col.names = FALSE)
   }
 

@@ -1,7 +1,7 @@
 #' @title Must-Link / Positive Constraint EM GMM.
 #'
 #' @param data Dataset in matrix form.
-#' @param chunk_labs Output from chunklet_cores.
+#' @param chunk_labels Output from chunklet_cores.
 #' @param params Model parameters, for example, output from initialise_model.
 #' @param clust_num Number of clusters.
 #' @param burnin Number of iterations before likelihood convergence criterion is
@@ -19,16 +19,16 @@
 #' iris_tab   <- rbind(se = c(-1, +1, -1, -1),
 #'                     ve = c(00, -1, +1, +1),
 #'                     vi = c(+1, 00, +1, +1))
-#' iris_zone_labs <- label_zones(iris[, 1:4], type_marker = iris_tab)$labs
-#' iris_chunk_labs <- label_chunklets(iris[, 1:4],
-#'                                    zone_labs = iris_zone_labs,
+#' iris_zone_labels <- label_zones(iris[, 1:4], type_marker = iris_tab)$labels
+#' iris_chunk_labels <- label_chunklets(iris[, 1:4],
+#'                                    zone_labels = iris_zone_labels,
 #'                                    zone_percent = 90)$chunk
 #' iris_init <- initialise_model(iris[, 1:4], clust_num = 3,
 #'                               start = "k-Means", init_seed = 123)
 #' mustlink_em_ns(as.matrix(iris[, 1:4]), clust_num = 3,
-#'              chunk_labs = iris_chunk_labs, params = iris_init)
+#'              chunk_labels = iris_chunk_labels, params = iris_init)
 
-mustlink_em_ns <- function(data, chunk_labs, params, clust_num,
+mustlink_em_ns <- function(data, chunk_labels, params, clust_num,
                         burnin = 10, maxit = 1000, eps = 1e-10,
                         no_print = FALSE, print_freq = 1) {
   it <- 0
@@ -37,9 +37,9 @@ mustlink_em_ns <- function(data, chunk_labs, params, clust_num,
   obs_num <- nrow(data)
   var_num <- ncol(params$mu)
 
-  chunk <- list(labs = chunk_labs,
-                num = length(unique(chunk_labs)),
-                size = as.numeric(table(chunk_labs)))
+  chunk <- list(labels = chunk_labels,
+                num = length(unique(chunk_labels)),
+                size = as.numeric(table(chunk_labels)))
 
   repeat {
     it <- it + 1

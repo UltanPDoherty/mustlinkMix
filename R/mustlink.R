@@ -50,14 +50,14 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
 
   setup_time <- system.time({
     if (is.null(type_marker)) {
-      chunk_labs <- seq_len(nrow(data))
+      chunk_labels <- seq_len(nrow(data))
     } else {
-      zone_labs <- label_zones(data = data, type_marker = type_marker)$labs
+      zone_labels <- label_zones(data = data, type_marker = type_marker)$labels
 
-      chunklets <- label_chunklets(data = data, zone_labs = zone_labs,
+      chunklets <- label_chunklets(data = data, zone_labels = zone_labels,
                                    zone_percent = zone_percent)
-      chunk_labs <- chunklets$chunk
-      core_labs  <- chunklets$core
+      chunk_labels <- chunklets$chunk
+      core_labels  <- chunklets$core
     }
 
     if (!is.matrix(data)) {
@@ -70,26 +70,26 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
 
     if (is.null(init_labels)) {
       init_labels <- initial_partition(data, clust_num = clust_num,
-                                       constraint_labels = core_labs,
+                                       constraint_labels = core_labels,
                                        init_seed = init_seed,
                                        init_method = init_method)
     }
     init_params <- initial_parameters(data, init_labels = init_labels)
     # params  <- initialise_model(data, clust_num = clust_num,
-    #                             constraint_labels = chunk_to_core(chunk_labs),
+    #                             constraint_labels = chunk_to_core(chunk_labels),
     #                             init_method = init_method,
     #                             init_seed = init_seed)
   })
 
   em_time <- system.time({
     em <- switch(model,
-                 vm = mustlink_em_vm(data = data, chunk_labs = chunk_labs,
+                 vm = mustlink_em_vm(data = data, chunk_labels = chunk_labels,
                                      params = init_params,
                                      clust_num = clust_num,
                                      maxit = maxit, eps = eps, burnin = burnin,
                                      print_freq = print_freq,
                                      no_print = no_print),
-                 ns = mustlink_em_ns(data = data, chunk_labs = chunk_labs,
+                 ns = mustlink_em_ns(data = data, chunk_labels = chunk_labels,
                                      params = init_params,
                                      clust_num = clust_num,
                                      maxit = maxit, eps = eps, burnin = burnin,
@@ -99,16 +99,15 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
 
   label_time <- system.time({
     chunk_to_clust <- apply(X = em$chunk_pp, MARGIN = 1, FUN = which.max)
-    clust_labs     <- chunk_to_clust[chunk_labs]
+    clust_labels     <- chunk_to_clust[chunk_labels]
   })
 
   times <- rbind(setup_time, em_time, label_time)
   rownames(times) <- c("setup", "em", "label")
 
-  res <- list(clust_labs = clust_labs,
+  res <- list(clust_labels = clust_labels,
               init_labels = init_labels,
-              chunk_labs = chunk_labs,
-              core_labels = core_labs,
+              chunk_labels = chunk_labels,
               em = em,
               times = times
               )

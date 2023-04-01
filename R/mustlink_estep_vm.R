@@ -16,10 +16,10 @@
 #' @export
 #'
 #' @examples
-#' chunk_labs1 <- c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78)
-#' chunk1 <- list(labs = chunk_labs1,
-#'                num = length(unique(chunk_labs1)),
-#'                size = as.numeric(table(chunk_labs1)))
+#' chunk_labels1 <- c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78)
+#' chunk1 <- list(labels = chunk_labels1,
+#'                num = length(unique(chunk_labels1)),
+#'                size = as.numeric(table(chunk_labels1)))
 #' params1 <- initialise_model(iris[, 1:4], clust_num = 3)
 #' mustlink_estep_vm(as.matrix(iris[, 1:4]), chunk = chunk1, params = params1,
 #'                   obs_num = 150, var_num = 4, clust_num = 3)
@@ -43,16 +43,16 @@ mustlink_estep_vm <- function(data, chunk, params,
   singles_chunk <- chunk$size == 1
   # singles_obs is a logical of length obs_num
   # it identifies which observations correspond to the singleton chunklets
-  singles_obs   <- chunk$labs %in% (1:chunk$num)[singles_chunk]
+  singles_obs   <- chunk$labels %in% (1:chunk$num)[singles_chunk]
 
   nonsingle_chunknum <- (1:chunk$num)[!singles_chunk]
-  single_chunknum   <- chunk$labs[singles_obs]
+  single_chunknum   <- chunk$labels[singles_obs]
 
   # lpdf_chunk is the sum of log_pdf values within each chunklet
   lpdf_chunk <- matrix(NA, nrow = chunk$num, ncol = clust_num)
   lpdf_chunk[single_chunknum, ]  <- log_pdf[singles_obs, ]
   lpdf_chunk[nonsingle_chunknum, ] <- rowsum(log_pdf[!singles_obs, ],
-                                               group = chunk$labs[!singles_obs])
+                                               group = chunk$labels[!singles_obs])
 
   # This for loop computes the chunklet posterior probability matrix, chunk_pp,
   chunk_unnorm <- chunk_pp <- matrix(NA, nrow = chunk$num, ncol = clust_num)
@@ -75,7 +75,7 @@ mustlink_estep_vm <- function(data, chunk, params,
 
   ll  <- sum(ll_vec)
 
-  obs_pp <- chunk_pp[chunk$labs, ]
+  obs_pp <- chunk_pp[chunk$labels, ]
 
   return(list(ll = ll,
               chunk_pp = chunk_pp,

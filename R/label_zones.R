@@ -7,7 +7,7 @@
 #' @param data Dataset in matrix or data.frame format.
 #' @param type_marker Matrix, rows for populations, columns for variables.
 #'
-#' @return List containing labs, a matrix with rows for observations and columns
+#' @return List containing labels, a matrix with rows for observations and columns
 #'         for populations, and splits, a vector of the variable bimodal
 #'         threshold values.
 #' @export
@@ -67,18 +67,18 @@ label_zones <- function(data, type_marker) {
                    FUN = function(vec) vec > thresholds))
   obs_tab_pm <- 2 * obs_tab_01 - 1
 
-  zone_labs <- matrix(NA, nrow = obs_num, ncol = zone_num,
+  zone_labels <- matrix(NA, nrow = obs_num, ncol = zone_num,
                       dimnames = list(NULL, zone_names))
   nonneutrals <- type_marker != 0
   for (j in 1:zone_num){
-    zone_labs[, j] <- vapply(X = 1:obs_num,
+    zone_labels[, j] <- vapply(X = 1:obs_num,
                              FUN = function(i) {
                                all(obs_tab_pm[i, nonneutrals[j, ]]
                                    == type_marker[j, nonneutrals[j, ]])
                              }, FUN.VALUE = logical(1))
   }
 
-  return(list(labs = zone_labs,
+  return(list(labels = zone_labels,
               splits = thresholds
               )
          )
