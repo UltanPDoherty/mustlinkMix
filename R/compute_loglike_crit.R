@@ -10,7 +10,7 @@
 #'
 #' @examples
 #' check_loglike_convergence(2, 0, c(-100, -50))
-check_loglike_convergence <- function(it, burnin, loglike) {
+compute_loglike_crit <- function(it, burnin, loglike) {
   loglike_crit <- NA
   # if tree accounts for the log-likelihoods being Inf or -Inf.
   if (it >= burnin) {
