@@ -32,7 +32,7 @@ initial_parameters <- function(data, init_labels) {
   clust_num <- length(unique(init_labels))
   var_num <- ncol(data)
   params$sigma <- array(NA, c(var_num, var_num, clust_num))
-  for (k in 1:clust_num) {
+  for (k in seq_len(clust_num)) {
     params$sigma[, , k] <- stats::cov(data[init_labels == names[k], ])
   }
 

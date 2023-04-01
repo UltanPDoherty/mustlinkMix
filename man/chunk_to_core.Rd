@@ -2,7 +2,7 @@
 % Please edit documentation in R/chunk_to_core.R
 \name{chunk_to_core}
 \alias{chunk_to_core}
-\title{Convert chunk_labels to core_labels, i.e. set all singleton chunklet labels to 0.}
+\title{Convert chunk_labels to core_labels.}
 \usage{
 chunk_to_core(chunk_labels)
 }
@@ -13,5 +13,6 @@ chunk_to_core(chunk_labels)
 Integer vector of core_labels, same length as chunk_labels.
 }
 \description{
-Convert chunk_labels to core_labels, i.e. set all singleton chunklet labels to 0.
+Instead of giving each unconstrained event its own chunklet label, label all
+unconstrained event as belonging to chunklet 0.
 }

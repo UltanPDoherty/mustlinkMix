@@ -4,12 +4,17 @@
 \alias{compute_f1}
 \title{Compute f1 given two vectors of labels}
 \usage{
-compute_f1(clust_labs, true_labs, exclude_from_true = NULL, prec_rec = FALSE)
+compute_f1(
+  clust_labels,
+  true_labels,
+  exclude_from_true = NULL,
+  prec_rec = FALSE
+)
 }
 \arguments{
-\item{clust_labs}{Vector of cluster labels to evaluate.}
+\item{clust_labels}{Vector of cluster labels to evaluate.}
 
-\item{true_labs}{Vector of true / reference labels to compare to.}
+\item{true_labels}{Vector of true / reference labels to compare to.}
 
 \item{exclude_from_true}{Vector of true labels to be excluded.
 Ignored if NULL.}
@@ -29,7 +34,7 @@ iris_tab   <- rbind(se = c(-1, +1, -1, -1),
                     vi = c(+1, 00, +1, +1))
 iris_out <- mustlink(iris[, 1:4], type_marker = iris_tab,
                      clust_num = 3, zone_percent = 90)
-compute_f1(clust_labs = iris_out$clust_labs,
-           true_labs = iris$Species,
+compute_f1(clust_labels = iris_out$clust_labels,
+           true_labels = iris$Species,
            exclude_from_true = "setosa")
 }
