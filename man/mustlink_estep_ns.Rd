@@ -35,10 +35,10 @@ Implement E-step of EM algorithm for GMM
 with positive / must-link constraints.
 }
 \examples{
-chunk_labs1 <- c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78)
-chunk1 <- list(labs = chunk_labs1,
-               num = length(unique(chunk_labs1)),
-               size = as.numeric(table(chunk_labs1)))
+chunk_labels1 <- c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78)
+chunk1 <- list(labels = chunk_labels1,
+               num = length(unique(chunk_labels1)),
+               size = as.numeric(table(chunk_labels1)))
 params1 <- initialise_model(iris[, 1:4], clust_num = 3)
 mustlink_estep_ns(as.matrix(iris[, 1:4]), chunk = chunk1, params = params1,
                   obs_num = 150, var_num = 4, clust_num = 3)

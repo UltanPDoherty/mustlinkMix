@@ -7,8 +7,8 @@
 write_mustlink(
   mustlink_out,
   file_prefix,
-  clust_labs = TRUE,
-  chunk_labs = TRUE,
+  clust_labels = TRUE,
+  chunk_labels = TRUE,
   times = TRUE,
   em_ll = TRUE,
   em_chunk_pp = TRUE,
@@ -20,9 +20,9 @@ write_mustlink(
 
 \item{file_prefix}{Desired file_prefix.}
 
-\item{clust_labs}{Logical: should cluster labels be written to a file?}
+\item{clust_labels}{Logical: should cluster labels be written to a file?}
 
-\item{chunk_labs}{Logical: should chunklet labels be written to a file?}
+\item{chunk_labels}{Logical: should chunklet labels be written to a file?}
 
 \item{times}{Logical: should runtimes be written to a file?}
 

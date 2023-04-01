@@ -2,16 +2,16 @@
 % Please edit documentation in R/chunk_to_core.R
 \name{chunk_to_core}
 \alias{chunk_to_core}
-\title{Convert chunk_labs to core_labs, i.e. set all singleton chunklet labels to 0.}
+\title{Convert chunk_labels to core_labels, i.e. set all singleton chunklet labels to 0.}
 \usage{
-chunk_to_core(chunk_labs)
+chunk_to_core(chunk_labels)
 }
 \arguments{
-\item{chunk_labs}{Integer vector of chunklet labels.}
+\item{chunk_labels}{Integer vector of chunklet labels.}
 }
 \value{
-Integer vector of core_labels, same length as chunk_labs.
+Integer vector of core_labels, same length as chunk_labels.
 }
 \description{
-Convert chunk_labs to core_labs, i.e. set all singleton chunklet labels to 0.
+Convert chunk_labels to core_labels, i.e. set all singleton chunklet labels to 0.
 }

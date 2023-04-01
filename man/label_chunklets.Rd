@@ -4,19 +4,19 @@
 \alias{label_chunklets}
 \title{Convert +/- Table Labels into Chunklets}
 \usage{
-label_chunklets(data, zone_labs, zone_percent)
+label_chunklets(data, zone_labels, zone_percent)
 }
 \arguments{
 \item{data}{Dataset in matrix or data.frame form.}
 
-\item{zone_labs}{Output from table_to_labs.}
+\item{zone_labels}{Output from label_zones.}
 
 \item{zone_percent}{Percentage of events in zone to be included in each
 chunklet, either one value for all chunklets or one value
 per chunklet.}
 }
 \value{
-A list of two label vectors, labs with all non-core points labelled
+A list of two label vectors, labels with all non-core points labelled
 0, chunks with all non-core points given their own chunklet label.
 }
 \description{
@@ -26,7 +26,8 @@ Convert +/- Table Labels into Chunklets
 iris_tab   <- rbind(se = c(-1, +1, -1, -1),
                     ve = c(00, -1, +1, +1),
                     vi = c(+1, 00, +1, +1))
-iris_zone_labs <- label_zones(iris[, 1:4], type_marker = iris_tab)$labs
-iris_chunk_labs <- label_chunklets(iris[, 1:4], zone_labs = iris_zone_labs,
-                                   zone_percent = 90)
+iris_zone_labels <- label_zones(iris[, 1:4], type_marker = iris_tab)$labels
+iris_chunk_labels <- label_chunklets(iris[, 1:4],
+                                     zone_labels = iris_zone_labels,
+                                     zone_percent = 90)
 }

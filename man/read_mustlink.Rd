@@ -6,8 +6,8 @@
 \usage{
 read_mustlink(
   file_prefix,
-  clust_labs = TRUE,
-  chunk_labs = TRUE,
+  clust_labels = TRUE,
+  chunk_labels = TRUE,
   times = TRUE,
   em_ll = TRUE,
   em_chunk_pp = TRUE,
@@ -17,9 +17,9 @@ read_mustlink(
 \arguments{
 \item{file_prefix}{Desired file_prefix.}
 
-\item{clust_labs}{Logical: should cluster labels be read from a file?}
+\item{clust_labels}{Logical: should cluster labels be read from a file?}
 
-\item{chunk_labs}{Logical: should chunklet labels be read from a file?}
+\item{chunk_labels}{Logical: should chunklet labels be read from a file?}
 
 \item{times}{Logical: should mustlink runtimes be read from a file?}
 

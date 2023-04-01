@@ -6,7 +6,7 @@
 \usage{
 mustlink_em_vm(
   data,
-  chunk_labs,
+  chunk_labels,
   params,
   clust_num,
   burnin = 10,
@@ -20,7 +20,7 @@ mustlink_em_vm(
 \arguments{
 \item{data}{Dataset in matrix form.}
 
-\item{chunk_labs}{Output from chunklet_cores.}
+\item{chunk_labels}{Output from chunklet_cores.}
 
 \item{params}{Model parameters, for example, output from initialise_model.}
 
@@ -51,12 +51,12 @@ Must-Link / Positive Constraint EM GMM.
 iris_tab   <- rbind(se = c(-1, +1, -1, -1),
                     ve = c(00, -1, +1, +1),
                     vi = c(+1, 00, +1, +1))
-iris_zone_labs <- label_zones(iris[, 1:4], type_marker = iris_tab)$labs
-iris_chunk_labs <- label_chunklets(iris[, 1:4],
-                                   zone_labs = iris_zone_labs,
+iris_zone_labels <- label_zones(iris[, 1:4], type_marker = iris_tab)$labels
+iris_chunk_labels <- label_chunklets(iris[, 1:4],
+                                   zone_labels = iris_zone_labels,
                                    zone_percent = 90)$chunk
 iris_init <- initialise_model(iris[, 1:4], clust_num = 3,
                               start = "k-Means", init_seed = 123)
 mustlink_em_vm(as.matrix(iris[, 1:4]), clust_num = 3,
-             chunk_labs = iris_chunk_labs, params = iris_init)
+             chunk_labels = iris_chunk_labels, params = iris_init)
 }
