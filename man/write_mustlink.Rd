@@ -8,6 +8,7 @@ write_mustlink(
   mustlink_out,
   file_prefix,
   clust_labels = TRUE,
+  init_labels = TRUE,
   chunk_labels = TRUE,
   times = TRUE,
   em_loglike = TRUE,
@@ -21,6 +22,8 @@ write_mustlink(
 \item{file_prefix}{Desired file_prefix.}
 
 \item{clust_labels}{Logical: should cluster labels be written to a file?}
+
+\item{init_labels}{Logical: should initial labels be written to a file?}
 
 \item{chunk_labels}{Logical: should chunklet labels be written to a file?}
 

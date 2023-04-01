@@ -2,6 +2,7 @@
 #'
 #' @param file_prefix Desired file_prefix.
 #' @param clust_labels Logical: should cluster labels be read from a file?
+#' @param init_labels Logical: should initial labels be read from a file?
 #' @param chunk_labels Logical: should chunklet labels be read from a file?
 #' @param times Logical: should mustlink runtimes be read from a file?
 #' @param em_loglike Logical: should log-likelihood values be read from a file?
@@ -13,8 +14,7 @@
 #' @export
 
 read_mustlink <- function(file_prefix,
-                        clust_labels = TRUE, chunk_labels = TRUE, times = TRUE,
-                        em_ll = TRUE, em_chunk_pp = TRUE, em_params = TRUE) {
+                          clust_labels = TRUE, init_labels = TRUE,
                           chunk_labels = TRUE, times = TRUE, em_loglike = TRUE,
                           em_chunk_pp = TRUE, em_params = TRUE) {
 
@@ -23,6 +23,11 @@ read_mustlink <- function(file_prefix,
   if (clust_labels) {
     out$clust_labels <- utils::read.table(file = paste0(file_prefix,
                                                       "_clust_labels.txt"))$V1
+  }
+
+  if (init_labels) {
+    out$init_labels <- utils::read.table(file = paste0(file_prefix,
+                                                        "_init_labels.txt"))$V1
   }
 
   if (chunk_labels) {
