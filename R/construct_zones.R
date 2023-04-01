@@ -20,33 +20,28 @@
 construct_zones <- function(data, type_marker) {
 
   event_num <- nrow(data)
-  var_num <- ncol(data)
   zone_num <- nrow(type_marker)
+  zone_names <- rownames(type_marker)
 
   check_zone_overlap(type_marker = type_marker)
 
-  to_be_split <- which(vapply(X = 1:var_num, FUN.VALUE = logical(1),
-                              FUN = function(p) any(type_marker[, p] != 0)))
-
-  # create a vector of +/- splits to check every row of the data against
-  splits <- rep(NA, var_num)
-  splits[to_be_split] <- vapply(to_be_split, FUN.VALUE = double(1),
-                                FUN = function(p) flowDensity::deGate(data[, p]))
+  splits <- compute_splits(data, type_marker = type_marker)
 
   # create a +1/-1 matrix the same size as the data flowFrame
-  obs_tab_01 <- t(apply(X = data, MARGIN = 1,
-                   FUN = function(vec) vec > splits))
-  obs_tab_pm <- 2 * obs_tab_01 - 1
+  is_event_positive <- t(apply(X = data, MARGIN = 1,
+                         FUN = function(event) event > splits))
+  event_plusminus <- (2 * is_event_positive) - 1
 
   zone_matrix <- matrix(NA, nrow = event_num, ncol = zone_num,
-                      dimnames = list(NULL, zone_names))
-  nonneutrals <- type_marker != 0
+                        dimnames = list(NULL, zone_names))
+  nonzero_markers <- list()
   for (j in 1:zone_num){
-    zone_matrix[, j] <- vapply(X = 1:event_num,
-                             FUN = function(i) {
-                               all(obs_tab_pm[i, nonneutrals[j, ]]
-                                   == type_marker[j, nonneutrals[j, ]])
-                             }, FUN.VALUE = logical(1))
+    nonzero_markers[[j]] <- type_marker[j, ] != 0
+    zone_matrix[, j] <- apply(event_plusminus, MARGIN = 1,
+                              FUN = function(x) {
+                                all(x[nonzero_markers[[j]]]
+                                    == type_marker[j, nonzero_markers[[j]]])
+                              })
   }
 
   return(list(matrix = zone_matrix,
@@ -54,7 +49,6 @@ construct_zones <- function(data, type_marker) {
               )
          )
 }
-
 
 check_zone_overlap <- function(type_marker) {
   zone_num <- nrow(type_marker)
@@ -64,22 +58,40 @@ check_zone_overlap <- function(type_marker) {
     zone_names <- 1:zone_num
   }
 
-  pairs <- utils::combn(1:zone_num, 2)
-  pair_names <- matrix(zone_names[pairs], nrow = 2)
+  pair_nums  <- utils::combn(1:zone_num, 2)
+  pair_names <- utils::combn(zone_names, 2,
+                             FUN = function(x) paste(x, collapse = "-"))
 
-  rowdiffs <- abs(type_marker[pairs[1, ], ] - type_marker[pairs[2, ], ])
-  rownames(rowdiffs) <- apply(X = pair_names, MARGIN = 2,
-                              FUN = function(x) paste(x, collapse = "-"))
+  rowdiffs <- abs(type_marker[pair_nums[1, ], ] - type_marker[pair_nums[2, ], ])
 
   maxdiffs <- apply(X = rowdiffs, MARGIN = 1, FUN = max)
   if (any(maxdiffs == 0)) {
     stop(paste0("The following pair(s) of population zones are identical: ",
-                paste(names(maxdiffs)[which(maxdiffs == 0)], sep = ", "),
+                paste(pair_names[which(maxdiffs == 0)], sep = ", "),
                 ".\n"))
   }
   if (any(maxdiffs == 1)) {
     message(paste0("The following pair(s) of population zones overlap: ",
-                   paste(names(maxdiffs)[which(maxdiffs == 1)], sep = ", "),
+                   paste(pair_names[which(maxdiffs == 1)], sep = ", "),
                    ".\n"))
   }
 }
+
+
+compute_splits <- function(data, type_marker) {
+  var_num <- ncol(data)
+
+  nonzero_markers <- lapply(seq_len(var_num),
+                            FUN = function(j) type_marker[, j] != 0)
+  to_be_split <- vapply(nonzero_markers, FUN.VALUE = logical(1), FUN = any)
+
+  # create a vector of +/- splits to check every row of the data against
+  splits <- rep(NA, var_num)
+  splits[to_be_split] <- vapply(which(to_be_split), FUN.VALUE = double(1),
+                                FUN = function(p) {
+                                  flowDensity::deGate(data[, p])
+                                })
+
+  return(splits)
+}
+
