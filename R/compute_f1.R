@@ -1,7 +1,7 @@
 #' Compute f1 given two vectors of labels
 #'
-#' @param clust_labs Vector of cluster labels to evaluate.
-#' @param true_labs Vector of true / reference labels to compare to.
+#' @param clust_labels Vector of cluster labels to evaluate.
+#' @param true_labels Vector of true / reference labels to compare to.
 #' @param exclude_from_true Vector of true labels to be excluded.
 #'                           Ignored if NULL.
 #' @param prec_rec Logical: Should vectors of precision and recall values,
@@ -16,31 +16,31 @@
 #'                     vi = c(+1, 00, +1, +1))
 #' iris_out <- mustlink(iris[, 1:4], type_marker = iris_tab,
 #'                      clust_num = 3, zone_percent = 90)
-#' compute_f1(clust_labs = iris_out$clust_labs,
-#'            true_labs = iris$Species,
+#' compute_f1(clust_labels = iris_out$clust_labels,
+#'            true_labels = iris$Species,
 #'            exclude_from_true = "setosa")
 
-compute_f1 <- function(clust_labs, true_labs,
+compute_f1 <- function(clust_labels, true_labels,
                        exclude_from_true = NULL,
                        prec_rec = FALSE) {
 
   if (!is.null(exclude_from_true)) {
-    excluded   <- true_labs %in% exclude_from_true
-    true_labs  <- true_labs[!excluded]
-    clust_labs <- clust_labs[!excluded]
-    if (is.factor(true_labs)) {
-      true_labs <- droplevels(true_labs)
+    excluded   <- true_labels %in% exclude_from_true
+    true_labels  <- true_labels[!excluded]
+    clust_labels <- clust_labels[!excluded]
+    if (is.factor(true_labels)) {
+      true_labels <- droplevels(true_labels)
     }
-    if (is.factor(clust_labs)) {
-      clust_labs <- droplevels(clust_labs)
+    if (is.factor(clust_labels)) {
+      clust_labels <- droplevels(clust_labels)
     }
   }
 
-  true_num  <- length(unique(true_labs))
-  clust_num <- length(unique(clust_labs))
+  true_num  <- length(unique(true_labels))
+  clust_num <- length(unique(clust_labels))
 
 
-  tab <- table(true_labs, clust_labs)
+  tab <- table(true_labels, clust_labels)
 
   re_mat <- sweep(tab, STATS = rowSums(tab), FUN = "/", MARGIN = 1)
   pr_mat <- sweep(tab, STATS = colSums(tab), FUN = "/", MARGIN = 2)
