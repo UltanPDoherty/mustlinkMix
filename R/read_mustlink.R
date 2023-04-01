@@ -4,7 +4,7 @@
 #' @param clust_labels Logical: should cluster labels be read from a file?
 #' @param chunk_labels Logical: should chunklet labels be read from a file?
 #' @param times Logical: should mustlink runtimes be read from a file?
-#' @param em_ll Logical: should log-likelihood values be read from a file?
+#' @param em_loglike Logical: should log-likelihood values be read from a file?
 #' @param em_chunk_pp Logical: should posterior probability matrix be read from
 #'                    a file?
 #' @param em_params Logical: should model parameters be read from a file?
@@ -15,6 +15,8 @@
 read_mustlink <- function(file_prefix,
                         clust_labels = TRUE, chunk_labels = TRUE, times = TRUE,
                         em_ll = TRUE, em_chunk_pp = TRUE, em_params = TRUE) {
+                          chunk_labels = TRUE, times = TRUE, em_loglike = TRUE,
+                          em_chunk_pp = TRUE, em_params = TRUE) {
 
   out <- list()
 
@@ -33,12 +35,12 @@ read_mustlink <- function(file_prefix,
                                    header = TRUE, row.names = 1)
   }
 
-  if (any(c(em_ll, em_chunk_pp, em_params))) {
+  if (any(c(em_loglike, em_chunk_pp, em_params))) {
     out$em <- list()
   }
 
-  if (em_ll) {
-    out$em$ll <- utils::read.table(file = paste0(file_prefix,
+  if (em_loglike) {
+    out$em$loglike <- utils::read.table(file = paste0(file_prefix,
                                                  "_loglike.txt"))$V1
   }
 
