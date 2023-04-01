@@ -21,14 +21,7 @@
 label_chunklets <- function(data, zone_labels, zone_percent) {
 
   chunk_num <- ncol(zone_labels)
-  obs_num   <- nrow(data)
-  var_num   <- ncol(data)
-
-  regions <- densities <- list()
-  means   <- matrix(NA, nrow = chunk_num, ncol = var_num)
-  sigmas  <- array(NA, dim = c(var_num, var_num, chunk_num))
-  cores   <- matrix(NA, nrow = obs_num, ncol = chunk_num)
-  quants  <- vector("numeric", length = chunk_num)
+  event_num <- nrow(data)
 
   if (length(zone_percent) == 1) {
     zone_percent <- rep(zone_percent, times = chunk_num)
@@ -43,24 +36,25 @@ label_chunklets <- function(data, zone_labels, zone_percent) {
     prob <- (100 - zone_percent) / 100
   }
 
-  # only points in region l can be assigned to chunklet l
+  zones <- densities <- list()
+  cores <- matrix(NA, nrow = event_num, ncol = chunk_num)
+  quantiles <- vector("numeric", length = chunk_num)
+
+  # only points in zone l can be assigned to chunklet l
   # the highest Gaussian density points in region l are selected
   for (l in 1:chunk_num) {
-    regions[[l]]   <- data[zone_labels[, l], ]
+    zones[[l]]   <- data[zone_labels[, l], ]
 
-    means[l, ]     <- colMeans(regions[[l]])
-    sigmas[, , l]  <- stats::cov(regions[[l]])
+    densities[[l]] <- mvtnorm::dmvnorm(zones[[l]],
+                                       mean = colMeans(zones[[l]]),
+                                       sigma = stats::cov(zones[[l]]))
+    quantiles[l] <- stats::quantile(densities[[l]], prob[l])
 
-    densities[[l]] <- mvtnorm::dmvnorm(regions[[l]],
-                                       mean = means[l, ],
-                                       sigma = sigmas[, , l])
-    quants[l] <- stats::quantile(densities[[l]], prob[l])
-
-    cores[zone_labels[, l], l]  <- densities[[l]] >= quants[l]
+    cores[zone_labels[, l], l]  <- densities[[l]] >= quantiles[l]
     cores[!zone_labels[, l], l] <- FALSE
   }
 
-  # regions may not be disjoint, so the cores could overlap, prevent this
+  # zones may overlap but cores are prevented from doing so
 
   cores_count   <- rowSums(cores)
   cores_overlap <- cores_count > 1
@@ -82,7 +76,7 @@ label_chunklets <- function(data, zone_labels, zone_percent) {
                    "\n \n"))
     }
 
-  core_labels <- chunk_labels <- vector("integer", length = obs_num)
+  core_labels <- chunk_labels <- vector("integer", length = event_num)
 
   # remove overlap
   core_labels[!cores_single]  <- 0L
