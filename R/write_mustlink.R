@@ -5,7 +5,7 @@
 #' @param clust_labels Logical: should cluster labels be written to a file?
 #' @param chunk_labels Logical: should chunklet labels be written to a file?
 #' @param times Logical: should runtimes be written to a file?
-#' @param em_ll Logical: should log-likelihood values be written to a file?
+#' @param em_loglike Logical: should log-likelihood values be written to a file?
 #' @param em_chunk_pp Logical: should posterior probability matrix be written to
 #'                    a file?
 #' @param em_params Logical: should model parameters be written to a file?
@@ -15,7 +15,7 @@
 #'
 write_mustlink <- function(mustlink_out, file_prefix,
                            clust_labels = TRUE, chunk_labels = TRUE, times = TRUE,
-                           em_ll = TRUE, em_chunk_pp = TRUE, em_params = TRUE) {
+                           em_loglike = TRUE, em_chunk_pp = TRUE, em_params = TRUE) {
 
   if (clust_labels) {
     utils::write.table(mustlink_out$clust_labels,
@@ -35,8 +35,8 @@ write_mustlink <- function(mustlink_out, file_prefix,
                        row.names = TRUE)
   }
 
-  if (em_ll) {
-    utils::write.table(mustlink_out$em$ll,
+  if (em_loglike) {
+    utils::write.table(mustlink_out$em$loglike,
                        file = paste0(file_prefix, "_loglike.txt"),
                        row.names = FALSE, col.names = FALSE)
   }

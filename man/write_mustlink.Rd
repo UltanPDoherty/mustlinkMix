@@ -10,7 +10,7 @@ write_mustlink(
   clust_labels = TRUE,
   chunk_labels = TRUE,
   times = TRUE,
-  em_ll = TRUE,
+  em_loglike = TRUE,
   em_chunk_pp = TRUE,
   em_params = TRUE
 )
@@ -26,7 +26,7 @@ write_mustlink(
 
 \item{times}{Logical: should runtimes be written to a file?}
 
-\item{em_ll}{Logical: should log-likelihood values be written to a file?}
+\item{em_loglike}{Logical: should log-likelihood values be written to a file?}
 
 \item{em_chunk_pp}{Logical: should posterior probability matrix be written to
 a file?}

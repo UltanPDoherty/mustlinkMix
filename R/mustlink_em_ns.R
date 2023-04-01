@@ -32,7 +32,7 @@ mustlink_em_ns <- function(data, chunk_labels, params, clust_num,
                         burnin = 10, maxit = 1000, eps = 1e-10,
                         no_print = FALSE, print_freq = 1) {
   it <- 0
-  ll <- c()
+  loglike <- c()
 
   obs_num <- nrow(data)
   var_num <- ncol(params$mu)
@@ -48,19 +48,19 @@ mustlink_em_ns <- function(data, chunk_labels, params, clust_num,
                                  obs_num = obs_num, var_num = var_num,
                                  clust_num = clust_num)
 
-    ll <- append(ll, e_out$ll)
+    loglike <- append(loglike, e_out$loglike)
 
     if (!no_print && it %% print_freq == 1) {
       cat(paste0("...No. of E-Steps: ", it,
-                 ",\t log-likelihood: ", round(ll[it],     digits = 5),
+                 ",\t log-likelihood: ", round(loglike[it],     digits = 5),
                  ",\t Sys.time: ", Sys.time(), "\n"))
     }
 
-    # ll_crit is the relative increase in the log-likelihood.
-    ll_crit <- check_ll_convergence(it = it, burnin = burnin, ll = ll)
+    # loglike_crit is the relative increase in the log-likelihood.
+    loglike_crit <- check_loglike_convergence(it = it, burnin = burnin, loglike = loglike)
 
     # EM has converged if the relative difference between consecutive values
-    # of the log-likelihood, i.e. ll_crit, is not NA and is less than eps.
+    # of the log-likelihood, i.e. loglike_crit, is not NA and is less than eps.
     if (it == maxit) {
       warning(paste0("EM algorithm did not converge before ",
                      maxit, " iterations."))
@@ -68,7 +68,7 @@ mustlink_em_ns <- function(data, chunk_labels, params, clust_num,
         cat(paste0("...EM stopped at ", Sys.time(), "\n"))
       }
       break
-    } else if (!is.na(ll_crit) && ll_crit < eps) {
+    } else if (!is.na(loglike_crit) && loglike_crit < eps) {
       if (!no_print) {
         cat(paste0("...EM converged at ", Sys.time(), "\n"))
       }
@@ -85,5 +85,5 @@ mustlink_em_ns <- function(data, chunk_labels, params, clust_num,
 
   return(list(chunk_pp = e_out$chunk_pp,
               params = params,
-              ll = ll))
+              loglike = loglike))
 }

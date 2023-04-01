@@ -56,7 +56,7 @@ mustlink_estep_vm <- function(data, chunk, params,
 
   # This for loop computes the chunklet posterior probability matrix, chunk_pp,
   chunk_unnorm <- chunk_pp <- matrix(NA, nrow = chunk$num, ncol = clust_num)
-  log_maxes <- ll_vec <- chunk_unnorm_sums <- vector(mode = "numeric",
+  log_maxes <- loglike_vec <- chunk_unnorm_sums <- vector(mode = "numeric",
                                                      length = chunk$num)
 
   for (l in 1:chunk$num) {
@@ -70,14 +70,14 @@ mustlink_estep_vm <- function(data, chunk, params,
     chunk_unnorm_sums[l] <- sum(chunk_unnorm[l, ])
     chunk_pp[l, ] <- chunk_unnorm[l, ] / chunk_unnorm_sums[l]
 
-    ll_vec[l] <- log(chunk_unnorm_sums[l]) + log_maxes[l]
+    loglike_vec[l] <- log(chunk_unnorm_sums[l]) + log_maxes[l]
   }
 
-  ll  <- sum(ll_vec)
+  loglike  <- sum(loglike_vec)
 
   obs_pp <- chunk_pp[chunk$labels, ]
 
-  return(list(ll = ll,
+  return(list(loglike = loglike,
               chunk_pp = chunk_pp,
               obs_pp = obs_pp))
 }
