@@ -7,7 +7,7 @@
 #' @param data Dataset being clustered in matrix form.
 #' @param params List containing prop, mu, sigma.
 #' @param chunk Object from make_chunk.
-#' @param obs_num Number of observations in the dataset.
+#' @param event_num Number of observations in the dataset.
 #' @param var_num Number of varibles in the dataset.
 #' @param clust_num Number of clusters pre-specified.
 #'
@@ -22,14 +22,14 @@
 #'                size = as.numeric(table(chunk_labels1)))
 #' params1 <- initialise_model(iris[, 1:4], clust_num = 3)
 #' mustlink_estep_ns(as.matrix(iris[, 1:4]), chunk = chunk1, params = params1,
-#'                   obs_num = 150, var_num = 4, clust_num = 3)
+#'                   event_num = 150, var_num = 4, clust_num = 3)
 mustlink_estep_ns <- function(data, chunk, params,
-                           obs_num = nrow(data), var_num = ncol(params$mu),
+                           event_num = nrow(data), var_num = ncol(params$mu),
                            clust_num = nrow(params$mu)) {
 
-  # log_pdf is an obs_num x clust_num matrix
+  # log_pdf is an event_num x clust_num matrix
   # it is the log pdf for each component evaluated at every point
-  log_pdf <- vapply(1:clust_num, FUN.VALUE = double(obs_num),
+  log_pdf <- vapply(1:clust_num, FUN.VALUE = double(event_num),
                     FUN = function(k) {
                       mvtnorm::dmvnorm(data, log = TRUE,
                                        mean = params$mu[k, ],
@@ -41,7 +41,7 @@ mustlink_estep_ns <- function(data, chunk, params,
   # it identifies which chunklets are singletons,
   # i.e. unconstrained observations
   singles_chunk <- chunk$size == 1
-  # singles_obs is a logical of length obs_num
+  # singles_obs is a logical of length event_num
   # it identifies which observations correspond to the singleton chunklets
   singles_obs   <- chunk$labels %in% (1:chunk$num)[singles_chunk]
 

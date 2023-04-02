@@ -8,7 +8,7 @@ mustlink_estep_ns(
   data,
   chunk,
   params,
-  obs_num = nrow(data),
+  event_num = nrow(data),
   var_num = ncol(params$mu),
   clust_num = nrow(params$mu)
 )
@@ -20,7 +20,7 @@ mustlink_estep_ns(
 
 \item{params}{List containing prop, mu, sigma.}
 
-\item{obs_num}{Number of observations in the dataset.}
+\item{event_num}{Number of observations in the dataset.}
 
 \item{var_num}{Number of varibles in the dataset.}
 
@@ -41,5 +41,5 @@ chunk1 <- list(labels = chunk_labels1,
                size = as.numeric(table(chunk_labels1)))
 params1 <- initialise_model(iris[, 1:4], clust_num = 3)
 mustlink_estep_ns(as.matrix(iris[, 1:4]), chunk = chunk1, params = params1,
-                  obs_num = 150, var_num = 4, clust_num = 3)
+                  event_num = 150, var_num = 4, clust_num = 3)
 }

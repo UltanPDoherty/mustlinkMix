@@ -9,7 +9,7 @@
 #' @param chunk_pp Chunklet posterior probability matrix.
 #' @param chunk_num Number of chunklets.
 #' @param clust_num Number of clusters pre-specified.
-#' @param obs_num Number of observations in the dataset.
+#' @param event_num Number of observations in the dataset.
 #' @param var_num Number of variables in the dataset.
 #'
 #' @return List containing prop, mu, sigma.
@@ -23,7 +23,7 @@
 #' params1 <- initialise_model(iris[, 1:4], clust_num = 3)
 #' e_out1  <- mustlink_estep_ns(as.matrix(iris[, 1:4]),
 #'                              chunk = chunk1, params = params1,
-#'                              obs_num = 150, var_num = 4, clust_num = 3)
+#'                              event_num = 150, var_num = 4, clust_num = 3)
 #' obs_pp1 <- e_out1$obs_pp
 #' chunk_pp1 <- e_out1$chunk_pp
 #' mustlink_mstep_ns(as.matrix(iris[, 1:4]),
@@ -31,7 +31,7 @@
 mustlink_mstep_ns <- function(data, obs_pp, chunk_pp,
                            chunk_num = nrow(chunk_pp),
                            clust_num = ncol(chunk_pp),
-                           obs_num = nrow(data),
+                           event_num = nrow(data),
                            var_num = ncol(data)) {
 
   # Chunklet mixing proportions
@@ -44,7 +44,7 @@ mustlink_mstep_ns <- function(data, obs_pp, chunk_pp,
   mu <- t(obs_pp2) %*% data
 
   # Covariance matrix
-  data_mu <- array(dim = c(obs_num, var_num, clust_num))
+  data_mu <- array(dim = c(event_num, var_num, clust_num))
   sigma   <- array(dim = c(var_num, var_num, clust_num))
   for (k in 1:clust_num) {
     data_mu[, , k] <- sqrt(obs_pp2[, k]) * scale(data, center = mu[k, ],

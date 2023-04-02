@@ -10,7 +10,7 @@ mustlink_mstep_ns(
   chunk_pp,
   chunk_num = nrow(chunk_pp),
   clust_num = ncol(chunk_pp),
-  obs_num = nrow(data),
+  event_num = nrow(data),
   var_num = ncol(data)
 )
 }
@@ -25,7 +25,7 @@ mustlink_mstep_ns(
 
 \item{clust_num}{Number of clusters pre-specified.}
 
-\item{obs_num}{Number of observations in the dataset.}
+\item{event_num}{Number of observations in the dataset.}
 
 \item{var_num}{Number of variables in the dataset.}
 }
@@ -44,7 +44,7 @@ chunk1 <- list(labels = chunk_labels1,
 params1 <- initialise_model(iris[, 1:4], clust_num = 3)
 e_out1  <- mustlink_estep_ns(as.matrix(iris[, 1:4]),
                              chunk = chunk1, params = params1,
-                             obs_num = 150, var_num = 4, clust_num = 3)
+                             event_num = 150, var_num = 4, clust_num = 3)
 obs_pp1 <- e_out1$obs_pp
 chunk_pp1 <- e_out1$chunk_pp
 mustlink_mstep_ns(as.matrix(iris[, 1:4]),

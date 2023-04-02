@@ -34,7 +34,7 @@ mustlink_em_ns <- function(data, chunk_labels, params, clust_num,
   it <- 0
   loglike <- c()
 
-  obs_num <- nrow(data)
+  event_num <- nrow(data)
   var_num <- ncol(params$mu)
 
   chunk <- list(labels = chunk_labels,
@@ -45,8 +45,8 @@ mustlink_em_ns <- function(data, chunk_labels, params, clust_num,
     it <- it + 1
 
     e_out <- mustlink_estep_ns(data, chunk = chunk, params = params,
-                                 obs_num = obs_num, var_num = var_num,
-                                 clust_num = clust_num)
+                               event_num = event_num, var_num = var_num,
+                               clust_num = clust_num)
 
     loglike <- append(loglike, e_out$loglike)
 
@@ -79,7 +79,7 @@ mustlink_em_ns <- function(data, chunk_labels, params, clust_num,
                                 obs_pp = e_out$obs_pp,
                                 chunk_pp = e_out$chunk_pp,
                                 chunk_num = chunk$num, clust_num = clust_num,
-                                obs_num = obs_num, var_num = var_num)
+                                obs_num = event_num, var_num = var_num)
 
   }
 

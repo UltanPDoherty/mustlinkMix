@@ -8,7 +8,7 @@ mustlink_estep_vm(
   data,
   chunk,
   params,
-  obs_num = nrow(data),
+  event_num = nrow(data),
   var_num = ncol(params$mu),
   clust_num = nrow(params$mu)
 )
@@ -20,7 +20,7 @@ mustlink_estep_vm(
 
 \item{params}{List containing prop, mu, sigma.}
 
-\item{obs_num}{Number of observations in the dataset.}
+\item{event_num}{Number of observations in the dataset.}
 
 \item{var_num}{Number of varibles in the dataset.}
 
