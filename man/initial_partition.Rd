@@ -7,7 +7,7 @@
 initial_partition(
   data,
   clust_num,
-  constraint_labels = NULL,
+  linked_set_labels = NULL,
   init_seed = NULL,
   init_method = c("Must-Link k-Means++", "k-Means++", "k-Means")
 )
@@ -17,7 +17,7 @@ initial_partition(
 
 \item{clust_num}{Number of clusters.}
 
-\item{constraint_labels}{Label indicating which constrained set an event
+\item{linked_set_labels}{Label indicating which linked set an event
 belongs to, 0 for unconstrained events.}
 
 \item{init_seed}{Seed.}

@@ -71,7 +71,7 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
 
     if (is.null(init_labels)) {
       init_labels <- initial_partition(data, clust_num = clust_num,
-                                       constraint_labels = core_labels,
+                                       linked_set_labels = linked_set_labels,
                                        init_seed = init_seed,
                                        init_method = init_method)
     }
