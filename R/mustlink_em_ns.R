@@ -45,7 +45,7 @@ mustlink_em_ns <- function(data, block_labels, params, clust_num,
   repeat {
     it <- it + 1
 
-    e_out <- mustlink_estep_ns(data, chunk = block, params = params,
+    e_out <- mustlink_estep_ns(data, block = block, params = params,
                                event_num = event_num, var_num = var_num,
                                clust_num = clust_num)
 
@@ -58,7 +58,7 @@ mustlink_em_ns <- function(data, block_labels, params, clust_num,
     }
 
     # loglike_crit is the relative increase in the log-likelihood.
-    loglike_crit <- check_loglike_convergence(it = it, burnin = burnin, loglike = loglike)
+    loglike_crit <- compute_loglike_crit(it = it, burnin = burnin, loglike = loglike)
 
     # EM has converged if the relative difference between consecutive values
     # of the log-likelihood, i.e. loglike_crit, is not NA and is less than eps.
@@ -78,13 +78,13 @@ mustlink_em_ns <- function(data, block_labels, params, clust_num,
 
     params <- mustlink_mstep_ns(data,
                                 obs_pp = e_out$obs_pp,
-                                chunk_pp = e_out$chunk_pp,
+                                block_pp = e_out$chunk_pp,
                                 chunk_num = block$num, clust_num = clust_num,
                                 obs_num = event_num, var_num = var_num)
 
   }
 
-  return(list(block_pp = e_out$chunk_pp,
+  return(list(block_pp = e_out$block_pp,
               params = params,
               loglike = loglike))
 }

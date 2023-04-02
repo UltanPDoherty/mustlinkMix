@@ -48,7 +48,7 @@ mustlink_em_vm <- function(data, block_labels, params, clust_num,
   repeat {
     it <- it + 1
 
-    e_out <- mustlink_estep_vm(data, chunk = block, params = params,
+    e_out <- mustlink_estep_vm(data, block = block, params = params,
                                event_num = event_num, var_num = var_num,
                                clust_num = clust_num)
 
@@ -82,12 +82,12 @@ mustlink_em_vm <- function(data, block_labels, params, clust_num,
 
     params <- mustlink_mstep_vm(data,
                                 obs_pp = e_out$obs_pp,
-                                chunk_pp = e_out$chunk_pp,
+                                chunk_pp = e_out$block_pp,
                                 chunk_num = block$num, clust_num = clust_num,
                                 event_num = event_num, var_num = var_num)
   }
 
-  return(list(block_pp = e_out$chunk_pp,
+  return(list(block_pp = e_out$block_pp,
               params = params,
               loglike = loglike))
 }
