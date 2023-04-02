@@ -5,6 +5,7 @@
 #'                     number and every non-linked event has its own number.
 #' @param params Model parameters, for example, output from initialise_model.
 #' @param clust_num Number of clusters.
+#' @param zone_num Number of zones.
 #' @param burnin Number of iterations before likelihood convergence criterion is
 #'               checked.
 #' @param print_freq Number of iterations between print statements during EM.
@@ -30,10 +31,10 @@
 #' mustlink_em_vm(as.matrix(iris[, 1:4]), clust_num = 3,
 #'              block_labels = iris_block_labels, params = iris_init)
 
-mustlink_em <- function(data, block_labels, params, clust_num,
-                           print_freq = 1,
-                           model = c("vm", "ns")) {
+mustlink_em <- function(data, block_labels, params, clust_num, zone_num,
                         burnin = 2, maxit = 1e4, eps = 1e-10,
+                        print_freq = 1,
+                        model = c("vm", "ns")) {
 
   model <- rlang::arg_match(model)
 
@@ -45,14 +46,16 @@ mustlink_em <- function(data, block_labels, params, clust_num,
 
   block <- list(labels = block_labels,
                 num = length(unique(block_labels)),
-                size = as.numeric(table(block_labels)))
+                size = as.numeric(table(block_labels)),
+                zone_num = zone_num)
 
   repeat {
     it <- it + 1
 
     e_out <- mustlink_estep(data, block = block, params = params,
                             event_num = event_num, var_num = var_num,
-                            clust_num = clust_num, model = model)
+                            clust_num = clust_num,
+                            model = model)
 
     loglike <- append(loglike, e_out$loglike)
 

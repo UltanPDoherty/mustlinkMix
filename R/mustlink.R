@@ -49,15 +49,17 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
 
   setup_time <- system.time({
     if (is.null(type_marker)) {
-      block_labels <- seq_len(nrow(data))
+      block_labels <- linked_set_labels <- seq_len(nrow(data))
+      zone_num <- 0
     } else {
       zone_matrix <- construct_zones(data = data,
                                      type_marker = type_marker)$matrix
+      zone_num <- ncol(zone_matrix)
 
       constraints <- label_constraints(data = data, zone_matrix = zone_matrix,
-                                   zone_percent = zone_percent)
+                                       zone_percent = zone_percent)
       block_labels <- constraints$block
-      linked_set_labels  <- constraints$linked_set
+      linked_set_labels <- constraints$linked_set
     }
 
     if (!is.matrix(data)) {
@@ -79,10 +81,10 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
 
   em_time <- system.time({
     em <- mustlink_em(data = data, block_labels = block_labels,
-                                     params = init_params,
-                                     clust_num = clust_num,
-                                     maxit = maxit, eps = eps, burnin = burnin,
-                                     print_freq = print_freq, model = model)
+                      params = init_params,
+                      clust_num = clust_num, zone_num = zone_num,
+                      maxit = maxit, eps = eps, burnin = burnin,
+                      print_freq = print_freq, model = model)
   })
 
   label_time <- system.time({

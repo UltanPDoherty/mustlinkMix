@@ -24,9 +24,9 @@
 #' mustlink_estep_vm(as.matrix(iris[, 1:4]), block = block1, params = params1,
 #'                   event_num = 150, var_num = 4, clust_num = 3)
 mustlink_estep <- function(data, block, params,
-                              event_num = nrow(data), var_num = ncol(params$mu),
-                              clust_num = nrow(params$mu),
-                              model = c("vm", "ns")) {
+                           event_num = nrow(data), var_num = ncol(params$mu),
+                           clust_num = nrow(params$mu),
+                           model = c("vm", "ns")) {
 
   model <- rlang::arg_match(model)
 
@@ -84,19 +84,17 @@ compute_lpdf_block <- function(data, block, params,
                        }
   )
 
-  # single_blocks is a logical of length block$num
-  # it identifies which blocks are singletons,
-  # i.e. unconstrained observations
-  single_blocks <- block$size == 1
-  # single_events is a logical of length event_num
-  # it identifies which observations correspond to the singleton blocks
-  single_events   <- block$labels %in% (1:block$num)[single_blocks]
+  linked_blocks <- seq_len(block$zone_num)
+  unlinked_blocks <- seq(block$zone_num + 1, block$num)
+
+  linked_events <- block$labels %in% linked_blocks
+  unlinked_events <- block$labels %in% unlinked_blocks
 
   # lpdf_block is the sum of lpdf_event values within each block
   lpdf_block <- matrix(NA, nrow = block$num, ncol = clust_num)
-  lpdf_block[single_blocks, ] <- lpdf_event[single_events, ]
-  lpdf_block[!single_blocks, ] <- rowsum(lpdf_event[!single_events, ],
-                                         group = block$labels[!single_events])
+  lpdf_block[unlinked_blocks, ] <- lpdf_event[unlinked_events, ]
+  lpdf_block[linked_blocks, ] <- rowsum(lpdf_event[linked_events, ],
+                                         group = block$labels[linked_events])
 
   return(lpdf_block)
 }
