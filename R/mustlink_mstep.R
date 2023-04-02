@@ -29,14 +29,19 @@
 #' mustlink_mstep_vm(as.matrix(iris[, 1:4]),
 #'                   postprob_event = postprob_event1,
 #'                   postprob_block = postprob_block1)
-mustlink_mstep_vm <- function(data, postprob_event, postprob_block,
-                              block_num = nrow(postprob_block),
-                              clust_num = ncol(postprob_block),
-                              event_num = nrow(data),
-                              var_num = ncol(data)) {
+mustlink_mstep <- function(data, postprob_event, postprob_block,
+                           block_num = nrow(postprob_block),
+                           clust_num = ncol(postprob_block),
+                           event_num = nrow(data),
+                           var_num = ncol(data),
+                           model = c("vm", "ns")) {
+
+  model <- rlang::arg_match(model)
 
   # block mixing proportions
-  prop <- colSums(postprob_event) / event_num
+  prop <- switch(model,
+                 vm = colSums(postprob_event) / event_num,
+                 ns = colSums(postprob_block) / block_num)
 
   postprob_event_sums <- colSums(postprob_event)
   postprob_event2 <- sweep(x = postprob_event, MARGIN = 2,

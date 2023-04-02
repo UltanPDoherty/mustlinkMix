@@ -50,15 +50,6 @@ mustlink_em <- function(data, block_labels, params, clust_num,
   repeat {
     it <- it + 1
 
-    # e_out <- switch(model,
-    #                 vm = mustlink_estep_vm(data, block = block, params = params,
-    #                                        event_num = event_num,
-    #                                        var_num = var_num,
-    #                                        clust_num = clust_num),
-    #                 ns = mustlink_estep_ns(data, block = block, params = params,
-    #                                        event_num = event_num,
-    #                                        var_num = var_num,
-    #                                        clust_num = clust_num))
     e_out <- mustlink_estep(data, block = block, params = params,
                            event_num = event_num,
                            var_num = var_num,
@@ -88,17 +79,12 @@ mustlink_em <- function(data, block_labels, params, clust_num,
       break
     }
 
-    params <- switch(model,
-                     vm = mustlink_mstep_vm(data,
+    params <-  mustlink_mstep(data,
                                   postprob_event = e_out$postprob_event,
                                   postprob_block = e_out$postprob_block,
                                   block_num = block$num, clust_num = clust_num,
-                                  event_num = event_num, var_num = var_num),
-                     ns = mustlink_mstep_ns(data,
-                                  postprob_event = e_out$postprob_event,
-                                  postprob_block = e_out$postprob_block,
-                                  block_num = block$num, clust_num = clust_num,
-                                  event_num = event_num, var_num = var_num))
+                                  event_num = event_num, var_num = var_num,
+                              model = model)
   }
 
   return(list(block_pp = e_out$postprob_block,
