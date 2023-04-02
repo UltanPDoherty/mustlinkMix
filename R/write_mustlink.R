@@ -7,8 +7,8 @@
 #' @param block_labels Logical: should block labels be written to a file?
 #' @param times Logical: should runtimes be written to a file?
 #' @param em_loglike Logical: should log-likelihood values be written to a file?
-#' @param em_postprob_block Logical: should posterior probability matrix be written to
-#'                    a file?
+#' @param em_postprob_block Logical: should posterior probability matrix be
+#'                          written to a file?
 #' @param em_params Logical: should model parameters be written to a file?
 #'
 #' @return Function does not have a return value.

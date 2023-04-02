@@ -75,7 +75,7 @@ check_linked_set_overlap <- function(linked_set_matrix) {
 
   if (any(check_overlap)) {
 
-    unique_overlaps <- unique_rows[check_overlap, ]
+    unique_overlaps <- unique_rows[check_overlap, , drop = FALSE]
     overlap_names <- apply(unique_overlaps, MARGIN = 1,
                            FUN = function(x) {
                              paste(colnames(linked_set_matrix)[x],
