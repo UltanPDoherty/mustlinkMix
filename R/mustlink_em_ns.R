@@ -78,8 +78,8 @@ mustlink_em_ns <- function(data, block_labels, params, clust_num,
 
     params <- mustlink_mstep_ns(data,
                                 obs_pp = e_out$obs_pp,
-                                block_pp = e_out$chunk_pp,
-                                chunk_num = block$num, clust_num = clust_num,
+                                block_pp = e_out$block_pp,
+                                block_num = block$num, clust_num = clust_num,
                                 obs_num = event_num, var_num = var_num)
 
   }

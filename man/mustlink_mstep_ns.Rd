@@ -7,9 +7,9 @@
 mustlink_mstep_ns(
   data,
   obs_pp,
-  chunk_pp,
-  chunk_num = nrow(chunk_pp),
-  clust_num = ncol(chunk_pp),
+  block_pp,
+  block_num = nrow(block_pp),
+  clust_num = ncol(block_pp),
   event_num = nrow(data),
   var_num = ncol(data)
 )
@@ -19,9 +19,9 @@ mustlink_mstep_ns(
 
 \item{obs_pp}{Expanded observation posterior probability matrix.}
 
-\item{chunk_pp}{Chunklet posterior probability matrix.}
+\item{block_pp}{Block posterior probability matrix.}
 
-\item{chunk_num}{Number of chunklets.}
+\item{block_num}{Number of blocks.}
 
 \item{clust_num}{Number of clusters pre-specified.}
 
@@ -37,16 +37,16 @@ Implement M-step of EM algorithm for GMM with positive / must-link
 constraints.
 }
 \examples{
-chunk_labels1 <- c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78)
-chunk1 <- list(labels = chunk_labels1,
-               num = length(unique(chunk_labels1)),
-               size = as.numeric(table(chunk_labels1)))
+block_labels1 <- c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78)
+block1 <- list(labels = block_labels1,
+               num = length(unique(block_labels1)),
+               size = as.numeric(table(block_labels1)))
 params1 <- initialise_model(iris[, 1:4], clust_num = 3)
 e_out1  <- mustlink_estep_ns(as.matrix(iris[, 1:4]),
-                             chunk = chunk1, params = params1,
+                             block = block1, params = params1,
                              event_num = 150, var_num = 4, clust_num = 3)
 obs_pp1 <- e_out1$obs_pp
-chunk_pp1 <- e_out1$chunk_pp
+block_pp1 <- e_out1$block_pp
 mustlink_mstep_ns(as.matrix(iris[, 1:4]),
-                  obs_pp = obs_pp1, chunk_pp = chunk_pp1)
+                  obs_pp = obs_pp1, block_pp = block_pp1)
 }

@@ -6,8 +6,8 @@
 #'
 #' @param data Dataset being clustered in matrix form.
 #' @param obs_pp Expanded observation posterior probability matrix.
-#' @param chunk_pp Chunklet posterior probability matrix.
-#' @param chunk_num Number of chunklets.
+#' @param block_pp block posterior probability matrix.
+#' @param block_num Number of blocks.
 #' @param clust_num Number of clusters pre-specified.
 #' @param event_num Number of observations in the dataset.
 #' @param var_num Number of variables in the dataset.
@@ -16,25 +16,25 @@
 #' @export
 #'
 #' @examples
-#' chunk_labels1 <- c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78)
-#' chunk1 <- list(labels = chunk_labels1,
-#'                num = length(unique(chunk_labels1)),
-#'                size = as.numeric(table(chunk_labels1)))
+#' block_labels1 <- c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78)
+#' block1 <- list(labels = block_labels1,
+#'                num = length(unique(block_labels1)),
+#'                size = as.numeric(table(block_labels1)))
 #' params1 <- initialise_model(iris[, 1:4], clust_num = 3)
 #' e_out1  <- mustlink_estep_vm(as.matrix(iris[, 1:4]),
-#'                              chunk = chunk1, params = params1,
+#'                              block = block1, params = params1,
 #'                              event_num = 150, var_num = 4, clust_num = 3)
 #' obs_pp1 <- e_out1$obs_pp
-#' chunk_pp1 <- e_out1$chunk_pp
+#' block_pp1 <- e_out1$block_pp
 #' mustlink_mstep_vm(as.matrix(iris[, 1:4]),
-#'                   obs_pp = obs_pp1, chunk_pp = chunk_pp1)
-mustlink_mstep_vm <- function(data, obs_pp, chunk_pp,
-                              chunk_num = nrow(chunk_pp),
-                              clust_num = ncol(chunk_pp),
+#'                   obs_pp = obs_pp1, block_pp = block_pp1)
+mustlink_mstep_vm <- function(data, obs_pp, block_pp,
+                              block_num = nrow(block_pp),
+                              clust_num = ncol(block_pp),
                               event_num = nrow(data),
                               var_num = ncol(data)) {
 
-  # Chunklet mixing proportions
+  # block mixing proportions
   prop <- colSums(obs_pp) / event_num
 
   obs_pp_sums <- colSums(obs_pp)
