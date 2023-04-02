@@ -12,8 +12,8 @@ construct_zones(data, type_marker)
 \item{type_marker}{Matrix, rows for populations, columns for variables.}
 }
 \value{
-List containing labels, a matrix with rows for observations and columns
-for populations, and splits, a vector of the variable bimodal
+List containing labels, a matrix with rows for observations and
+columns for populations, and splits, a vector of the variable bimodal
 threshold values.
 }
 \description{

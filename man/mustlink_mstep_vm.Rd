@@ -48,5 +48,6 @@ e_out1  <- mustlink_estep_vm(as.matrix(iris[, 1:4]),
 postprob_event1 <- e_out1$postprob_event
 postprob_block1 <- e_out1$postprob_block
 mustlink_mstep_vm(as.matrix(iris[, 1:4]),
-                  postprob_event = postprob_event1, postprob_block = postprob_block1)
+                  postprob_event = postprob_event1,
+                  postprob_block = postprob_block1)
 }
