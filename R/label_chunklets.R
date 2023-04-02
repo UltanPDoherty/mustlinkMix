@@ -37,7 +37,7 @@ label_chunklets <- function(data, zone_matrix, zone_percent) {
   }
 
   zones <- densities <- list()
-  constraint_matrix <- zone_matrix
+  linked_set_matrix <- zone_matrix
   quantiles <- vector("numeric", length = zone_num)
 
   # only points in zone l can be assigned to chunklet l
@@ -50,26 +50,30 @@ label_chunklets <- function(data, zone_matrix, zone_percent) {
                                        sigma = stats::cov(zones[[l]]))
     quantiles[l] <- stats::quantile(densities[[l]], prob[l])
 
-    constraint_matrix[zone_matrix[, l], l]  <- densities[[l]] >= quantiles[l]
+    linked_set_matrix[zone_matrix[, l], l]  <- densities[[l]] >= quantiles[l]
   }
 
   # zones may overlap but cores are prevented from doing so
-  check_constraint_overlap(constraint_matrix)
+  check_linked_set_overlap(linked_set_matrix)
 
-  constraint_labels <- chunk_labels <- vector("integer", length = event_num)
+  linked_set_labels <- chunk_labels <- vector("integer", length = event_num)
 
-  constraint_labels <- apply(X = constraint_matrix, MARGIN = 1,
+  linked_set_labels <- apply(X = linked_set_matrix, MARGIN = 1,
                           FUN = function(x) {
                             label <- which(x == max(x))
                             ifelse(length(label) == 1, label, 0)
                           })
 
+  block_labels <- linked_set_labels
+  block_labels[linked_set_labels == 0] <- seq_len(zone_num)
 
-  return(constraint_labels)
+
+  return(list(linked_set = linked_set_labels,
+              block = block_labels))
 }
 
-check_constraint_overlap <- function(constraint_matrix) {
-  unique_rows <- unique(constraint_matrix)
+check_linked_set_overlap <- function(linked_set_matrix) {
+  unique_rows <- unique(linked_set_matrix)
   check_overlap <- rowSums(unique_rows) > 1
 
   if (any(check_overlap)) {
@@ -77,7 +81,7 @@ check_constraint_overlap <- function(constraint_matrix) {
     unique_overlaps <- unique_rows[check_overlap, ]
     overlap_names <- apply(unique_overlaps, MARGIN = 1,
                            FUN = function(x) {
-                             paste(colnames(constraint_matrix)[x],
+                             paste(colnames(linked_set_matrix)[x],
                                    collapse = "-")
                            })
 
