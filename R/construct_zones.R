@@ -72,7 +72,8 @@ check_zone_overlap <- function(type_marker) {
   maxdiffs <- apply(X = rowdiffs, MARGIN = 1, FUN = max)
   if (any(maxdiffs == 0)) {
     stop(paste0("The following population zones are identical:\n",
-                paste(pair_names[which(maxdiffs == 0)], collapse = ",\n")))
+                paste("\t", pair_names[which(maxdiffs == 0)],
+                      collapse = ",\n")))
   }
   if (any(maxdiffs == 1)) {
     message(paste0("The following population zones overlap:\n",
