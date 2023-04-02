@@ -93,12 +93,10 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
   times <- rbind(setup_time, em_time, label_time)
   rownames(times) <- c("setup", "em", "label")
 
-  res <- list(clust_labels = clust_labels,
+  return(list(clust_labels = clust_labels,
               init_labels = init_labels,
+              linked_set_labels = linked_set_labels,
               block_labels = block_labels,
               em = em,
-              times = times
-              )
-
-  return(res)
+              times = times))
 }
