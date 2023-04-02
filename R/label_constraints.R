@@ -82,10 +82,9 @@ check_linked_set_overlap <- function(linked_set_matrix) {
                                    collapse = "-")
                            })
 
-    message(paste0("Initial chunklets overlapped for these populations: ",
-                   paste(overlap_names, sep = ", "),
-                   ".\n",
-                   "Points in intersection were excluded from all chunklets.",
+    message(paste0("Initial constrained sets overlapped for these populations: ",
+                   paste(overlap_names, collapse = ",\n"),
+                   "\nPoints in intersection were excluded from all chunklets.",
                    "\n \n"))
   }
 }

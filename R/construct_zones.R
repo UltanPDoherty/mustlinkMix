@@ -65,20 +65,19 @@ check_zone_overlap <- function(type_marker) {
 
   pair_nums  <- utils::combn(1:zone_num, 2)
   pair_names <- utils::combn(zone_names, 2,
-                             FUN = function(x) paste(x, collapse = "-"))
+                             FUN = function(x) paste(x, collapse = " & "))
 
   rowdiffs <- abs(type_marker[pair_nums[1, ], ] - type_marker[pair_nums[2, ], ])
 
   maxdiffs <- apply(X = rowdiffs, MARGIN = 1, FUN = max)
   if (any(maxdiffs == 0)) {
-    stop(paste0("The following pair(s) of population zones are identical: ",
-                paste(pair_names[which(maxdiffs == 0)], sep = ", "),
-                ".\n"))
+    stop(paste0("The following population zones are identical:\n",
+                paste(pair_names[which(maxdiffs == 0)], collapse = ",\n")))
   }
   if (any(maxdiffs == 1)) {
-    message(paste0("The following pair(s) of population zones overlap: ",
-                   paste(pair_names[which(maxdiffs == 1)], sep = ", "),
-                   ".\n"))
+    message(paste0("The following population zones overlap:\n",
+                   paste("\t", pair_names[which(maxdiffs == 1)],
+                         collapse = ",\n")))
   }
 }
 
