@@ -54,8 +54,8 @@ mustlink_estep_vm <- function(data, block, params,
   lpdf_block[nonsingle_blocknum, ] <- rowsum(lpdf_event[!singles_obs, ],
                                                group = block$labels[!singles_obs])
 
-  # This for loop computes the block posterior probability matrix, block_pp,
-  block_unnorm <- block_pp <- matrix(NA, nrow = block$num, ncol = clust_num)
+  # This for loop computes the block posterior probability matrix, postprob_block,
+  block_unnorm <- postprob_block <- matrix(NA, nrow = block$num, ncol = clust_num)
   log_maxes <- loglike_vec <- block_unnorm_sums <- vector(mode = "numeric",
                                                      length = block$num)
 
@@ -66,18 +66,18 @@ mustlink_estep_vm <- function(data, block, params,
     block_unnorm[l, ] <- exp(lpdf_block[l, ] + block$size[l] * log(params$prop)
                              - log_maxes[l])
 
-    # Normalise rows of block_unnorm to obtain block_pp.
+    # Normalise rows of block_unnorm to obtain postprob_block.
     block_unnorm_sums[l] <- sum(block_unnorm[l, ])
-    block_pp[l, ] <- block_unnorm[l, ] / block_unnorm_sums[l]
+    postprob_block[l, ] <- block_unnorm[l, ] / block_unnorm_sums[l]
 
     loglike_vec[l] <- log(block_unnorm_sums[l]) + log_maxes[l]
   }
 
   loglike  <- sum(loglike_vec)
 
-  obs_pp <- block_pp[block$labels, ]
+  postprob_event <- postprob_block[block$labels, ]
 
   return(list(loglike = loglike,
-              block_pp = block_pp,
-              obs_pp = obs_pp))
+              postprob_block = postprob_block,
+              postprob_event = postprob_event))
 }

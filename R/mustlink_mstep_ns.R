@@ -29,16 +29,17 @@
 #' mustlink_mstep_ns(as.matrix(iris[, 1:4]),
 #'                   postprob_event = postprob_event1, postprob_block = postprob_block1)
 mustlink_mstep_ns <- function(data, postprob_event, postprob_block,
-                           block_num = nrow(postprob_block),
-                           clust_num = ncol(postprob_block),
-                           event_num = nrow(data),
-                           var_num = ncol(data)) {
+                              block_num = nrow(postprob_block),
+                              clust_num = ncol(postprob_block),
+                              event_num = nrow(data),
+                              var_num = ncol(data)) {
 
   # Block mixing proportions
   prop <- colSums(postprob_block) / block_num
 
   postprob_event_sums <- colSums(postprob_event)
-  postprob_event2 <- sweep(x = postprob_event, MARGIN = 2, STATS = postprob_event_sums, FUN = "/")
+  postprob_event2 <- sweep(x = postprob_event, MARGIN = 2,
+                           STATS = postprob_event_sums, FUN = "/")
 
   # Mean vector
   mu <- t(postprob_event2) %*% data
@@ -48,7 +49,7 @@ mustlink_mstep_ns <- function(data, postprob_event, postprob_block,
   sigma   <- array(dim = c(var_num, var_num, clust_num))
   for (k in 1:clust_num) {
     data_mu[, , k] <- sqrt(postprob_event2[, k]) * scale(data, center = mu[k, ],
-                                                 scale = FALSE)
+                                                         scale = FALSE)
     sigma[, , k] <- crossprod(data_mu[, , k])
   }
 

@@ -38,7 +38,8 @@ mustlink_mstep_vm <- function(data, postprob_event, postprob_block,
   prop <- colSums(postprob_event) / event_num
 
   postprob_event_sums <- colSums(postprob_event)
-  postprob_event2 <- sweep(x = postprob_event, MARGIN = 2, STATS = postprob_event_sums, FUN = "/")
+  postprob_event2 <- sweep(x = postprob_event, MARGIN = 2,
+                           STATS = postprob_event_sums, FUN = "/")
 
   # Mean vector
   mu <- t(postprob_event2) %*% data
@@ -48,7 +49,7 @@ mustlink_mstep_vm <- function(data, postprob_event, postprob_block,
   sigma   <- array(dim = c(var_num, var_num, clust_num))
   for (k in 1:clust_num){
     data_mu[, , k] <- sqrt(postprob_event2[, k]) * scale(data, center = mu[k, ],
-                                                 scale = FALSE)
+                                                         scale = FALSE)
     sigma[, , k] <- crossprod(data_mu[, , k])
   }
 
