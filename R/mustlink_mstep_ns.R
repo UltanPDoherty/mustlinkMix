@@ -27,7 +27,8 @@
 #' postprob_event1 <- e_out1$postprob_event
 #' postprob_block1 <- e_out1$postprob_block
 #' mustlink_mstep_ns(as.matrix(iris[, 1:4]),
-#'                   postprob_event = postprob_event1, postprob_block = postprob_block1)
+#'                   postprob_event = postprob_event1,
+#'                   postprob_block = postprob_block1)
 mustlink_mstep_ns <- function(data, postprob_event, postprob_block,
                               block_num = nrow(postprob_block),
                               clust_num = ncol(postprob_block),

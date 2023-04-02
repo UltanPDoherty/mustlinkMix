@@ -52,10 +52,10 @@ mustlink_estep_vm <- function(data, block, params,
   lpdf_block <- matrix(NA, nrow = block$num, ncol = clust_num)
   lpdf_block[single_blocknum, ]  <- lpdf_event[singles_obs, ]
   lpdf_block[nonsingle_blocknum, ] <- rowsum(lpdf_event[!singles_obs, ],
-                                               group = block$labels[!singles_obs])
+                                             group = block$labels[!singles_obs])
 
-  # This for loop computes the block posterior probability matrix, postprob_block,
-  block_unnorm <- postprob_block <- matrix(NA, nrow = block$num, ncol = clust_num)
+  # for loop computes the block posterior probability matrix, postprob_block
+  block_unnorm <- postprob_block <- matrix(nrow = block$num, ncol = clust_num)
   log_maxes <- loglike_vec <- block_unnorm_sums <- vector(mode = "numeric",
                                                      length = block$num)
 

@@ -21,7 +21,6 @@
 label_constraints <- function(data, zone_matrix, zone_percent) {
 
   zone_num <- ncol(zone_matrix)
-  event_num <- nrow(data)
 
   if (length(zone_percent) == 1) {
     zone_percent <- rep(zone_percent, times = zone_num)
@@ -55,8 +54,6 @@ label_constraints <- function(data, zone_matrix, zone_percent) {
 
   # zones may overlap but cores are prevented from doing so
   check_linked_set_overlap(linked_set_matrix)
-
-  linked_set_labels <- chunk_labels <- vector("integer", length = event_num)
 
   linked_set_labels <- apply(X = linked_set_matrix, MARGIN = 1,
                           FUN = function(x) {

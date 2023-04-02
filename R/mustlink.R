@@ -50,7 +50,7 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
 
   setup_time <- system.time({
     if (is.null(type_marker)) {
-      chunk_labels <- seq_len(nrow(data))
+      block_labels <- seq_len(nrow(data))
     } else {
       zone_matrix <- construct_zones(data = data,
                                      type_marker = type_marker)$matrix
@@ -76,10 +76,6 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
                                        init_method = init_method)
     }
     init_params <- initial_parameters(data, init_labels = init_labels)
-    # params  <- initialise_model(data, clust_num = clust_num,
-    #                             constraint_labels = chunk_to_core(chunk_labels),
-    #                             init_method = init_method,
-    #                             init_seed = init_seed)
   })
 
   em_time <- system.time({

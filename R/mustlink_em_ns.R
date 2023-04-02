@@ -30,8 +30,8 @@
 #'              block_labels = iris_block_labels, params = iris_init)
 
 mustlink_em_ns <- function(data, block_labels, params, clust_num,
-                        burnin = 10, maxit = 1000, eps = 1e-10,
-                        no_print = FALSE, print_freq = 1) {
+                           burnin = 10, maxit = 1000, eps = 1e-10,
+                           no_print = FALSE, print_freq = 1) {
   it <- 0
   loglike <- c()
 
@@ -58,7 +58,8 @@ mustlink_em_ns <- function(data, block_labels, params, clust_num,
     }
 
     # loglike_crit is the relative increase in the log-likelihood.
-    loglike_crit <- compute_loglike_crit(it = it, burnin = burnin, loglike = loglike)
+    loglike_crit <- compute_loglike_crit(it = it, burnin = burnin,
+                                         loglike = loglike)
 
     # EM has converged if the relative difference between consecutive values
     # of the log-likelihood, i.e. loglike_crit, is not NA and is less than eps.
@@ -80,7 +81,7 @@ mustlink_em_ns <- function(data, block_labels, params, clust_num,
                                 postprob_event = e_out$postprob_event,
                                 postprob_block = e_out$postprob_block,
                                 block_num = block$num, clust_num = clust_num,
-                                obs_num = event_num, var_num = var_num)
+                                event_num = event_num, var_num = var_num)
 
   }
 

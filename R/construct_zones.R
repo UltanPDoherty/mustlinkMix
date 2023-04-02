@@ -7,8 +7,8 @@
 #' @param data Dataset in matrix or data.frame format.
 #' @param type_marker Matrix, rows for populations, columns for variables.
 #'
-#' @return List containing labels, a matrix with rows for observations and columns
-#'         for populations, and splits, a vector of the variable bimodal
+#' @return List containing labels, a matrix with rows for observations and
+#'         columns for populations, and splits, a vector of the variable bimodal
 #'         threshold values.
 #' @export
 #'
@@ -99,4 +99,3 @@ compute_splits <- function(data, type_marker) {
 
   return(splits)
 }
-
