@@ -8,10 +8,11 @@ read_mustlink(
   file_prefix,
   clust_labels = TRUE,
   init_labels = TRUE,
-  chunk_labels = TRUE,
+  block_labels = TRUE,
+  linked_set_labels = TRUE,
   times = TRUE,
   em_loglike = TRUE,
-  em_chunk_pp = TRUE,
+  em_postprob_block = TRUE,
   em_params = TRUE
 )
 }
@@ -22,14 +23,17 @@ read_mustlink(
 
 \item{init_labels}{Logical: should initial labels be read from a file?}
 
-\item{chunk_labels}{Logical: should chunklet labels be read from a file?}
+\item{block_labels}{Logical: should block labels be read from a file?}
+
+\item{linked_set_labels}{Logical: should linked set labels be read from a
+file?}
 
 \item{times}{Logical: should mustlink runtimes be read from a file?}
 
 \item{em_loglike}{Logical: should log-likelihood values be read from a file?}
 
-\item{em_chunk_pp}{Logical: should posterior probability matrix be read from
-a file?}
+\item{em_postprob_block}{Logical: should posterior probability matrix be read
+from a file?}
 
 \item{em_params}{Logical: should model parameters be read from a file?}
 }

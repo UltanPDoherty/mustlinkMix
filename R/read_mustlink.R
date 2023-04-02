@@ -3,11 +3,13 @@
 #' @param file_prefix Desired file_prefix.
 #' @param clust_labels Logical: should cluster labels be read from a file?
 #' @param init_labels Logical: should initial labels be read from a file?
-#' @param chunk_labels Logical: should chunklet labels be read from a file?
+#' @param block_labels Logical: should block labels be read from a file?
+#' @param linked_set_labels Logical: should linked set labels be read from a
+#'                          file?
 #' @param times Logical: should mustlink runtimes be read from a file?
 #' @param em_loglike Logical: should log-likelihood values be read from a file?
-#' @param em_chunk_pp Logical: should posterior probability matrix be read from
-#'                    a file?
+#' @param em_postprob_block Logical: should posterior probability matrix be read
+#'                          from a file?
 #' @param em_params Logical: should model parameters be read from a file?
 #'
 #' @return Same format as mustlink function.
@@ -15,8 +17,9 @@
 
 read_mustlink <- function(file_prefix,
                           clust_labels = TRUE, init_labels = TRUE,
-                          chunk_labels = TRUE, times = TRUE, em_loglike = TRUE,
-                          em_chunk_pp = TRUE, em_params = TRUE) {
+                          block_labels = TRUE, linked_set_labels = TRUE,
+                          times = TRUE, em_loglike = TRUE,
+                          em_postprob_block = TRUE, em_params = TRUE) {
 
   out <- list()
 
@@ -30,9 +33,14 @@ read_mustlink <- function(file_prefix,
                                                         "_init_labels.txt"))$V1
   }
 
-  if (chunk_labels) {
-    out$chunk_labels <- utils::read.table(file = paste0(file_prefix,
-                                                      "_chunk_labels.txt"))$V1
+  if (linked_set_labels) {
+    out$block_labels <- utils::read.table(file = paste0(file_prefix,
+                                                        "_link_labels.txt"))$V1
+  }
+
+  if (block_labels) {
+    out$block_labels <- utils::read.table(file = paste0(file_prefix,
+                                                      "_block_labels.txt"))$V1
   }
 
   if (times) {
@@ -40,7 +48,7 @@ read_mustlink <- function(file_prefix,
                                    header = TRUE, row.names = 1)
   }
 
-  if (any(c(em_loglike, em_chunk_pp, em_params))) {
+  if (any(c(em_loglike, em_postprob_block, em_params))) {
     out$em <- list()
   }
 
@@ -49,9 +57,9 @@ read_mustlink <- function(file_prefix,
                                                  "_loglike.txt"))$V1
   }
 
-  if (em_chunk_pp) {
-    out$em$chunk_pp <- utils::read.table(file = paste0(file_prefix,
-                                                       "_chunk_pp.txt"))
+  if (em_postprob_block) {
+    out$em$postprob_block <- utils::read.table(file = paste0(file_prefix,
+                                                       "_postprob_block.txt"))
   }
 
   if (em_params) {

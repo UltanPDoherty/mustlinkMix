@@ -4,10 +4,10 @@
 #' @param file_prefix Desired file_prefix.
 #' @param clust_labels Logical: should cluster labels be written to a file?
 #' @param init_labels Logical: should initial labels be written to a file?
-#' @param chunk_labels Logical: should chunklet labels be written to a file?
+#' @param block_labels Logical: should block labels be written to a file?
 #' @param times Logical: should runtimes be written to a file?
 #' @param em_loglike Logical: should log-likelihood values be written to a file?
-#' @param em_chunk_pp Logical: should posterior probability matrix be written to
+#' @param em_postprob_block Logical: should posterior probability matrix be written to
 #'                    a file?
 #' @param em_params Logical: should model parameters be written to a file?
 #'
@@ -16,8 +16,9 @@
 #'
 write_mustlink <- function(mustlink_out, file_prefix,
                            clust_labels = TRUE, init_labels = TRUE,
-                           chunk_labels = TRUE, times = TRUE, em_loglike = TRUE,
-                           em_chunk_pp = TRUE, em_params = TRUE) {
+                           block_labels = TRUE, linked_set_labels = TRUE,
+                           times = TRUE, em_loglike = TRUE,
+                           em_postprob_block = TRUE, em_params = TRUE) {
 
   if (clust_labels) {
     utils::write.table(mustlink_out$clust_labels,
@@ -31,9 +32,15 @@ write_mustlink <- function(mustlink_out, file_prefix,
                        row.names = FALSE, col.names = FALSE)
   }
 
-  if (chunk_labels) {
-    utils::write.table(mustlink_out$chunk_labels,
-                       file = paste0(file_prefix, "_chunk_labels.txt"),
+  if (block_labels) {
+    utils::write.table(mustlink_out$block_labels,
+                       file = paste0(file_prefix, "_block_labels.txt"),
+                       row.names = FALSE, col.names = FALSE)
+  }
+
+  if (linked_set_labels) {
+    utils::write.table(mustlink_out$linked_set_labels,
+                       file = paste0(file_prefix, "_link_labels.txt"),
                        row.names = FALSE, col.names = FALSE)
   }
 
@@ -49,9 +56,9 @@ write_mustlink <- function(mustlink_out, file_prefix,
                        row.names = FALSE, col.names = FALSE)
   }
 
-  if (em_chunk_pp) {
-    utils::write.table(mustlink_out$em$chunk_pp,
-                       file = paste0(file_prefix, "_chunk_pp.txt"),
+  if (em_postprob_block) {
+    utils::write.table(mustlink_out$em$postprob_block,
+                       file = paste0(file_prefix, "_postprob_block.txt"),
                        row.names = FALSE, col.names = FALSE)
   }
 
