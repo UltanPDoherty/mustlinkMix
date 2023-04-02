@@ -78,17 +78,11 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
   })
 
   em_time <- system.time({
-    em <- switch(model,
-                 vm = mustlink_em_vm(data = data, block_labels = block_labels,
+    em <- mustlink_em(data = data, block_labels = block_labels,
                                      params = init_params,
                                      clust_num = clust_num,
                                      maxit = maxit, eps = eps, burnin = burnin,
-                                     print_freq = print_freq,
-                 ns = mustlink_em_ns(data = data, block_labels = block_labels,
-                                     params = init_params,
-                                     clust_num = clust_num,
-                                     maxit = maxit, eps = eps, burnin = burnin,
-                                     print_freq = print_freq,
+                                     print_freq = print_freq, model = model)
   })
 
   label_time <- system.time({
