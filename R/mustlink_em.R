@@ -33,7 +33,10 @@
 mustlink_em <- function(data, block_labels, params, clust_num,
                            burnin = 10, maxit = 1e4, eps = 1e-10,
                            print_freq = 1,
-                           model = "vm") {
+                           model = c("vm", "ns")) {
+
+  model <- rlang::arg_match(model)
+
   it <- 0
   loglike <- c()
 
@@ -47,15 +50,19 @@ mustlink_em <- function(data, block_labels, params, clust_num,
   repeat {
     it <- it + 1
 
-    e_out <- switch(model,
-                    vm = mustlink_estep_vm(data, block = block, params = params,
-                                           event_num = event_num,
-                                           var_num = var_num,
-                                           clust_num = clust_num),
-                    ns = mustlink_estep_ns(data, block = block, params = params,
-                                           event_num = event_num,
-                                           var_num = var_num,
-                                           clust_num = clust_num))
+    # e_out <- switch(model,
+    #                 vm = mustlink_estep_vm(data, block = block, params = params,
+    #                                        event_num = event_num,
+    #                                        var_num = var_num,
+    #                                        clust_num = clust_num),
+    #                 ns = mustlink_estep_ns(data, block = block, params = params,
+    #                                        event_num = event_num,
+    #                                        var_num = var_num,
+    #                                        clust_num = clust_num))
+    e_out <- mustlink_estep(data, block = block, params = params,
+                           event_num = event_num,
+                           var_num = var_num,
+                           clust_num = clust_num, model = model)
 
     loglike <- append(loglike, e_out$loglike)
 

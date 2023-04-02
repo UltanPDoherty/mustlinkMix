@@ -13,7 +13,7 @@ mustlink_em(
   maxit = 10000,
   eps = 1e-10,
   print_freq = 1,
-  model = "vm"
+  model = c("vm", "ns")
 )
 }
 \arguments{
