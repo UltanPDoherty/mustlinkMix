@@ -31,9 +31,9 @@
 #'              block_labels = iris_block_labels, params = iris_init)
 
 mustlink_em <- function(data, block_labels, params, clust_num,
-                           burnin = 10, maxit = 1e4, eps = 1e-10,
                            print_freq = 1,
                            model = c("vm", "ns")) {
+                        burnin = 2, maxit = 1e4, eps = 1e-10,
 
   model <- rlang::arg_match(model)
 
