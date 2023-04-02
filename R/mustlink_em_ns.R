@@ -84,7 +84,7 @@ mustlink_em_ns <- function(data, block_labels, params, clust_num,
 
   }
 
-  return(list(block_pp = e_out$block_pp,
+  return(list(block_pp = e_out$postprob_block,
               params = params,
               loglike = loglike))
 }
