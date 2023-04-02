@@ -60,9 +60,9 @@ mustlink_em <- function(data, block_labels, params, clust_num, zone_num,
     loglike <- append(loglike, e_out$loglike)
 
     if ((it %% print_freq) == 1) {
-      cat(paste0("...No. of E-Steps: ", it,
-                 ",\t log-likelihood: ", round(loglike[it], digits = 5),
-                 ",\t Sys.time: ", Sys.time(), "\n"))
+      cat(paste0(format(Sys.time(), "%H:%M:%S"),
+                 "\t E-Step Number: ", it,
+                 ",\t Log-likelihood: ", round(loglike[it], digits = 5), "\n"))
     }
 
     # loglike_crit is the relative increase in the log-likelihood.
