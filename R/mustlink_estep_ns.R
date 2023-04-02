@@ -37,22 +37,22 @@ mustlink_estep_ns <- function(data, block, params,
                       }
                     )
 
-  # singles_block is a logical of length block$num
+  # single_blocks is a logical of length block$num
   # it identifies which blocks are singletons,
   # i.e. unconstrained observations
-  singles_block <- block$size == 1
-  # singles_obs is a logical of length event_num
+  single_blocks <- block$size == 1
+  # single_events is a logical of length event_num
   # it identifies which observations correspond to the singleton blocks
-  singles_obs   <- block$labels %in% (1:block$num)[singles_block]
+  single_events   <- block$labels %in% (1:block$num)[single_blocks]
 
-  nonsingle_blocknum <- (1:block$num)[!singles_block]
-  single_blocknum   <- block$labels[singles_obs]
+  nonsingle_blocknum <- (1:block$num)[!single_blocks]
+  single_blocknum   <- block$labels[single_events]
 
   # lpdf_block is the sum of lpdf_event values within each block
   lpdf_block <- matrix(NA, nrow = block$num, ncol = clust_num)
-  lpdf_block[single_blocknum, ] <- lpdf_event[singles_obs, ]
-  lpdf_block[nonsingle_blocknum, ] <- rowsum(lpdf_event[!singles_obs, ],
-                                             group = block$labels[!singles_obs])
+  lpdf_block[single_blocknum, ] <- lpdf_event[single_events, ]
+  lpdf_block[nonsingle_blocknum, ] <- rowsum(lpdf_event[!single_events, ],
+                                             group = block$labels[!single_events])
 
   # for loop computes the block posterior probability matrix, postprob_block
   block_unnorm <- postprob_block <- matrix(nrow = block$num, ncol = clust_num)
