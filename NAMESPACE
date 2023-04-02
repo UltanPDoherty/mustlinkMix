@@ -2,7 +2,6 @@
 
 export(chunk_to_core)
 export(compute_f1)
-export(compute_loglike_crit)
 export(construct_zones)
 export(initial_parameters)
 export(initial_partition)
