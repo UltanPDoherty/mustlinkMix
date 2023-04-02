@@ -81,8 +81,8 @@ mustlink_em_vm <- function(data, block_labels, params, clust_num,
     }
 
     params <- mustlink_mstep_vm(data,
-                                obs_pp = e_out$obs_pp,
-                                block_pp = e_out$block_pp,
+                                postprob_event = e_out$obs_pp,
+                                postprob_block = e_out$block_pp,
                                 block_num = block$num, clust_num = clust_num,
                                 event_num = event_num, var_num = var_num)
   }
