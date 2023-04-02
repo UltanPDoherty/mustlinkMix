@@ -9,7 +9,8 @@ mustlink_em(
   block_labels,
   params,
   clust_num,
-  burnin = 10,
+  zone_num,
+  burnin = 2,
   maxit = 10000,
   eps = 1e-10,
   print_freq = 1,
@@ -25,6 +26,8 @@ number and every non-linked event has its own number.}
 \item{params}{Model parameters, for example, output from initialise_model.}
 
 \item{clust_num}{Number of clusters.}
+
+\item{zone_num}{Number of zones.}
 
 \item{burnin}{Number of iterations before likelihood convergence criterion is
 checked.}

@@ -79,7 +79,7 @@ check_linked_set_overlap <- function(linked_set_matrix) {
     overlap_names <- apply(unique_overlaps, MARGIN = 1,
                            FUN = function(x) {
                              paste(colnames(linked_set_matrix)[x],
-                                   collapse = "-")
+                                   collapse = " & ")
                            })
 
     message(paste0("Initial constrained sets overlapped for these populations: ",

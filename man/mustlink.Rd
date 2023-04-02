@@ -15,7 +15,7 @@ mustlink(
   init_method = c("Must-Link k-Means++", "k-Means++", "k-Means"),
   init_labels = NULL,
   print_freq = 10,
-  burnin = 10,
+  burnin = 2,
   model = c("vm", "ns")
 )
 }
