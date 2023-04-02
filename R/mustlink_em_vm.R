@@ -1,7 +1,8 @@
 #' @title Must-Link / Positive Constraint EM GMM.
 #'
 #' @param data Dataset in matrix form.
-#' @param chunk_labels Output from chunklet_cores.
+#' @param block_labels Each event in a particular linked set has the same
+#'                     number and every non-linked event has its own number.
 #' @param params Model parameters, for example, output from initialise_model.
 #' @param clust_num Number of clusters.
 #' @param burnin Number of iterations before likelihood convergence criterion is
@@ -22,15 +23,15 @@
 #'                     ve = c(00, -1, +1, +1),
 #'                     vi = c(+1, 00, +1, +1))
 #' iris_zone_labels <- label_zones(iris[, 1:4], type_marker = iris_tab)$labels
-#' iris_chunk_labels <- label_chunklets(iris[, 1:4],
+#' iris_block_labels <- label_chunklets(iris[, 1:4],
 #'                                    zone_labels = iris_zone_labels,
 #'                                    zone_percent = 90)$chunk
 #' iris_init <- initialise_model(iris[, 1:4], clust_num = 3,
 #'                               start = "k-Means", init_seed = 123)
 #' mustlink_em_vm(as.matrix(iris[, 1:4]), clust_num = 3,
-#'              chunk_labels = iris_chunk_labels, params = iris_init)
+#'              block_labels = iris_block_labels, params = iris_init)
 
-mustlink_em_vm <- function(data, chunk_labels, params, clust_num,
+mustlink_em_vm <- function(data, block_labels, params, clust_num,
                         burnin = 10, maxit = 1e4, eps = 1e-10,
                         no_print = FALSE, print_freq = 1,
                         model = "vm") {
@@ -40,14 +41,14 @@ mustlink_em_vm <- function(data, chunk_labels, params, clust_num,
   event_num <- nrow(data)
   var_num <- ncol(params$mu)
 
-  chunk <- list(labels = chunk_labels,
-                num = length(unique(chunk_labels)),
-                size = as.numeric(table(chunk_labels)))
+  block <- list(labels = block_labels,
+                num = length(unique(block_labels)),
+                size = as.numeric(table(block_labels)))
 
   repeat {
     it <- it + 1
 
-    e_out <- mustlink_estep_vm(data, chunk = chunk, params = params,
+    e_out <- mustlink_estep_vm(data, chunk = block, params = params,
                                event_num = event_num, var_num = var_num,
                                clust_num = clust_num)
 
@@ -82,11 +83,11 @@ mustlink_em_vm <- function(data, chunk_labels, params, clust_num,
     params <- mustlink_mstep_vm(data,
                                 obs_pp = e_out$obs_pp,
                                 chunk_pp = e_out$chunk_pp,
-                                chunk_num = chunk$num, clust_num = clust_num,
+                                chunk_num = block$num, clust_num = clust_num,
                                 event_num = event_num, var_num = var_num)
   }
 
-  return(list(chunk_pp = e_out$chunk_pp,
+  return(list(block_pp = e_out$chunk_pp,
               params = params,
               loglike = loglike))
 }

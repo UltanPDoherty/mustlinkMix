@@ -57,8 +57,8 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
 
       constraints <- label_constraints(data = data, zone_matrix = zone_matrix,
                                    zone_percent = zone_percent)
-      chunk_labels <- chunklets$chunk
-      core_labels  <- chunklets$core
+      block_labels <- constraints$block
+      linked_set_labels  <- constraints$linked_set
     }
 
     if (!is.matrix(data)) {
@@ -84,13 +84,13 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
 
   em_time <- system.time({
     em <- switch(model,
-                 vm = mustlink_em_vm(data = data, chunk_labels = chunk_labels,
+                 vm = mustlink_em_vm(data = data, block_labels = block_labels,
                                      params = init_params,
                                      clust_num = clust_num,
                                      maxit = maxit, eps = eps, burnin = burnin,
                                      print_freq = print_freq,
                                      no_print = no_print),
-                 ns = mustlink_em_ns(data = data, chunk_labels = chunk_labels,
+                 ns = mustlink_em_ns(data = data, block_labels = block_labels,
                                      params = init_params,
                                      clust_num = clust_num,
                                      maxit = maxit, eps = eps, burnin = burnin,
@@ -99,8 +99,8 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
   })
 
   label_time <- system.time({
-    chunk_to_clust <- apply(X = em$chunk_pp, MARGIN = 1, FUN = which.max)
-    clust_labels     <- chunk_to_clust[chunk_labels]
+    block_to_clust <- apply(X = em$block_pp, MARGIN = 1, FUN = which.max)
+    clust_labels     <- block_to_clust[block_labels]
   })
 
   times <- rbind(setup_time, em_time, label_time)
@@ -108,7 +108,7 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
 
   res <- list(clust_labels = clust_labels,
               init_labels = init_labels,
-              chunk_labels = chunk_labels,
+              block_labels = block_labels,
               em = em,
               times = times
               )
