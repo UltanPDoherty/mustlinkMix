@@ -7,7 +7,7 @@
 #' @param data Dataset being clustered in matrix form.
 #' @param params List containing prop, mu, sigma.
 #' @param chunk Object from make_chunk.
-#' @param obs_num Number of observations in the dataset.
+#' @param event_num Number of observations in the dataset.
 #' @param var_num Number of varibles in the dataset.
 #' @param clust_num Number of clusters pre-specified.
 #'

@@ -37,7 +37,7 @@ mustlink_em_vm <- function(data, chunk_labels, params, clust_num,
   it <- 0
   loglike <- c()
 
-  obs_num <- nrow(data)
+  event_num <- nrow(data)
   var_num <- ncol(params$mu)
 
   chunk <- list(labels = chunk_labels,
@@ -60,7 +60,8 @@ mustlink_em_vm <- function(data, chunk_labels, params, clust_num,
     }
 
     # loglike_crit is the relative increase in the log-likelihood.
-    loglike_crit <- check_loglike_convergence(it = it, burnin = burnin, loglike = loglike)
+    loglike_crit <- compute_loglike_crit(it = it, burnin = burnin,
+                                         loglike = loglike)
 
     # EM has converged if the relative difference between consecutive values
     # of the log-likelihood, i.e. loglike_crit, is not NA and is less than eps.
