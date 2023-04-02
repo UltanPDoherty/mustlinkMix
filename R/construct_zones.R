@@ -44,10 +44,15 @@ construct_zones <- function(data, type_marker) {
                               })
   }
 
+  zone_sizes <- colSums(zone_matrix)
+  if (any(zone_sizes == 0)) {
+    stop(paste0("The following zones do not contain any events: ",
+                paste0(colnames(zone_matrix)[zone_sizes == 0],
+                       collapse = ", "), "\n"))
+  }
+
   return(list(matrix = zone_matrix,
-              splits = splits
-              )
-         )
+              splits = splits))
 }
 
 check_zone_overlap <- function(type_marker) {
