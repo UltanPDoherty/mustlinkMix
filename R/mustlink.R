@@ -19,7 +19,6 @@
 #' printed in the EM loop.
 #' @param burnin Controls how many loops are completed before testing for
 #' likelihood convergence.
-#' @param no_print If TRUE, no output is printed.
 #' @param model Model to be used. Either "vm" for Melnykov et al. or "ns" for
 #' Shental et al.
 #'
@@ -42,7 +41,7 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
                      init_method = c("Must-Link k-Means++", "k-Means++",
                                      "k-Means"),
                      init_labels = NULL,
-                     print_freq = 10, burnin = 10, no_print = FALSE,
+                     print_freq = 10, burnin = 10,
                      model = c("vm", "ns")) {
 
   model <- rlang::arg_match(model)
@@ -85,13 +84,11 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
                                      clust_num = clust_num,
                                      maxit = maxit, eps = eps, burnin = burnin,
                                      print_freq = print_freq,
-                                     no_print = no_print),
                  ns = mustlink_em_ns(data = data, block_labels = block_labels,
                                      params = init_params,
                                      clust_num = clust_num,
                                      maxit = maxit, eps = eps, burnin = burnin,
                                      print_freq = print_freq,
-                                     no_print = no_print))
   })
 
   label_time <- system.time({

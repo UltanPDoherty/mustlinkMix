@@ -37,8 +37,6 @@ checked.}
 
 \item{model}{Model to be used. Either "vm" for Melnykov et al. or "ns" for
 Shental et al.}
-
-\item{no_print}{If TRUE, no printing takes place.}
 }
 \value{
 List of chunklet posterior probability matrix, model parameters, and

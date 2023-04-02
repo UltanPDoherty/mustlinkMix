@@ -7,7 +7,6 @@
 #' @param clust_num Number of clusters.
 #' @param burnin Number of iterations before likelihood convergence criterion is
 #'               checked.
-#' @param no_print If TRUE, no printing takes place.
 #' @param print_freq Number of iterations between print statements during EM.
 #' @param maxit Maximum number of EM iterations.
 #' @param eps Likelihood convergence criterion threshold.
@@ -31,9 +30,10 @@
 #' mustlink_em_vm(as.matrix(iris[, 1:4]), clust_num = 3,
 #'              block_labels = iris_block_labels, params = iris_init)
 
-                        burnin = 10, maxit = 1e4, eps = 1e-10,
-                        no_print = FALSE, print_freq = 1,
-                        model = "vm") {
+mustlink_em <- function(data, block_labels, params, clust_num,
+                           burnin = 10, maxit = 1e4, eps = 1e-10,
+                           print_freq = 1,
+                           model = "vm") {
   it <- 0
   loglike <- c()
 
@@ -59,7 +59,7 @@
 
     loglike <- append(loglike, e_out$loglike)
 
-    if (!no_print && it %% print_freq == 1) {
+    if ((it %% print_freq) == 1) {
       cat(paste0("...No. of E-Steps: ", it,
                  ",\t log-likelihood: ", round(loglike[it], digits = 5),
                  ",\t Sys.time: ", Sys.time(), "\n"))
@@ -74,14 +74,10 @@
     if (it == maxit) {
       warning(paste0("EM algorithm did not converge before ",
                      maxit, " iterations."))
-      if (!no_print) {
-        cat(paste0("...EM stopped at ", Sys.time(), "\n"))
-      }
+      cat(paste0("...EM stopped at ", Sys.time(), "\n"))
       break
     } else if (!is.na(loglike_crit) && loglike_crit < eps) {
-      if (!no_print) {
-        cat(paste0("...EM converged at ", Sys.time(), "\n"))
-      }
+      cat(paste0("...EM converged at ", Sys.time(), "\n"))
       break
     }
 
