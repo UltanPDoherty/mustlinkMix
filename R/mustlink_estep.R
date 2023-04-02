@@ -27,32 +27,8 @@ mustlink_estep_vm <- function(data, block, params,
                               event_num = nrow(data), var_num = ncol(params$mu),
                               clust_num = nrow(params$mu)) {
 
-  # lpdf_event is an event_num x clust_num matrix
-  # it is the log pdf for each component evaluated at every point
-  lpdf_event <- vapply(1:clust_num, FUN.VALUE = double(event_num),
-                    FUN = function(k) {
-                      mvtnorm::dmvnorm(data, log = TRUE,
-                                       mean = params$mu[k, ],
-                                       sigma = params$sigma[, , k])
-                    }
-  )
-
-  # single_blocks is a logical of length block$num
-  # it identifies which blocks are singletons,
-  # i.e. unconstrained observations
-  single_blocks <- block$size == 1
-  # single_events is a logical of length event_num
-  # it identifies which observations correspond to the singleton blocks
-  single_events   <- block$labels %in% (1:block$num)[single_blocks]
-
-  nonsingle_blocknum <- (1:block$num)[!single_blocks]
-  single_blocknum   <- block$labels[single_events]
-
-  # lpdf_block is the sum of lpdf_event values within each block
-  lpdf_block <- matrix(NA, nrow = block$num, ncol = clust_num)
-  lpdf_block[single_blocknum, ] <- lpdf_event[single_events, ]
-  lpdf_block[nonsingle_blocknum, ] <- rowsum(lpdf_event[!single_events, ],
-                                             group = block$labels[!single_events])
+  lpdf_block <- compute_lpdf_block(data = data, block = block, params = params,
+                                   event_num = event_num, clust_num = clust_num)
 
   # for loop computes the block posterior probability matrix, postprob_block
   block_unnorm <- postprob_block <- matrix(nrow = block$num, ncol = clust_num)
@@ -116,32 +92,10 @@ mustlink_estep_ns <- function(data, block, params,
                               event_num = nrow(data), var_num = ncol(params$mu),
                               clust_num = nrow(params$mu)) {
 
-  # lpdf_event is an event_num x clust_num matrix
-  # it is the log pdf for each component evaluated at every point
-  lpdf_event <- vapply(1:clust_num, FUN.VALUE = double(event_num),
-                       FUN = function(k) {
-                         mvtnorm::dmvnorm(data, log = TRUE,
-                                          mean = params$mu[k, ],
-                                          sigma = params$sigma[, , k])
-                       }
-  )
-
-  # single_blocks is a logical of length block$num
-  # it identifies which blocks are singletons,
-  # i.e. unconstrained observations
-  single_blocks <- block$size == 1
-  # single_events is a logical of length event_num
-  # it identifies which observations correspond to the singleton blocks
-  single_events   <- block$labels %in% (1:block$num)[single_blocks]
-
-  nonsingle_blocknum <- (1:block$num)[!single_blocks]
-  single_blocknum   <- block$labels[single_events]
-
-  # lpdf_block is the sum of lpdf_event values within each block
-  lpdf_block <- matrix(NA, nrow = block$num, ncol = clust_num)
   lpdf_block[single_blocknum, ] <- lpdf_event[single_events, ]
   lpdf_block[nonsingle_blocknum, ] <- rowsum(lpdf_event[!single_events, ],
-                                             group = block$labels[!single_events])
+  lpdf_block <- compute_lpdf_block(data = data, block = block, params = params,
+                                   event_num = event_num, clust_num = clust_num)
 
   # for loop computes the block posterior probability matrix, postprob_block
   block_unnorm <- postprob_block <- matrix(nrow = block$num, ncol = clust_num)
@@ -168,4 +122,39 @@ mustlink_estep_ns <- function(data, block, params,
   return(list(loglike = loglike,
               postprob_block = postprob_block,
               postprob_event = postprob_event))
+}
+
+
+
+
+compute_lpdf_block <- function(data, block, params,
+                               event_num = nrow(data),
+                               clust_num = nrow(params$mu)) {
+
+  # lpdf_event is an event_num x clust_num matrix
+  # it is the log pdf for each component evaluated at every point
+  lpdf_event <- vapply(1:clust_num, FUN.VALUE = double(event_num),
+                       FUN = function(k) {
+                         mvtnorm::dmvnorm(data, log = TRUE,
+                                          mean = params$mu[k, ],
+                                          sigma = params$sigma[, , k])
+                       }
+  )
+
+  # single_blocks is a logical of length block$num
+  # it identifies which blocks are singletons,
+  # i.e. unconstrained observations
+  single_blocks <- block$size == 1
+  # single_events is a logical of length event_num
+  # it identifies which observations correspond to the singleton blocks
+  single_events   <- block$labels %in% (1:block$num)[single_blocks]
+
+  nonsingle_blocknum <- (1:block$num)[!single_blocks]
+  single_blocknum   <- block$labels[single_events]
+
+  # lpdf_block is the sum of lpdf_event values within each block
+  lpdf_block <- matrix(NA, nrow = block$num, ncol = clust_num)
+                                             group = block$labels[!single_events])
+
+  return(lpdf_block)
 }
