@@ -55,7 +55,7 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
       zone_matrix <- construct_zones(data = data,
                                      type_marker = type_marker)$matrix
 
-      chunklets <- label_chunklets(data = data, zone_labels = zone_labels,
+      constraints <- label_constraints(data = data, zone_matrix = zone_matrix,
                                    zone_percent = zone_percent)
       chunk_labels <- chunklets$chunk
       core_labels  <- chunklets$core

@@ -18,7 +18,7 @@
 #' iris_chunk_labels <- label_chunklets(iris[, 1:4],
 #'                                      zone_matrix = iris_zone_matrix,
 #'                                      zone_percent = 90)
-label_chunklets <- function(data, zone_matrix, zone_percent) {
+label_constraints <- function(data, zone_matrix, zone_percent) {
 
   zone_num <- ncol(zone_matrix)
   event_num <- nrow(data)
@@ -65,8 +65,8 @@ label_chunklets <- function(data, zone_matrix, zone_percent) {
                           })
 
   block_labels <- linked_set_labels
-  block_labels[linked_set_labels == 0] <- seq_len(zone_num)
-
+  block_labels[linked_set_labels == 0] <- zone_num +
+                                            seq_len(sum(linked_set_labels == 0))
 
   return(list(linked_set = linked_set_labels,
               block = block_labels))
