@@ -27,7 +27,7 @@ mustlink_estep_vm <- function(data, chunk, params,
                               event_num = nrow(data), var_num = ncol(params$mu),
                               clust_num = nrow(params$mu)) {
 
-  # log_pdf is an obs_num x clust_num matrix
+  # lpdf_event is an obs_num x clust_num matrix
   # it is the log pdf for each component evaluated at every point
   lpdf_event <- vapply(1:clust_num, FUN.VALUE = double(event_num),
                     FUN = function(k) {
@@ -48,10 +48,10 @@ mustlink_estep_vm <- function(data, chunk, params,
   nonsingle_chunknum <- (1:chunk$num)[!singles_chunk]
   single_chunknum   <- chunk$labels[singles_obs]
 
-  # lpdf_chunk is the sum of log_pdf values within each chunklet
+  # lpdf_chunk is the sum of lpdf_event values within each chunklet
   lpdf_chunk <- matrix(NA, nrow = chunk$num, ncol = clust_num)
-  lpdf_chunk[single_chunknum, ]  <- log_pdf[singles_obs, ]
-  lpdf_chunk[nonsingle_chunknum, ] <- rowsum(log_pdf[!singles_obs, ],
+  lpdf_chunk[single_chunknum, ]  <- lpdf_event[singles_obs, ]
+  lpdf_chunk[nonsingle_chunknum, ] <- rowsum(lpdf_event[!singles_obs, ],
                                                group = chunk$labels[!singles_obs])
 
   # This for loop computes the chunklet posterior probability matrix, chunk_pp,
