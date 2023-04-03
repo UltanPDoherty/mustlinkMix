@@ -38,8 +38,9 @@
 
 mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
                      maxit = 1e4, eps = 1e-10, init_seed = NULL,
-                     init_method = c("Must-Link k-Means++", "k-Means++",
-                                     "k-Means"),
+                     init_method = c("Must-Link k-Means++",
+                                     "Must-Link k-Means",
+                                     "k-Means++", "k-Means"),
                      init_labels = NULL,
                      print_freq = 10, burnin = 2,
                      model = c("vm", "ns")) {
