@@ -27,14 +27,16 @@ initial_partition <- function(data, clust_num, linked_set_labels = NULL,
 
   obs_num <- nrow(data)
 
-  set.seed(init_seed)
 
   if (init_method == "k-Means") {
+    set.seed(init_seed)
     partition <- stats::kmeans(data, centers = clust_num)$cluster
   } else if (init_method == "k-Means++") {
-    partition <- ClusterR::KMeans_rcpp(data, clusters = clust_num)$clusters
+    partition <- ClusterR::KMeans_rcpp(data, clusters = clust_num,
+                                       seed = init_seed)$clusters
   } else if (init_method == "Must-Link k-Means") {
     linked_num <- length(unique(linked_set_labels[linked_set_labels != 0]))
+    set.seed(init_seed)
     km <- stats::kmeans(data[linked_set_labels == 0, ],
                         centers = clust_num - linked_num)$cluster
 
@@ -44,7 +46,8 @@ initial_partition <- function(data, clust_num, linked_set_labels = NULL,
   } else if (init_method == "Must-Link k-Means++") {
     linked_num <- length(unique(linked_set_labels[linked_set_labels != 0]))
     kmpp <- ClusterR::KMeans_rcpp(data[linked_set_labels == 0, ],
-                                  clusters = clust_num - linked_num)$clusters
+                                  clusters = clust_num - linked_num,
+                                  seed = init_seed)$clusters
 
     partition <- integer(obs_num)
     partition <- linked_set_labels
