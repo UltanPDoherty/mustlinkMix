@@ -28,13 +28,3 @@ List of mean f1, mean precision, mean recall, and f1 matrix.
 \description{
 Compute f1 given two vectors of labels
 }
-\examples{
-iris_tab   <- rbind(se = c(-1, +1, -1, -1),
-                    ve = c(00, -1, +1, +1),
-                    vi = c(+1, 00, +1, +1))
-iris_out <- mustlink(iris[, 1:4], type_marker = iris_tab,
-                     clust_num = 3, zone_percent = 90)
-compute_f1(clust_labels = iris_out$clust_labels,
-           true_labels = iris$Species,
-           exclude_from_true = "setosa")
-}

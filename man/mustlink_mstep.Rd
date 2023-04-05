@@ -29,6 +29,9 @@ mustlink_mstep(
 \item{event_num}{Number of observations in the dataset.}
 
 \item{var_num}{Number of variables in the dataset.}
+
+\item{model}{Model to be used. Either "vm" for Melnykov et al. or "ns" for
+Shental et al.}
 }
 \value{
 List containing prop, mu, sigma.
@@ -36,19 +39,4 @@ List containing prop, mu, sigma.
 \description{
 Implement M-step of EM algorithm for GMM with positive / must-link
 constraints.
-}
-\examples{
-block_labels1 <- c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78)
-block1 <- list(labels = block_labels1,
-               num = length(unique(block_labels1)),
-               size = as.numeric(table(block_labels1)))
-params1 <- initialise_model(iris[, 1:4], clust_num = 3)
-e_out1  <- mustlink_estep_vm(as.matrix(iris[, 1:4]),
-                             block = block1, params = params1,
-                             event_num = 150, var_num = 4, clust_num = 3)
-postprob_event1 <- e_out1$postprob_event
-postprob_block1 <- e_out1$postprob_block
-mustlink_mstep_vm(as.matrix(iris[, 1:4]),
-                  postprob_event = postprob_event1,
-                  postprob_block = postprob_block1)
 }

@@ -12,7 +12,7 @@ mustlink(
   maxit = 10000,
   eps = 1e-10,
   init_seed = NULL,
-  init_method = c("Must-Link k-Means++", "k-Means++", "k-Means"),
+  init_method = c("k-Means++", "k-Means", "Must-Link k-Means++", "Must-Link k-Means"),
   init_labels = NULL,
   print_freq = 10,
   burnin = 2,
@@ -60,11 +60,4 @@ and a vector of times.
 \description{
 Only requires flowFrame dataset, cell type - marker table, number of
 clusters, and size of chunklets.
-}
-\examples{
-iris_tab   <- rbind(se = c(-1, +1, -1, -1),
-                    ve = c(00, -1, +1, +1),
-                    vi = c(+1, 00, +1, +1))
-mustlink(iris[, 1:4], type_marker = iris_tab,
-         clust_num = 3, zone_percent = 90)
 }

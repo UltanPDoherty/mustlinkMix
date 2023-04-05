@@ -9,15 +9,6 @@
 #' @return A list of two label vectors, labels with all non-core points labelled
 #'         0, chunks with all non-core points given their own chunklet label.
 #' @export
-#'
-#' @examples
-#' iris_tab   <- rbind(se = c(-1, +1, -1, -1),
-#'                     ve = c(00, -1, +1, +1),
-#'                     vi = c(+1, 00, +1, +1))
-#' iris_zone_matrix <- label_zones(iris[, 1:4], type_marker = iris_tab)$labels
-#' iris_chunk_labels <- label_chunklets(iris[, 1:4],
-#'                                      zone_matrix = iris_zone_matrix,
-#'                                      zone_percent = 90)
 label_constraints <- function(data, zone_matrix, zone_percent) {
 
   zone_num <- ncol(zone_matrix)

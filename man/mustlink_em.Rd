@@ -48,16 +48,3 @@ vector of log-likelihood values for each iteration.
 \description{
 Must-Link / Positive Constraint EM GMM.
 }
-\examples{
-iris_tab   <- rbind(se = c(-1, +1, -1, -1),
-                    ve = c(00, -1, +1, +1),
-                    vi = c(+1, 00, +1, +1))
-iris_zone_labels <- label_zones(iris[, 1:4], type_marker = iris_tab)$labels
-iris_block_labels <- label_chunklets(iris[, 1:4],
-                                   zone_labels = iris_zone_labels,
-                                   zone_percent = 90)$chunk
-iris_init <- initialise_model(iris[, 1:4], clust_num = 3,
-                              start = "k-Means", init_seed = 123)
-mustlink_em_vm(as.matrix(iris[, 1:4]), clust_num = 3,
-             block_labels = iris_block_labels, params = iris_init)
-}

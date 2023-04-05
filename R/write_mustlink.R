@@ -5,6 +5,8 @@
 #' @param clust_labels Logical: should cluster labels be written to a file?
 #' @param init_labels Logical: should initial labels be written to a file?
 #' @param block_labels Logical: should block labels be written to a file?
+#' @param linked_set_labels Logical: should linked set labels be written to a
+#'                          file?
 #' @param times Logical: should runtimes be written to a file?
 #' @param em_loglike Logical: should log-likelihood values be written to a file?
 #' @param em_postprob_block Logical: should posterior probability matrix be

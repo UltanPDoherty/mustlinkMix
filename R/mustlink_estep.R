@@ -10,19 +10,12 @@
 #' @param event_num Number of observations in the dataset.
 #' @param var_num Number of varibles in the dataset.
 #' @param clust_num Number of clusters pre-specified.
+#' @param model Model to be used. Either "vm" for Melnykov et al. or "ns" for
+#' Shental et al.
 #'
 #' @return A list containing a log-likelihood value
 #'         and a posterior probability matrix.
 #' @export
-#'
-#' @examples
-#' block_labels1 <- c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78)
-#' block1 <- list(labels = block_labels1,
-#'                num = length(unique(block_labels1)),
-#'                size = as.numeric(table(block_labels1)))
-#' params1 <- initialise_model(iris[, 1:4], clust_num = 3)
-#' mustlink_estep_vm(as.matrix(iris[, 1:4]), block = block1, params = params1,
-#'                   event_num = 150, var_num = 4, clust_num = 3)
 mustlink_estep <- function(data, block, params,
                            event_num = nrow(data), var_num = ncol(params$mu),
                            clust_num = nrow(params$mu),
@@ -73,7 +66,6 @@ mustlink_estep <- function(data, block, params,
 compute_lpdf_block <- function(data, block, params,
                                event_num = nrow(data),
                                clust_num = nrow(params$mu)) {
-
   # lpdf_event is an event_num x clust_num matrix
   # it is the log pdf for each component evaluated at every point
   lpdf_event <- vapply(1:clust_num, FUN.VALUE = double(event_num),

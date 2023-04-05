@@ -9,7 +9,7 @@ initial_partition(
   clust_num,
   linked_set_labels = NULL,
   init_seed = NULL,
-  init_method = c("Must-Link k-Means++", "k-Means++", "k-Means")
+  init_method = c("k-Means++", "k-Means", "Must-Link k-Means++", "Must-Link k-Means")
 )
 }
 \arguments{
@@ -23,14 +23,11 @@ belongs to, 0 for unconstrained events.}
 \item{init_seed}{Seed.}
 
 \item{init_method}{Initialisation option. One of "Must-Link k-Means++",
-"k-Means++", "k-Means", "Mclust", or "use_labels".}
+"Must-Link k-Means", "k-Means++", or "k-Means".}
 }
 \value{
 An integer vector.
 }
 \description{
 Partition the data.
-}
-\examples{
-initialise_model(iris[, 1:4], 4)
 }

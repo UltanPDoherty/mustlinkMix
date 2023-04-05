@@ -11,12 +11,6 @@
 #'         columns for populations, and splits, a vector of the variable bimodal
 #'         threshold values.
 #' @export
-#'
-#' @examples
-#' iris_tab   <- rbind(se = c(-1, +1, -1, -1),
-#'                     ve = c(00, -1, +1, +1),
-#'                     vi = c(+1, 00, +1, +1))
-#' out <- label_zones(iris[, 1:4], type_marker = iris_tab)
 construct_zones <- function(data, type_marker) {
 
   event_num <- nrow(data)

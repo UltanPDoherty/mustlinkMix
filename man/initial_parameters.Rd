@@ -11,8 +11,6 @@ initial_parameters(data, init_labels)
 \item{data}{Matrix or dataframe.}
 
 \item{init_labels}{Set of initial labels.}
-
-\item{clust_num}{Number of clusters.}
 }
 \value{
 A list consisting of a mixing proportions vector, a matrix of
@@ -21,7 +19,4 @@ matrices.
 }
 \description{
 Initialise a Gaussian Mixture Model.
-}
-\examples{
-initial_parameters(iris[, 1:4], 4)
 }

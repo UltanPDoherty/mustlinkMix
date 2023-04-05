@@ -5,16 +5,12 @@
 #' Initialise a Gaussian Mixture Model.
 #'
 #' @param data Matrix or dataframe.
-#' @param clust_num Number of clusters.
 #' @param init_labels Set of initial labels.
 #'
 #' @return A list consisting of a mixing proportions vector, a matrix of
 #'         component means, and an array containing component covariance
 #'         matrices.
 #' @export
-#'
-#' @examples
-#' initial_parameters(iris[, 1:4], 4)
 initial_parameters <- function(data, init_labels) {
 
   stopifnot(length(init_labels) == nrow(data),

@@ -13,10 +13,6 @@
 #'
 #' @return An integer vector.
 #' @export
-#' @import mclust
-#'
-#' @examples
-#' initialise_model(iris[, 1:4], 4)
 initial_partition <- function(data, clust_num, linked_set_labels = NULL,
                               init_seed = NULL,
                               init_method = c("k-Means++", "k-Means",

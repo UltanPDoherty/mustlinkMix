@@ -28,6 +28,9 @@ write_mustlink(
 
 \item{block_labels}{Logical: should block labels be written to a file?}
 
+\item{linked_set_labels}{Logical: should linked set labels be written to a
+file?}
+
 \item{times}{Logical: should runtimes be written to a file?}
 
 \item{em_loglike}{Logical: should log-likelihood values be written to a file?}

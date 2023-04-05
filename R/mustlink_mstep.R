@@ -11,24 +11,11 @@
 #' @param clust_num Number of clusters pre-specified.
 #' @param event_num Number of observations in the dataset.
 #' @param var_num Number of variables in the dataset.
+#' @param model Model to be used. Either "vm" for Melnykov et al. or "ns" for
+#' Shental et al.
 #'
 #' @return List containing prop, mu, sigma.
 #' @export
-#'
-#' @examples
-#' block_labels1 <- c(rep(1, 25), 2:26, rep(27, 25), 28:52, rep(53, 25), 54:78)
-#' block1 <- list(labels = block_labels1,
-#'                num = length(unique(block_labels1)),
-#'                size = as.numeric(table(block_labels1)))
-#' params1 <- initialise_model(iris[, 1:4], clust_num = 3)
-#' e_out1  <- mustlink_estep_vm(as.matrix(iris[, 1:4]),
-#'                              block = block1, params = params1,
-#'                              event_num = 150, var_num = 4, clust_num = 3)
-#' postprob_event1 <- e_out1$postprob_event
-#' postprob_block1 <- e_out1$postprob_block
-#' mustlink_mstep_vm(as.matrix(iris[, 1:4]),
-#'                   postprob_event = postprob_event1,
-#'                   postprob_block = postprob_block1)
 mustlink_mstep <- function(data, postprob_event, postprob_block,
                            block_num = nrow(postprob_block),
                            clust_num = ncol(postprob_block),
