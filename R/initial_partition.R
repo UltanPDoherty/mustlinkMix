@@ -27,6 +27,9 @@ initial_partition <- function(data, clust_num, linked_set_labels = NULL,
 
   obs_num <- nrow(data)
 
+  if (is.null(init_seed)) {
+    init_seed <- as.numeric(Sys.time())
+  }
 
   if (init_method == "k-Means") {
     set.seed(init_seed)
