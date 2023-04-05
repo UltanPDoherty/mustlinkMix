@@ -89,7 +89,7 @@ mustlink_em <- function(data, block_labels, params, clust_num, zone_num,
                               model = model)
   }
 
-  return(list(block_pp = e_out$postprob_block,
+  return(list(postprob_block = e_out$postprob_block,
               params = params,
               loglike = loglike))
 }

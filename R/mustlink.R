@@ -89,8 +89,8 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
   })
 
   label_time <- system.time({
-    block_to_clust <- apply(X = em$block_pp, MARGIN = 1, FUN = which.max)
-    clust_labels     <- block_to_clust[block_labels]
+    block_to_clust <- apply(X = em$postprob_block, MARGIN = 1, FUN = which.max)
+    clust_labels <- block_to_clust[block_labels]
   })
 
   times <- rbind(setup_time, em_time, label_time)
