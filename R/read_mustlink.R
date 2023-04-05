@@ -34,7 +34,7 @@ read_mustlink <- function(file_prefix,
   }
 
   if (linked_set_labels) {
-    out$block_labels <- utils::read.table(file = paste0(file_prefix,
+    out$linked_set_labels <- utils::read.table(file = paste0(file_prefix,
                                                         "_link_labels.txt"))$V1
   }
 
