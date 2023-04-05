@@ -28,19 +28,12 @@
 #'         a vector of log-likelihood values,
 #'         and a vector of times.
 #' @export
-#'
-#' @examples
-#' iris_tab   <- rbind(se = c(-1, +1, -1, -1),
-#'                     ve = c(00, -1, +1, +1),
-#'                     vi = c(+1, 00, +1, +1))
-#' mustlink(iris[, 1:4], type_marker = iris_tab,
-#'          clust_num = 3, zone_percent = 90)
 
 mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
                      maxit = 1e4, eps = 1e-10, init_seed = NULL,
-                     init_method = c("Must-Link k-Means++",
-                                     "Must-Link k-Means",
-                                     "k-Means++", "k-Means"),
+                     init_method = c("k-Means++", "k-Means",
+                                     "Must-Link k-Means++",
+                                     "Must-Link k-Means"),
                      init_labels = NULL,
                      print_freq = 10, burnin = 2,
                      model = c("vm", "ns")) {
