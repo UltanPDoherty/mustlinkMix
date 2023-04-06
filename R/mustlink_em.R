@@ -75,6 +75,7 @@ mustlink_em <- function(data, block_labels, params, clust_num, zone_num,
                               block_num = block$num, clust_num = clust_num,
                               event_num = event_num, var_num = var_num,
                               model = model)
+    clust_num <- length(params$prop)
   }
 
   return(list(postprob_block = e_out$postprob_block,
@@ -86,7 +87,6 @@ mustlink_em <- function(data, block_labels, params, clust_num, zone_num,
 
 
 compute_loglike_crit <- function(it, burnin, loglike) {
-
   # if tree accounts for the log-likelihoods being Inf or -Inf.
   if (it >= burnin) {
     loglike_diff <- loglike[it] - loglike[it - 1]

@@ -25,24 +25,34 @@ mustlink_mstep <- function(data, postprob_event, postprob_block,
 
   model <- rlang::arg_match(model)
 
+  postprob_event_sums <- colSums(postprob_event)
+
+  empty_clusters <- postprob_event_sums < 1e-6
+  if (any(empty_clusters)) {
+    clust_num <- sum(!empty_clusters)
+    postprob_event_sums <- postprob_event_sums[!empty_clusters]
+    postprob_block <- postprob_block[, !empty_clusters]
+    postprob_event <- postprob_event[, !empty_clusters]
+  }
+
   # block mixing proportions
   prop <- switch(model,
-                 vm = colSums(postprob_event) / event_num,
+                 vm = postprob_event_sums / event_num,
                  ns = colSums(postprob_block) / block_num)
 
-  postprob_event_sums <- colSums(postprob_event)
-  postprob_event2 <- sweep(x = postprob_event, MARGIN = 2,
+  postprob_event_div <- sweep(x = postprob_event, MARGIN = 2,
                            STATS = postprob_event_sums, FUN = "/")
 
   # Mean vector
-  mu <- t(postprob_event2) %*% data
+  mu <- t(postprob_event_div) %*% data
 
   # Covariance matrix
   data_mu <- array(dim = c(event_num, var_num, clust_num))
   sigma   <- array(dim = c(var_num, var_num, clust_num))
   for (k in 1:clust_num){
-    data_mu[, , k] <- sqrt(postprob_event2[, k]) * scale(data, center = mu[k, ],
-                                                         scale = FALSE)
+    data_mu[, , k] <- sqrt(postprob_event_div[, k]) * scale(data,
+                                                            center = mu[k, ],
+                                                            scale = FALSE)
     sigma[, , k] <- crossprod(data_mu[, , k])
   }
 

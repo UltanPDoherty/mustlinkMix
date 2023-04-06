@@ -34,7 +34,6 @@ mustlink_estep <- function(data, block, params,
   prop_exponent <- switch(model,
                           vm = block$size,
                           ns = rep(1, block$num))
-
   for (l in 1:block$num) {
     # Add the log mixing proportions and then un-log this sum with exp.
     # Subtract lpdf_block row maxes to prevent exp mapping large values to Inf.
