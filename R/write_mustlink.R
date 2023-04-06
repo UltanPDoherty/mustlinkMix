@@ -28,7 +28,7 @@ write_mustlink <- function(mustlink_out, file_prefix,
                        row.names = FALSE, col.names = FALSE)
   }
 
-  if (clust_labels) {
+  if (init_labels) {
     utils::write.table(mustlink_out$init_labels,
                        file = paste0(file_prefix, "_init_labels.txt"),
                        row.names = FALSE, col.names = FALSE)
