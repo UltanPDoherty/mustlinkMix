@@ -35,7 +35,7 @@ label_constraints <- function(data, zone_matrix, zone_percent) {
   for (l in 1:zone_num) {
     zones[[l]] <- data[zone_matrix[, l], ]
 
-    densities[[l]] <- mvtnorm::dmvnorm(zones[[l]],
+    densities[[l]] <- mclust::dmvnorm(zones[[l]],
                                        mean = colMeans(zones[[l]]),
                                        sigma = stats::cov(zones[[l]]))
     quantiles[l] <- stats::quantile(densities[[l]], prob[l])
