@@ -27,7 +27,7 @@ mustlink_mstep <- function(data, postprob_event, postprob_block,
 
   postprob_event_sums <- colSums(postprob_event)
 
-  empty_clusters <- postprob_event_sums < 1e-6
+  empty_clusters <- postprob_event_sums < 2
   if (any(empty_clusters)) {
     clust_num <- sum(!empty_clusters)
     postprob_event_sums <- postprob_event_sums[!empty_clusters]
