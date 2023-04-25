@@ -44,13 +44,16 @@ label_constraints <- function(data, zone_matrix, zone_percent) {
   }
 
   # zones may overlap but cores are prevented from doing so
-  check_linked_set_overlap(linked_set_matrix)
-
-  linked_set_labels <- apply(X = linked_set_matrix, MARGIN = 1,
-                          FUN = function(x) {
-                            label <- which(x == max(x))
-                            ifelse(length(label) == 1, label, 0)
-                          })
+  if (zone_num == 1) {
+    linked_set_labels <- as.integer(linked_set_matrix[, 1])
+  } else if (zone_num > 1) {
+    check_linked_set_overlap(linked_set_matrix)
+    linked_set_labels <- apply(X = linked_set_matrix, MARGIN = 1,
+                               FUN = function(x) {
+                                 label <- which(x == max(x))
+                                 ifelse(length(label) == 1, label, 0)
+                               })
+  }
 
   block_labels <- linked_set_labels
   block_labels[linked_set_labels == 0] <- zone_num +
