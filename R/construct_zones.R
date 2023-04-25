@@ -17,7 +17,9 @@ construct_zones <- function(data, type_marker) {
   zone_num <- nrow(type_marker)
   zone_names <- rownames(type_marker)
 
-  check_zone_overlap(type_marker = type_marker)
+  if (zone_num > 1) {
+    check_zone_overlap(type_marker = type_marker)
+  }
 
   splits <- compute_splits(data, type_marker = type_marker)
 
