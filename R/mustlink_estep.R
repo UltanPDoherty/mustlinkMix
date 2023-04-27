@@ -84,7 +84,7 @@ compute_lpdf_block <- function(data, block, params,
   # lpdf_block is the sum of lpdf_event values within each block
   lpdf_block <- matrix(NA, nrow = block$num, ncol = clust_num)
   lpdf_block[unlinked_blocks, ] <- lpdf_event[unlinked_events, ]
-  lpdf_block[linked_blocks, ] <- rowsum(lpdf_event[linked_events, ],
+  lpdf_block[linked_blocks, ] <- rowsum(lpdf_event[linked_events, , drop = FALSE],
                                          group = block$labels[linked_events])
 
   return(lpdf_block)
