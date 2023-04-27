@@ -65,7 +65,11 @@ check_zone_overlap <- function(type_marker) {
 
   rowdiffs <- abs(type_marker[pair_nums[1, ], ] - type_marker[pair_nums[2, ], ])
 
-  maxdiffs <- apply(X = rowdiffs, MARGIN = 1, FUN = max)
+  if (zone_num == 2) {
+    maxdiffs <- max(rowdiffs)
+  } else {
+    maxdiffs <- apply(X = rowdiffs, MARGIN = 1, FUN = max)
+  }
   if (any(maxdiffs == 0)) {
     stop(paste0("The following population zones are identical:\n",
                 paste("\t", pair_names[which(maxdiffs == 0)],
