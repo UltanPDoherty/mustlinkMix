@@ -31,8 +31,8 @@ mustlink_mstep <- function(data, postprob_event, postprob_block,
   if (any(empty_clusters)) {
     clust_num <- sum(!empty_clusters)
     postprob_event_sums <- postprob_event_sums[!empty_clusters]
-    postprob_block <- postprob_block[, !empty_clusters]
-    postprob_event <- postprob_event[, !empty_clusters]
+    postprob_block <- postprob_block[, !empty_clusters, drop = FALSE]
+    postprob_event <- postprob_event[, !empty_clusters, drop = FALSE]
   }
 
   # block mixing proportions
@@ -41,7 +41,7 @@ mustlink_mstep <- function(data, postprob_event, postprob_block,
                  ns = colSums(postprob_block) / block_num)
 
   postprob_event_div <- sweep(x = postprob_event, MARGIN = 2,
-                           STATS = postprob_event_sums, FUN = "/")
+                              STATS = postprob_event_sums, FUN = "/")
 
   # Mean vector
   mu <- t(postprob_event_div) %*% data
