@@ -47,7 +47,7 @@ mustlink_em <- function(data, block_labels, params, clust_num, zone_num,
 
     loglike <- append(loglike, e_out$loglike)
 
-    if ((it %% print_freq) == 1) {
+    if ((it %% print_freq) == 0) {
       cat(paste0(format(Sys.time(), "%H:%M:%S"),
                  "\t E-Step Number: ", it,
                  ",\t Log-likelihood: ", round(loglike[it], digits = 5), "\n"))
