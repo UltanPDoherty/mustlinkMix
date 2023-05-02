@@ -18,7 +18,7 @@ biocViews:
 Imports: 
     flowCore,
     flowDensity,
-    mclust,
+    mvtnorm,
     stats,
     clue,
     rlang,

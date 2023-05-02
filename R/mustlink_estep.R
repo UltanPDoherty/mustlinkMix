@@ -69,7 +69,7 @@ compute_lpdf_block <- function(data, block, params,
   # it is the log pdf for each component evaluated at every point
   lpdf_event <- vapply(1:clust_num, FUN.VALUE = double(event_num),
                        FUN = function(k) {
-                         mclust::dmvnorm(data, log = TRUE,
+                         mvtnorm::dmvnorm(data, log = TRUE,
                                           mean = params$mu[k, ],
                                           sigma = params$sigma[, , k])
                        }
