@@ -14,6 +14,9 @@ compute_f1 <- function(clust_labels, true_labels,
                        exclude_from_true = NULL,
                        prec_rec = FALSE) {
 
+  clust_nas <- is.na(clust_labels)
+  clust_labels[clust_nas] <- max(clust_labels[!clust_nas]) + 1
+
   if (!is.null(exclude_from_true)) {
     excluded   <- true_labels %in% exclude_from_true
     true_labels  <- true_labels[!excluded]
