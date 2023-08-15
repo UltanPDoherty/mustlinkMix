@@ -12,9 +12,13 @@ construct_zones(data, type_marker)
 \item{type_marker}{Matrix, rows for populations, columns for variables.}
 }
 \value{
-List containing labels, a matrix with rows for observations and
-columns for populations, and splits, a vector of the variable bimodal
-threshold values.
+List containing
+\itemize{
+\item labels: a matrix of logical values with a row per observation and a
+column per population.
+\item splits: a data frame containing upper, lower, and default bimodal
+threshold values for each marker from flowDensity::deGate.
+}
 }
 \description{
 Convert a cell type vs marker table into a logical vector of region

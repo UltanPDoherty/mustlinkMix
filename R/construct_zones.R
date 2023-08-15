@@ -7,9 +7,13 @@
 #' @param data Dataset in matrix or data.frame format.
 #' @param type_marker Matrix, rows for populations, columns for variables.
 #'
-#' @return List containing labels, a matrix with rows for observations and
-#'         columns for populations, and splits, a vector of the variable bimodal
-#'         threshold values.
+#' @return List containing
+#' \itemize{
+#' \item labels: a matrix of logical values with a row per observation and a
+#'               column per population.
+#' \item splits: a data frame containing upper, lower, and default bimodal
+#'               threshold values for each marker from flowDensity::deGate.
+#' }
 #' @export
 construct_zones <- function(data, type_marker) {
 
@@ -25,8 +29,10 @@ construct_zones <- function(data, type_marker) {
 
   # create a +1/-1 matrix the same size as the data flowFrame
   is_event_positive <- t(apply(X = data, MARGIN = 1,
-                         FUN = function(event) event > splits))
-  event_plusminus <- (2 * is_event_positive) - 1
+                               FUN = function(event) event > splits$upper))
+  is_event_negative <- t(apply(X = data, MARGIN = 1,
+                               FUN = function(event) event < splits$lower))
+  event_plusminus <- is_event_positive - is_event_negative
 
   zone_matrix <- matrix(NA, nrow = event_num, ncol = zone_num,
                         dimnames = list(NULL, zone_names))
@@ -91,11 +97,24 @@ compute_splits <- function(data, type_marker) {
   to_be_split <- vapply(nonzero_markers, FUN.VALUE = logical(1), FUN = any)
 
   # create a vector of +/- splits to check every row of the data against
-  splits <- rep(NA, var_num)
-  splits[to_be_split] <- vapply(which(to_be_split), FUN.VALUE = double(1),
-                                FUN = function(p) {
-                                  flowDensity::deGate(data[, p])
+  splits <- data.frame(upper = rep(NA, var_num),
+                       default = rep(NA, var_num),
+                       lower = rep(NA, var_num))
+  splits$upper[to_be_split] <- vapply(which(to_be_split), FUN.VALUE = double(1),
+                                      FUN = function(p) {
+                                        flowDensity::deGate(data[, p],
+                                                            upper = TRUE)
                                 })
+  splits$default[to_be_split] <- vapply(which(to_be_split), FUN.VALUE = double(1),
+                                      FUN = function(p) {
+                                        flowDensity::deGate(data[, p],
+                                                            upper = NA)
+                                      })
+  splits$lower[to_be_split] <- vapply(which(to_be_split), FUN.VALUE = double(1),
+                                      FUN = function(p) {
+                                        flowDensity::deGate(data[, p],
+                                                            upper = FALSE)
+                                      })
 
   return(splits)
 }
