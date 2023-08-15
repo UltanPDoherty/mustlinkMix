@@ -103,18 +103,27 @@ compute_splits <- function(data, type_marker) {
   splits$upper[to_be_split] <- vapply(which(to_be_split), FUN.VALUE = double(1),
                                       FUN = function(p) {
                                         flowDensity::deGate(data[, p],
-                                                            upper = TRUE)
+                                                            upper = TRUE,
+                                                            verbose = FALSE)
                                 })
   splits$default[to_be_split] <- vapply(which(to_be_split), FUN.VALUE = double(1),
                                       FUN = function(p) {
                                         flowDensity::deGate(data[, p],
-                                                            upper = NA)
+                                                            upper = NA,
+                                                            verbose = FALSE)
                                       })
   splits$lower[to_be_split] <- vapply(which(to_be_split), FUN.VALUE = double(1),
                                       FUN = function(p) {
                                         flowDensity::deGate(data[, p],
-                                                            upper = FALSE)
+                                                            upper = FALSE,
+                                                            verbose = FALSE)
                                       })
+  for (i in 1:var_num) {
+    if (!all(splits[i, 1] == splits[i, ])) {
+      message(paste0("Upper & lower flowDensity splits used for marker ", i,
+                     ": ", colnames(data)[i], ".\n"))
+    }
+  }
 
   return(splits)
 }
