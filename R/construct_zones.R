@@ -119,7 +119,7 @@ compute_splits <- function(data, type_marker) {
                                                             verbose = FALSE)
                                       })
   for (i in 1:var_num) {
-    if (!all(splits[i, 1] == splits[i, ])) {
+    if (to_be_split[i] & !all(splits[i, 1] == splits[i, ])) {
       message(paste0("Upper & lower flowDensity splits used for marker ", i,
                      ": ", colnames(data)[i], ".\n"))
     }
