@@ -6,6 +6,7 @@
 #'
 #' @param data Dataset in matrix or data.frame format.
 #' @param type_marker Matrix, rows for populations, columns for variables.
+#' @param custom_splits Vector of values for variables' bimodal thresholds.
 #'
 #' @return List containing
 #' \itemize{
@@ -15,7 +16,7 @@
 #'               threshold values for each marker from flowDensity::deGate.
 #' }
 #' @export
-construct_zones <- function(data, type_marker) {
+construct_zones <- function(data, type_marker, custom_splits = NULL) {
 
   event_num <- nrow(data)
   zone_num <- nrow(type_marker)
@@ -25,7 +26,12 @@ construct_zones <- function(data, type_marker) {
     check_zone_overlap(type_marker = type_marker)
   }
 
-  splits <- compute_splits(data, type_marker = type_marker)
+  if (is.null(custom_splits)) {
+    splits <- compute_splits(data, type_marker = type_marker)
+  } else {
+    splits <- data.frame(lower = custom_splits,
+                         upper = custom_splits)
+  }
 
   # create a +1/-1 matrix the same size as the data flowFrame
   is_event_positive <- t(apply(X = data, MARGIN = 1,

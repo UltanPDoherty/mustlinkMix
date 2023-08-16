@@ -4,12 +4,14 @@
 \alias{construct_zones}
 \title{Construct positive / negative region labels.}
 \usage{
-construct_zones(data, type_marker)
+construct_zones(data, type_marker, custom_splits = NULL)
 }
 \arguments{
 \item{data}{Dataset in matrix or data.frame format.}
 
 \item{type_marker}{Matrix, rows for populations, columns for variables.}
+
+\item{custom_splits}{Vector of values for variables' bimodal thresholds.}
 }
 \value{
 List containing

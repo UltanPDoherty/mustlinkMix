@@ -21,6 +21,7 @@
 #' likelihood convergence.
 #' @param model Model to be used. Either "vm" for Melnykov et al. or "ns" for
 #' Shental et al.
+#' @param custom_splits Vector of values for variables' bimodal thresholds.
 #'
 #' @return A list consisting of a vector of cluster labels,
 #'         a matrix of chunklet to cluster assignment probabilities,
@@ -36,7 +37,8 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
                                      "Must-Link k-Means"),
                      init_labels = NULL,
                      print_freq = 10, burnin = 2,
-                     model = c("vm", "ns")) {
+                     model = c("vm", "ns"),
+                     custom_splits = NULL) {
 
   model <- rlang::arg_match(model)
   init_method <- rlang::arg_match(init_method)
@@ -47,7 +49,8 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
       zone_num <- 0
     } else {
       zone_matrix <- construct_zones(data = data,
-                                     type_marker = type_marker)$matrix
+                                     type_marker = type_marker,
+                                     custom_splits = custom_splits)$matrix
       zone_num <- ncol(zone_matrix)
 
       constraints <- label_constraints(data = data, zone_matrix = zone_matrix,
