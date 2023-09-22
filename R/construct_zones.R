@@ -120,8 +120,18 @@ compute_splits <- function(data, type_marker) {
   to_be_split <- vapply(nonzero_markers, FUN.VALUE = logical(1), FUN = any)
 
   # create a vector of +/- splits to check every row of the data against
+  split_fun <- function(x) {
+    split0 <- try(flowDensity::deGate(x, verbose = NA), silent = TRUE)
+    if (!is.numeric(split0)) {
+      return(NA)
+    } else {
+      return(split0)
     }
   }
+
+  splits <- rep(NA, var_num)
+  splits[to_be_split] <- vapply(which(to_be_split), FUN.VALUE = double(1),
+                                FUN = function(p) split_fun(data[, p]))
 
   return(splits)
 }
