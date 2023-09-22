@@ -93,8 +93,8 @@ check_zone_overlap <- function(type_marker) {
 #' @param data Dataset in matrix or data.frame format.
 #' @param type_marker Matrix, rows for populations, columns for variables.
 #'
-#' @return splits: a data frame containing upper, lower, and default bimodal
-#' threshold values for each marker from flowDensity::deGate.
+#' @return splits: a vector of bimodal threshold values for each marker
+#' from flowDensity::deGate.
 #'
 #' @export
 compute_splits <- function(data, type_marker) {
