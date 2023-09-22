@@ -10,7 +10,7 @@
 #'
 #' @return List containing
 #' \itemize{
-#' \item labels: a matrix of logical values with a row per observation and a
+#' \item matrix: a matrix of logical values with a row per observation and a
 #'               column per population.
 #' \item splits: a data frame containing upper, lower, and default bimodal
 #'               threshold values for each marker from flowDensity::deGate.
@@ -34,6 +34,8 @@ construct_zones <- function(data, type_marker, custom_splits = NULL) {
   zone_matrix <- construct_zone_matrix(data, type_marker, splits)
 
   zone_sizes <- colSums(zone_matrix)
+  cat("zone_sizes        \t", zone_sizes, "\n")
+  cat("zone_sizes w/o NA:\t", colSums(zone_matrix, na.rm = TRUE), "\n")
   if (any(zone_sizes == 0)) {
     stop(paste0("The following zones do not contain any events: ",
                 paste0(colnames(zone_matrix)[zone_sizes == 0],
