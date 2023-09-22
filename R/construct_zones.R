@@ -20,7 +20,6 @@ construct_zones <- function(data, type_marker, custom_splits = NULL) {
 
   event_num <- nrow(data)
   zone_num <- nrow(type_marker)
-  zone_names <- rownames(type_marker)
 
   if (zone_num > 1) {
     check_zone_overlap(type_marker = type_marker)
@@ -32,19 +31,7 @@ construct_zones <- function(data, type_marker, custom_splits = NULL) {
     splits <- custom_splits
   }
 
-  # create a +1/-1 matrix the same size as the data flowFrame
-
-  zone_matrix <- matrix(NA, nrow = event_num, ncol = zone_num,
-                        dimnames = list(NULL, zone_names))
-  nonzero_markers <- list()
-  for (j in 1:zone_num){
-    nonzero_markers[[j]] <- type_marker[j, ] != 0
-    zone_matrix[, j] <- apply(event_plusminus, MARGIN = 1,
-                              FUN = function(x) {
-                                all(x[nonzero_markers[[j]]]
-                                    == type_marker[j, nonzero_markers[[j]]])
-                              })
-  }
+  zone_matrix <- construct_zone_matrix(data, type_marker, splits)
 
   zone_sizes <- colSums(zone_matrix)
   if (any(zone_sizes == 0)) {
@@ -55,6 +42,34 @@ construct_zones <- function(data, type_marker, custom_splits = NULL) {
 
   return(list(matrix = zone_matrix,
               splits = splits))
+}
+
+construct_zone_matrix <- function(data, type_marker, splits) {
+
+  event_num <- nrow(data)
+  zone_num <- nrow(type_marker)
+  zone_names <- rownames(type_marker)
+
+  # create a +1/-1 matrix the same size as the data flowFrame
+  is_event_positive <- t(apply(X = data, MARGIN = 1,
+                               FUN = function(event) event > splits))
+  event_plusminus <- (2 * is_event_positive) - 1
+
+  zone_matrix <- matrix(NA, nrow = event_num, ncol = zone_num,
+                        dimnames = list(NULL, zone_names))
+  nonzero_markers <- list()
+  for (j in 1:zone_num){
+    nonzero_markers[[j]] <- type_marker[j, ] != 0
+    zone_matrix[, j] <- apply(
+      event_plusminus,
+      MARGIN = 1,
+      function(x) {
+        all(x[nonzero_markers[[j]]] == type_marker[j, nonzero_markers[[j]]])
+      }
+    )
+  }
+
+  return(zone_matrix)
 }
 
 check_zone_overlap <- function(type_marker) {
