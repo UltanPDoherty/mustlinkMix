@@ -71,30 +71,52 @@ find_peaks <- function(dens, width_percent = 0.01, min_height = 0.01) {
   return(is_peak)
 }
 
-find_valley <- function(dens, is_peak) {
-  peak1_ind <- which.max(dens$y)
-  peak1 <- data.frame(x = dens$x[peak1_ind],
-                      y = dens$y[peak1_ind])
-  peak2_ind <- which(is_peak & dens$y != max(dens$y))
-  peak2 <- data.frame(x = dens$x[peak2_ind],
-                      y = dens$y[peak2_ind])
+find_valley <- function(dens, is_peak = NULL, score = FALSE, min_score = 0.01, min_height = 0.01) {
 
-  scores <- valleys <- valley_ind <- c()
-  interpeak <- matrix(nrow = length(dens$x), ncol = length(peak2$x))
-  for (i in seq_along(peak2$x)) {
-    if (peak2$x[i] < peak1$x) {
-      interpeak[, i] <- dens$x > peak2$x[i] & dens$x < peak1$x
-      valley_ind[i] <- peak2_ind[i] + which.min(dens$y[interpeak[, i]])
-      valleys[i] <- dens$y[valley_ind[i]]
-    } else {
-      interpeak[, i] <- dens$x > peak1$x & dens$x < peak2$x[i]
-      valley_ind[i] <- peak1_ind + which.min(dens$y[interpeak[, i]])
-      valleys[i] <- dens$y[valley_ind[i]]
-    }
-    scores[i] <- peak2$y[i] - valleys[i]
+  if(is.null(is_peak)) {
+    is_peak <- find_peaks(dens, min_height = min_height)
   }
 
-  return(dens$x[valley_ind[which.max(scores)]])
+  if(sum(is_peak) == 1) {
+    if (score){
+      return(c(NA, NA))
+    } else {
+      return(NA)
+    }
+  }
+
+  maxpeak_ind <- which.max(dens$y)
+  maxpeak <- data.frame(x = dens$x[maxpeak_ind],
+                        y = dens$y[maxpeak_ind])
+
+  otherpeaks_ind <- which(is_peak & dens$y != max(dens$y))
+  otherpeaks <- data.frame(x = dens$x[otherpeaks_ind],
+                      y = dens$y[otherpeaks_ind])
+
+  scores <- valleys <- valley_ind <- c()
+  interpeak <- matrix(nrow = length(dens$x), ncol = length(otherpeaks$x))
+  for (i in seq_along(otherpeaks$x)) {
+    peakpair_x <- sort(c(otherpeaks$x[i], maxpeak$x))
+    peakpair_ind <- sort(c(otherpeaks_ind[i], maxpeak_ind))
+    interpeak[, i] <- dens$x > peakpair_x[1] & dens$x < peakpair_x[2]
+    valley_ind[i] <- peakpair_ind[1] + which.min(dens$y[interpeak[, i]])
+    valleys[i] <- dens$y[valley_ind[i]]
+    scores[i] <- otherpeaks$y[i] - valleys[i]
+  }
+
+  if (max(scores) < min_score) {
+    if(score) {
+      return(c(NA, NA))
+    } else {
+      return(NA)
+    }
+  } else {
+    if (score) {
+      return(c(dens$x[valley_ind[which.max(scores)]],max(scores)))
+    } else {
+      return(dens$x[valley_ind[which.max(scores)]])
+    }
+  }
 }
 
 advanced_split <- function(data, type_marker, splits,
