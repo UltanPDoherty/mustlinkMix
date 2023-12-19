@@ -37,11 +37,17 @@ sequential_split <- function(x, typemarker, min_height = 0.1, min_score = 0.1, p
       proposals <- matrix(nrow = 2, ncol = P)
       for (p in 1:P){
         if (!is.na(progress[g, p]) & !progress[g, p]){
+          x_gp <- x[subsetter[, g], p]
+          min_gp <- min(x_gp)
+          max_gp <- max(x_gp)
+          dens_gp <- stats::density((x_gp - min_gp) / (max_gp - min_gp))
+
           proposals[, p] <- find_valley(
-            stats::density(x[subsetter[, g], p]),
+            dens_gp,
             score = TRUE,
             min_score = min_score,
             min_height = min_height)
+          proposals[1, p] <- min_gp + (max_gp - min_gp) * proposals[1, p]
         }
       }
 
@@ -55,11 +61,14 @@ sequential_split <- function(x, typemarker, min_height = 0.1, min_score = 0.1, p
         scores[g, p_choice] <- proposals[2, p_choice]
         progress[g, p_choice] <- TRUE
 
-        plot(stats::density(x[subsetter[, g], p_choice]),
-             main = paste0("Round ", round_count,
-                           ": g = ", g, ", p = ", p_choice,
+        x_gp <- x[subsetter[, g], p_choice]
+        min_gp <- min(x_gp)
+        max_gp <- max(x_gp)
+        dens_gp <- stats::density((x_gp - min_gp) / (max_gp - min_gp))
+        plot(dens_gp,
+             main = paste0("g = ", g, ", p = ", p_choice,
                            ", score = ", round(scores[g, p_choice], 3)))
-        graphics::abline(v = splits[g, p_choice])
+        graphics::abline(v = (splits[g, p_choice] - min_gp) / (max_gp - min_gp))
 
         if (typemarker[g, p_choice] == +1) {
           subsetter[, g] <- subsetter[, g] & x[, p_choice] > splits[g, p_choice]
