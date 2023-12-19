@@ -29,11 +29,8 @@ sequential_split <- function(x, typemarker, min_height = 0.1, min_score = 0.1, p
   round_count <- 0
 
   for (g in 1:G){
-    graphics::par(mfrow = c(2, 2))
-    while (any(!progress[g, ], na.rm = TRUE)) {
-      if (any(paused[g, !is.na(progress[g, ]) & !progress[g, ]])){
-        next
-      }
+    graphics::par(mfrow = c(2, 3))
+    while (any(!progress[g, ] & !paused[g, ], na.rm = TRUE)) {
       proposals <- matrix(nrow = 2, ncol = P)
       for (p in 1:P){
         if (!is.na(progress[g, p]) & !progress[g, p]){
@@ -51,9 +48,18 @@ sequential_split <- function(x, typemarker, min_height = 0.1, min_score = 0.1, p
         }
       }
 
-      if (all(is.na(proposals[1, ]))){
+      if (all(is.na(proposals[1, ]))) {
         paused[g, !is.na(progress[g, ]) & !progress[g, ]] <- TRUE
-        progress[g, !is.na(progress[g, ])] <- TRUE
+        # progress[g, !is.na(progress[g, ])] <- TRUE
+
+        for (p in which(!is.na(progress[g, ]) & !progress[g, ])) {
+          x_gp <- x[subsetter[, g], p]
+          min_gp <- min(x_gp)
+          max_gp <- max(x_gp)
+          dens_gp <- stats::density((x_gp - min_gp) / (max_gp - min_gp))
+          plot(dens_gp,
+               main = paste0("g = ", g, ", p = ", p))
+        }
         next
       } else {
         p_choice <- which.max(proposals[2, ])

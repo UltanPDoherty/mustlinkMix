@@ -4,12 +4,16 @@
 \alias{sequential_split}
 \title{Convert +/- Table Labels into Chunklets}
 \usage{
-sequential_split(x, typemarker, plot = TRUE)
+sequential_split(x, typemarker, min_height = 0.1, min_score = 0.1, plot = TRUE)
 }
 \arguments{
 \item{x}{Dataset in matrix or data.frame form.}
 
 \item{typemarker}{Cell-type marker table.}
+
+\item{min_height}{Minimum height for a peak to be recognised by find_peaks.}
+
+\item{min_score}{Minimum score for a split to be returned by find_valley.}
 
 \item{plot}{Logical value.}
 }
