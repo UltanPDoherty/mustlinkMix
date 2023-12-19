@@ -65,15 +65,17 @@ sequential_split <- function(x, typemarker, plot = TRUE){
     }
   }
 
-  equal_subsets <- matrix(nrow = G, ncol = G)
-  is_a_duplicate <- rep(FALSE, G)
-  for (g in 1:(G-1)) {
-    for (h in (g + 1):G) {
-      equal_subsets[g, h] <- all(subsetter[, g] == subsetter[, h])
-      if (equal_subsets[g, h]) {
-        print(paste0("Failed to distinguish between populations ",
-                     g, " & ", h, "."))
-        is_a_duplicate[h] <- TRUE
+  if (G > 1) {
+    equal_subsets <- matrix(nrow = G, ncol = G)
+    is_a_duplicate <- rep(FALSE, G)
+    for (g in 1:(G-1)) {
+      for (h in (g + 1):G) {
+        equal_subsets[g, h] <- all(subsetter[, g] == subsetter[, h])
+        if (equal_subsets[g, h]) {
+          print(paste0("Failed to distinguish between populations ",
+                       g, " & ", h, "."))
+          is_a_duplicate[h] <- TRUE
+        }
       }
     }
   }
