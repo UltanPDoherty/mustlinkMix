@@ -78,16 +78,16 @@ sequential_split <- function(x, typemarker, plot = TRUE){
         }
       }
     }
-  }
-  to_be_deleted <- which(is_a_duplicate)
+    to_be_deleted <- which(is_a_duplicate)
 
-  subsetter <- subsetter[, -to_be_deleted]
-  progress <- progress[-to_be_deleted, ]
-  splits <- splits[-to_be_deleted, ]
-  scores <- scores[-to_be_deleted, ]
-  paused <- paused[-to_be_deleted, ]
-  typemarker <- typemarker[-to_be_deleted, ]
-  G <- G - sum(is_a_duplicate)
+    subsetter <- subsetter[, -to_be_deleted]
+    progress <- progress[-to_be_deleted, ]
+    splits <- splits[-to_be_deleted, ]
+    scores <- scores[-to_be_deleted, ]
+    paused <- paused[-to_be_deleted, ]
+    typemarker <- typemarker[-to_be_deleted, ]
+    G <- G - sum(is_a_duplicate)
+  }
 
   for (g in 1:G) {
     for (p in 1:P) {
