@@ -12,8 +12,8 @@ compute_splits(data, type_marker)
 \item{type_marker}{Matrix, rows for populations, columns for variables.}
 }
 \value{
-splits: a data frame containing upper, lower, and default bimodal
-threshold values for each marker from flowDensity::deGate.
+splits: a vector of bimodal threshold values for each marker
+from flowDensity::deGate.
 }
 \description{
 Use flowDensity::deGate to split the markers.

@@ -16,7 +16,7 @@ construct_zones(data, type_marker, custom_splits = NULL)
 \value{
 List containing
 \itemize{
-\item labels: a matrix of logical values with a row per observation and a
+\item matrix: a matrix of logical values with a row per observation and a
 column per population.
 \item splits: a data frame containing upper, lower, and default bimodal
 threshold values for each marker from flowDensity::deGate.
