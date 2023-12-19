@@ -28,10 +28,9 @@ sequential_split <- function(x, typemarker, min_height = 0.1, min_score = 0.1, p
   col_plot_num <- ceiling(G / row_plot_num)
   round_count <- 0
 
-  while (any(!progress, na.rm = TRUE)) {
-    round_count <- round_count + 1
-    graphics::par(mfrow = c(row_plot_num, col_plot_num))
-    for (g in 1:G){
+  for (g in 1:G){
+    graphics::par(mfrow = c(2, 2))
+    while (any(!progress[g, ], na.rm = TRUE)) {
       if (any(paused[g, !is.na(progress[g, ]) & !progress[g, ]])){
         next
       }
