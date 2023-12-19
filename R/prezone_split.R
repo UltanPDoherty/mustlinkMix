@@ -141,7 +141,7 @@ advanced_split <- function(data, type_marker, splits,
   for (j in seq_along(splits)) {
     if (is.na(pz_splits[j]) & to_be_split[j]) {
       cat("advanced_split for marker ", j, "\n")
-      pz_density[[j]] <- density(data[, j], weights = pz_weights,
+      pz_density[[j]] <- stats::density(data[, j], weights = pz_weights,
                                  warnWbw = FALSE)
       pz_peaks[[j]] <- find_peaks(pz_density[[j]], width_percent)
       if (sum(pz_peaks[[j]]) == 1) {
