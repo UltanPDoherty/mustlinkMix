@@ -99,3 +99,75 @@ mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
               em = em,
               times = times))
 }
+
+
+mustlink2 <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
+                     maxit = 1e4, eps = 1e-10, init_seed = NULL,
+                     init_method = c("k-Means++", "k-Means",
+                                     "Must-Link k-Means++",
+                                     "Must-Link k-Means"),
+                     init_labels = NULL,
+                     print_freq = 10, burnin = 2,
+                     model = c("vm", "ns"),
+                     custom_splits = NULL) {
+
+  model <- rlang::arg_match(model)
+  init_method <- rlang::arg_match(init_method)
+
+  setup_time <- system.time({
+    if (is.null(type_marker)) {
+      block_labels <- linked_set_labels <- seq_len(nrow(data))
+      zone_num <- 0
+    } else {
+      seq_split <- sequential_split(data, type_marker)
+      zone_matrix <- seq_split$subsetter
+      type_marker <-seq_split$typemarker
+
+      zone_num <- ncol(zone_matrix)
+
+      constraints <- label_constraints(data = data, zone_matrix = zone_matrix,
+                                       zone_percent = zone_percent)
+      block_labels <- constraints$block
+      linked_set_labels <- constraints$linked_set
+    }
+
+    if (!is.matrix(data)) {
+      if (inherits(data, "flowFrame")) {
+        data <- flowCore::exprs(data)
+      } else {
+        data <- as.matrix(data)
+      }
+    }
+
+    if (is.null(init_labels)) {
+      init_labels <- initial_partition(data, clust_num = clust_num,
+                                       linked_set_labels = linked_set_labels,
+                                       init_seed = init_seed,
+                                       init_method = init_method)
+    }
+    init_params <- initial_parameters(data, init_labels = init_labels)
+  })
+
+  em_time <- system.time({
+    em <- mustlink_em(data = data, block_labels = block_labels,
+                      params = init_params,
+                      clust_num = clust_num, zone_num = zone_num,
+                      maxit = maxit, eps = eps, burnin = burnin,
+                      print_freq = print_freq, model = model)
+  })
+
+  label_time <- system.time({
+    block_to_clust <- apply(X = em$postprob_block, MARGIN = 1, FUN = which.max)
+    clust_labels <- block_to_clust[block_labels]
+  })
+
+  times <- rbind(setup_time, em_time, label_time)
+  rownames(times) <- c("setup", "em", "label")
+
+  return(list(clust_labels = clust_labels,
+              init_labels = init_labels,
+              linked_set_labels = linked_set_labels,
+              block_labels = block_labels,
+              em = em,
+              times = times))
+}
