@@ -2,11 +2,13 @@
 #'
 #' @param x Dataset in matrix or data.frame form.
 #' @param typemarker Cell-type marker table.
+#' @param min_height Minimum height for a peak to be recognised by find_peaks.
+#' @param min_score Minimum score for a split to be returned by find_valley.
 #' @param plot Logical value.
 #'
 #' @return splits, typemarker, subsetter
 #' @export
-sequential_split <- function(x, typemarker, plot = TRUE){
+sequential_split <- function(x, typemarker, min_height, plot = TRUE){
   progress <- splits <- scores <- array(dim = dim(typemarker))
   G <- nrow(typemarker)
   P <- ncol(typemarker)
@@ -36,7 +38,11 @@ sequential_split <- function(x, typemarker, plot = TRUE){
       proposals <- matrix(nrow = 2, ncol = P)
       for (p in 1:P){
         if (!is.na(progress[g, p]) & !progress[g, p]){
-          proposals[, p] <- find_valley(stats::density(x[subsetter[, g], p]), score = TRUE)
+          proposals[, p] <- find_valley(
+            stats::density(x[subsetter[, g], p]),
+            score = TRUE,
+            min_score = min_score,
+            min_height = min_height)
         }
       }
 
