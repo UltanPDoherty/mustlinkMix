@@ -1,5 +1,5 @@
-Package: cytozones
-Title: Semi-Supervised Model-Based Clustering Methods informed via a Positive / Negative Table
+Package: mustlinkMix
+Title: Must-Link Constrained Model-Based Clustering
 Version: 0.0.1.0010
 Authors@R: 
     person("Ultán", "Doherty", , "dohertyu@tcd.ie", role = c("aut", "cre"),
