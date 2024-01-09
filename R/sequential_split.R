@@ -8,7 +8,16 @@
 #'
 #' @return splits, typemarker, subsetter
 #' @export
-sequential_split <- function(x, typemarker, min_height = 0.1, min_score = 0.1, plot = TRUE){
+sequential_split <- function(
+    x,
+    typemarker,
+    min_height = 0.1,
+    min_score = 0.1,
+    min_val_cutoff = NULL,
+    max_val_cutoff = NULL,
+    plot = TRUE
+    ){
+
   progress <- splits <- scores <- array(dim = dim(typemarker))
   G <- nrow(typemarker)
   P <- ncol(typemarker)
@@ -24,12 +33,32 @@ sequential_split <- function(x, typemarker, min_height = 0.1, min_score = 0.1, p
     }
   }
 
+  if (is.null(min_val_cutoff)) {
+    below_cutoff <- array(FALSE, dim = dim(x))
+  } else {
+    below_cutoff <- array(dim = dim(x))
+    for (j in 1:ncol(x)) {
+      below_cutoff[, j] <- x[, j] < min_val_cutoff[j]
+    }
+  }
+  if (is.null(max_val_cutoff)) {
+    above_cutoff <- array(FALSE, dim = dim(x))
+  } else {
+    above_cutoff <- array(dim = dim(x))
+    for (j in 1:ncol(x)) {
+      above_cutoff[, j] <- x[, j] < max_val_cutoff[j]
+    }
+  }
+  inside_cutoffs <- !below_cutoff & !above_cutoff
+
   row_plot_num <- floor(sqrt(G))
   col_plot_num <- ceiling(G / row_plot_num)
   round_count <- 0
 
   for (g in 1:G){
-    graphics::par(mfrow = c(2, 3))
+    subsetter[, g] <- apply(inside_cutoffs[, typemarker[g, ] != 0], 1, all)
+
+    graphics::par(mfrow = c(2, 2))
     while (any(!progress[g, ] & !paused[g, ], na.rm = TRUE)) {
       proposals <- matrix(nrow = 2, ncol = P)
       for (p in 1:P){
@@ -50,15 +79,40 @@ sequential_split <- function(x, typemarker, min_height = 0.1, min_score = 0.1, p
 
       if (all(is.na(proposals[1, ]))) {
         paused[g, !is.na(progress[g, ]) & !progress[g, ]] <- TRUE
-        # progress[g, !is.na(progress[g, ])] <- TRUE
 
         for (p in which(!is.na(progress[g, ]) & !progress[g, ])) {
           x_gp <- x[subsetter[, g], p]
           min_gp <- min(x_gp)
           max_gp <- max(x_gp)
           dens_gp <- stats::density((x_gp - min_gp) / (max_gp - min_gp))
-          plot(dens_gp,
-               main = paste0("g = ", g, ", p = ", p))
+
+          gmm_out <- splitgmm(x_gp)
+
+          if (gmm_out$bic_two < gmm_out$bic_one) {
+            splits[g, p] <- gmm_out$split
+            scores[g, p] <- -Inf
+            trans_split_gp <- (splits[g, p] - min_gp) / (max_gp - min_gp)
+            if (typemarker[g, p] == -1) {
+              plot(dens_gp,
+                   main = paste0("g = ", g, ", p = ", p),
+                   sub = paste0(rownames(typemarker)[g], ", ", colnames(typemarker)[p_choice]),
+                   panel.first = graphics::rect(0, 0, trans_split_gp, max(dens_gp$y),
+                                                col = "blue", border =  NA))
+              subsetter[, g] <- subsetter[, g] & x[, p] < splits[g, p]
+            } else if (typemarker[g, p] == +1) {
+              plot(dens_gp,
+                   main = paste0("g = ", g, ", p = ", p),
+                   sub = paste0(rownames(typemarker)[g], ", ", colnames(typemarker)[p_choice]),
+                   panel.first = graphics::rect(trans_split_gp, 0, 1, max(dens_gp$y),
+                                                col = "blue", border =  NA))
+              subsetter[, g] <- subsetter[, g] & x[, p] > splits[g, p]
+            }
+            abline(v = trans_split_gp)
+          } else {
+            plot(dens_gp,
+                 main = paste0("g = ", g, ", p = ", p),
+                 sub = paste0(rownames(typemarker)[g], ", ", colnames(typemarker)[p]))
+          }
         }
         next
       } else {
@@ -71,16 +125,25 @@ sequential_split <- function(x, typemarker, min_height = 0.1, min_score = 0.1, p
         min_gp <- min(x_gp)
         max_gp <- max(x_gp)
         dens_gp <- stats::density((x_gp - min_gp) / (max_gp - min_gp))
-        plot(dens_gp,
-             main = paste0("g = ", g, ", p = ", p_choice,
-                           ", score = ", round(scores[g, p_choice], 3)))
-        graphics::abline(v = (splits[g, p_choice] - min_gp) / (max_gp - min_gp))
-
-        if (typemarker[g, p_choice] == +1) {
-          subsetter[, g] <- subsetter[, g] & x[, p_choice] > splits[g, p_choice]
-        } else {
+        trans_split_gp <- (splits[g, p_choice] - min_gp) / (max_gp - min_gp)
+        if (typemarker[g, p_choice] == -1) {
+          plot(dens_gp,
+               main = paste0("g = ", g, ", p = ", p_choice,
+                             ", score = ", round(scores[g, p_choice], 3)),
+               sub = paste0(rownames(typemarker)[g], ", ", colnames(typemarker)[p_choice]),
+               panel.first = graphics::rect(0, 0, trans_split_gp, max(dens_gp$y),
+                                  col = "green", border =  NA))
           subsetter[, g] <- subsetter[, g] & x[, p_choice] < splits[g, p_choice]
+        } else if (typemarker[g, p_choice] == +1) {
+          plot(dens_gp,
+               main = paste0("g = ", g, ", p = ", p_choice,
+                             ", score = ", round(scores[g, p_choice], 3)),
+               sub = paste0(rownames(typemarker)[g], ", ", colnames(typemarker)[p_choice]),
+               panel.first = graphics::rect(trans_split_gp, 0, 1, max(dens_gp$y),
+                                  col = "green", border =  NA))
+          subsetter[, g] <- subsetter[, g] & x[, p_choice] > splits[g, p_choice]
         }
+        graphics::abline(v = trans_split_gp)
       }
     }
   }
@@ -98,15 +161,17 @@ sequential_split <- function(x, typemarker, min_height = 0.1, min_score = 0.1, p
         }
       }
     }
-    to_be_deleted <- which(is_a_duplicate)
+    if (any(is_a_duplicate)) {
+      to_be_deleted <- which(is_a_duplicate)
 
-    subsetter <- subsetter[, -to_be_deleted]
-    progress <- progress[-to_be_deleted, ]
-    splits <- splits[-to_be_deleted, ]
-    scores <- scores[-to_be_deleted, ]
-    paused <- paused[-to_be_deleted, ]
-    typemarker <- typemarker[-to_be_deleted, ]
-    G <- G - sum(is_a_duplicate)
+      subsetter <- subsetter[, -to_be_deleted]
+      progress <- progress[-to_be_deleted, ]
+      splits <- splits[-to_be_deleted, ]
+      scores <- scores[-to_be_deleted, ]
+      paused <- paused[-to_be_deleted, ]
+      typemarker <- typemarker[-to_be_deleted, ]
+      G <- G - sum(is_a_duplicate)
+    }
   }
 
   for (g in 1:G) {
