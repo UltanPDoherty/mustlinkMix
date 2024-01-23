@@ -6,8 +6,8 @@
 \usage{
 mustlink(
   data,
-  type_marker = NULL,
   clust_num,
+  zone_matrix = NULL,
   zone_percent = 100,
   maxit = 10000,
   eps = 1e-10,
@@ -16,17 +16,15 @@ mustlink(
   init_labels = NULL,
   print_freq = 10,
   burnin = 2,
-  model = c("vm", "ns"),
-  custom_splits = NULL
+  model = c("vm", "ns")
 )
 }
 \arguments{
 \item{data}{Dataset in matrix or data.frame format.}
 
-\item{type_marker}{Matrix with entries +/-/0, rows for populations, columns
-for variables.}
-
 \item{clust_num}{Number of clusters / components.}
+
+\item{zone_matrix}{Logical matrix with a column per zone and a row per event.}
 
 \item{zone_percent}{Percentage of events in zone to be included in each
 chunklet, either one value for all chunklets or one value
@@ -50,8 +48,6 @@ likelihood convergence.}
 
 \item{model}{Model to be used. Either "vm" for Melnykov et al. or "ns" for
 Shental et al.}
-
-\item{custom_splits}{Vector of values for variables' bimodal thresholds.}
 }
 \value{
 A list consisting of a vector of cluster labels,

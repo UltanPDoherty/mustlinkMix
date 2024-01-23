@@ -4,9 +4,8 @@
 #' clusters, and size of chunklets.
 #'
 #' @param data Dataset in matrix or data.frame format.
-#' @param type_marker Matrix with entries +/-/0, rows for populations, columns
-#'                    for variables.
 #' @param clust_num Number of clusters / components.
+#' @param zone_matrix Logical matrix with a column per zone and a row per event.
 #' @param zone_percent Percentage of events in zone to be included in each
 #'                     chunklet, either one value for all chunklets or one value
 #'                     per chunklet.
@@ -21,7 +20,6 @@
 #' likelihood convergence.
 #' @param model Model to be used. Either "vm" for Melnykov et al. or "ns" for
 #' Shental et al.
-#' @param custom_splits Vector of values for variables' bimodal thresholds.
 #'
 #' @return A list consisting of a vector of cluster labels,
 #'         a matrix of chunklet to cluster assignment probabilities,
@@ -29,28 +27,24 @@
 #'         a vector of log-likelihood values,
 #'         and a vector of times.
 #' @export
-mustlink <- function(data, type_marker = NULL, clust_num, zone_percent = 100,
+mustlink <- function(data, clust_num,
+                     zone_matrix = NULL, zone_percent = 100,
                      maxit = 1e4, eps = 1e-10, init_seed = NULL,
                      init_method = c("k-Means++", "k-Means",
                                      "Must-Link k-Means++",
                                      "Must-Link k-Means"),
                      init_labels = NULL,
                      print_freq = 10, burnin = 2,
-                     model = c("vm", "ns"),
-                     custom_splits = NULL) {
+                     model = c("vm", "ns")) {
 
   model <- rlang::arg_match(model)
   init_method <- rlang::arg_match(init_method)
 
   setup_time <- system.time({
-    if (is.null(type_marker)) {
+    if (is.null(zone_matrix)) {
       block_labels <- linked_set_labels <- seq_len(nrow(data))
       zone_num <- 0
     } else {
-      seq_split <- marginalSplit::sequential_split(data, type_marker)
-      zone_matrix <- seq_split$subsetter
-      type_marker <- seq_split$typemarker
-
       zone_num <- ncol(zone_matrix)
 
       constraints <- label_constraints(data = data, zone_matrix = zone_matrix,
