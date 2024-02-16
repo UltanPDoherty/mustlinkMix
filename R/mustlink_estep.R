@@ -29,7 +29,7 @@ mustlink_estep <- function(data, block, params,
   # for loop computes the block posterior probability matrix, postprob_block
   block_unnorm <- postprob_block <- matrix(nrow = block$num, ncol = clust_num)
   log_maxes <- loglike_vec <- block_unnorm_sums <- vector(mode = "numeric",
-                                                     length = block$num)
+                                                          length = block$num)
 
   prop_exponent <- switch(model,
                           vm = block$size,
