@@ -30,9 +30,7 @@
 mustlink <- function(data, clust_num,
                      zone_matrix = NULL, zone_percent = 100,
                      maxit = 1e4, eps = 1e-10, init_seed = NULL,
-                     init_method = c("k-Means++", "k-Means",
-                                     "Must-Link k-Means++",
-                                     "Must-Link k-Means"),
+                     init_method = c("kmpp", "km", "mlkmpp", "mlkm"),
                      init_labels = NULL,
                      print_freq = 10, burnin = 2,
                      model = c("vm", "ns")) {
