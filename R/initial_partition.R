@@ -16,8 +16,8 @@
 initial_partition <- function(data, clust_num, linked_set_labels = NULL,
                               init_seed = NULL,
                               init_method = c("kmpp", "km",
-                                              "mlkmpp",
-                                              "mlkm")) {
+                                              "mlkmpp", "mlkm",
+                                              "old_mlkmpp", "old_mlkm")) {
 
   init_method <- rlang::arg_match(init_method)
 
@@ -34,15 +34,31 @@ initial_partition <- function(data, clust_num, linked_set_labels = NULL,
     partition <- ClusterR::KMeans_rcpp(data, clusters = clust_num,
                                        seed = init_seed)$clusters
   } else if (init_method == "mlkm") {
-      partition <- mustlink_kmeans(
+    partition <- mustlink_kmeans(
+      data,
+      linked_set_labels,
+      clust_num,
+      init_seed,
+      plusplus = FALSE
+    )
+  } else if (init_method == "mlkmpp") {
+    partition <- mustlink_kmeans(
+      data,
+      linked_set_labels,
+      clust_num,
+      init_seed,
+      plusplus = TRUE
+    )
+  } else if (init_method == "old_mlkm") {
+      partition <- old_mustlink_kmeans(
         data,
         linked_set_labels,
         clust_num,
         init_seed,
         plusplus = FALSE
       )
-  } else if (init_method == "mlkmpp") {
-      partition <- mustlink_kmeans(
+  } else if (init_method == "old_mlkmpp") {
+      partition <- old_mustlink_kmeans(
         data,
         linked_set_labels,
         clust_num,
@@ -56,6 +72,68 @@ initial_partition <- function(data, clust_num, linked_set_labels = NULL,
 
 
 mustlink_kmeans <- function(
+  data,
+  linked_set_labels,
+  clust_num,
+  init_seed,
+  plusplus = FALSE
+) {
+  linked_num <- length(unique(linked_set_labels)) - 1
+
+  bigK <- 2 * clust_num
+  if (plusplus) {
+    bigKmeans <- ClusterR::KMeans_rcpp(
+      data,
+      clusters = bigK,
+      seed = init_seed
+    )
+  } else {
+    set.seed(init_seed)
+    bigKmeans <- kmeans(
+      data,
+      centers = bigK,
+      nstart = 3
+    )
+  }
+
+  well <- rep(0, nrow(data))
+  for (k in seq_len(bigK)) {
+    bigKmeans_k <- bigKmeans$cluster == k
+    for (p in seq_len(linked_num)) {
+      linked_p <- linked_set_labels == p
+      if (sum(linked_p & bigKmeans_k) > sum(bigKmeans_k) / 2) {
+        well[bigKmeans_k] <- p
+      }
+    }
+  }
+
+  partition <- well
+  partition[linked_set_labels != 0] <- linked_set_labels[linked_set_labels != 0]
+
+  if (plusplus) {
+    smallKmeans <- ClusterR::KMeans_rcpp(
+      data[partition == 0, ],
+      clusters = clust_num - linked_num,
+      seed = init_seed
+    )
+  } else {
+    set.seed(init_seed)
+    smallKmeans <- kmeans(
+      data[partition == 0, ],
+      centers = clust_num - linked_num,
+      nstart = 3
+    )
+  }
+
+  partition[partition == 0] <- smallKmeans$cluster + linked_num
+
+  return(partition)
+}
+
+
+
+
+old_mustlink_kmeans <- function(
   data,
   linked_set_labels,
   clust_num,
