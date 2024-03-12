@@ -33,7 +33,7 @@ initial_partition <- function(data, clust_num, linked_set_labels = NULL,
   } else if (init_method == "k-Means++") {
     partition <- ClusterR::KMeans_rcpp(data, clusters = clust_num,
                                        seed = init_seed)$clusters
-  } else if (init_method == "Must-Link k-Means") {
+  } else if (init_method %in% c("Must-Link k-Means", "Must-Link k-Means++")) {
     linked_num <- length(unique(linked_set_labels[linked_set_labels != 0]))
     if (clust_num <= linked_num) {
       message(paste0("Cluster number is equal to number of constrained sets.",
@@ -43,31 +43,18 @@ initial_partition <- function(data, clust_num, linked_set_labels = NULL,
       partition <- linked_set_labels
     } else {
       set.seed(init_seed)
-      km <- stats::kmeans(data[linked_set_labels == 0, ],
-                          centers = clust_num - linked_num)$cluster
-
+      if (init_method == "Must-Link k-Means") {
+        km <- stats::kmeans(data[linked_set_labels == 0, ],
+                            centers = clust_num - linked_num)$cluster
+      } else {
+        km <- ClusterR::KMeans_rcpp(data[linked_set_labels == 0, ],
+                                    clusters = clust_num - linked_num,
+                                    seed = init_seed)$clusters
+      }
       partition <- integer(obs_num)
       partition <- linked_set_labels
       partition[partition == 0] <- km + linked_num
     }
-  } else if (init_method == "Must-Link k-Means++") {
-    linked_num <- length(unique(linked_set_labels[linked_set_labels != 0]))
-    if (clust_num <= linked_num) {
-      message(paste0("Cluster number is equal to number of constrained sets.",
-                     "\n", "k-Means++ is not implemented.",
-                     "\n", "Constrained sets are used for initialisation.",
-                     "\n"))
-      partition <- linked_set_labels
-    } else {
-      set.seed(init_seed)
-      kmpp <- ClusterR::KMeans_rcpp(data[linked_set_labels == 0, ],
-                                    clusters = clust_num - linked_num,
-                                    seed = init_seed)$clusters
-
-      partition <- integer(obs_num)
-      partition <- linked_set_labels
-      partition[partition == 0] <- km + linked_num
-  }
   }
 
   return(partition)
