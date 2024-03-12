@@ -33,28 +33,61 @@ initial_partition <- function(data, clust_num, linked_set_labels = NULL,
   } else if (init_method == "kmpp") {
     partition <- ClusterR::KMeans_rcpp(data, clusters = clust_num,
                                        seed = init_seed)$clusters
-  } else if (init_method %in% c("mlkm", "mlkmpp")) {
-    linked_num <- length(unique(linked_set_labels[linked_set_labels != 0]))
-    if (clust_num <= linked_num) {
-      message(paste0("Cluster number is equal to number of constrained sets.",
-                     "\n", "km is not implemented.",
-                     "\n", "Constrained sets are used for initialisation.",
-                     "\n"))
-      partition <- linked_set_labels
+  } else if (init_method == "mlkm") {
+      partition <- mustlink_kmeans(
+        data,
+        linked_set_labels,
+        clust_num,
+        init_seed,
+        plusplus = FALSE
+      )
+  } else if (init_method == "mlkmpp") {
+      partition <- mustlink_kmeans(
+        data,
+        linked_set_labels,
+        clust_num,
+        init_seed,
+        plusplus = TRUE
+      )
+  }
+
+  return(partition)
+}
+
+
+mustlink_kmeans <- function(
+  data,
+  linked_set_labels,
+  clust_num,
+  init_seed,
+  plusplus = FALSE
+) {
+  linked_num <- length(unique(linked_set_labels[linked_set_labels != 0]))
+
+  if (clust_num <= linked_num) {
+    message(paste0(
+      "Cluster number is less than or equal to number of constrained sets.\n",
+      "km is not implemented.\n",
+      "Constrained sets are used for initialisation.\n"
+    ))
+    partition <- linked_set_labels
+  } else {
+    set.seed(init_seed)
+    if (plusplus) {
+      km <- ClusterR::KMeans_rcpp(
+        data[linked_set_labels == 0, ],
+        clusters = clust_num - linked_num,
+        seed = init_seed
+      )$clusters
     } else {
-      set.seed(init_seed)
-      if (init_method == "mlkm") {
-        km <- stats::kmeans(data[linked_set_labels == 0, ],
-                            centers = clust_num - linked_num)$cluster
-      } else {
-        km <- ClusterR::KMeans_rcpp(data[linked_set_labels == 0, ],
-                                    clusters = clust_num - linked_num,
-                                    seed = init_seed)$clusters
-      }
-      partition <- integer(obs_num)
-      partition <- linked_set_labels
-      partition[partition == 0] <- km + linked_num
+      km <- stats::kmeans(
+        data[linked_set_labels == 0, ],
+        centers = clust_num - linked_num
+      )$cluster
     }
+
+    partition <- linked_set_labels
+    partition[partition == 0] <- km + linked_num
   }
 
   return(partition)
