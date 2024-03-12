@@ -15,8 +15,8 @@
 #' @export
 initial_partition <- function(data, clust_num, linked_set_labels = NULL,
                               init_seed = NULL,
-                              init_method = c("kmpp", "km",
-                                              "mlkmpp", "mlkm",
+                              init_method = c("mlkmpp", "mlkm",
+                                              "kmpp", "km",
                                               "old_mlkmpp", "old_mlkm")) {
 
   init_method <- rlang::arg_match(init_method)
