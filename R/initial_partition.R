@@ -15,10 +15,11 @@
 #' @export
 initial_partition <- function(data, clust_num, linked_set_labels = NULL,
                               init_seed = NULL,
-                              init_method = c("mlkmpp", "mlkm",
-                                              "kmpp", "km",
-                                              "old_mlkmpp", "old_mlkm")) {
-
+                              init_method = c(
+                                "mlkmpp", "mlkm",
+                                "kmpp", "km",
+                                "old_mlkmpp", "old_mlkm"
+                              )) {
   init_method <- rlang::arg_match(init_method)
 
   if (is.null(init_seed)) {
@@ -29,8 +30,10 @@ initial_partition <- function(data, clust_num, linked_set_labels = NULL,
     set.seed(init_seed)
     partition <- stats::kmeans(data, centers = clust_num)$cluster
   } else if (init_method == "kmpp") {
-    partition <- ClusterR::KMeans_rcpp(data, clusters = clust_num,
-                                       seed = init_seed)$clusters
+    partition <- ClusterR::KMeans_rcpp(data,
+      clusters = clust_num,
+      seed = init_seed
+    )$clusters
   } else if (init_method == "mlkm") {
     partition <- mustlink_kmeans(
       data,
@@ -70,12 +73,11 @@ initial_partition <- function(data, clust_num, linked_set_labels = NULL,
 
 
 mustlink_kmeans <- function(
-  data,
-  linked_set_labels,
-  clust_num,
-  init_seed,
-  plusplus = FALSE
-) {
+    data,
+    linked_set_labels,
+    clust_num,
+    init_seed,
+    plusplus = FALSE) {
   linked_num <- length(unique(linked_set_labels)) - 1
 
   big_k <- 2 * clust_num
@@ -132,12 +134,11 @@ mustlink_kmeans <- function(
 
 
 old_mustlink_kmeans <- function(
-  data,
-  linked_set_labels,
-  clust_num,
-  init_seed,
-  plusplus = FALSE
-) {
+    data,
+    linked_set_labels,
+    clust_num,
+    init_seed,
+    plusplus = FALSE) {
   linked_num <- length(unique(linked_set_labels[linked_set_labels != 0]))
 
   if (clust_num <= linked_num) {

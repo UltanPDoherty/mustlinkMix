@@ -13,13 +13,12 @@
 compute_f1 <- function(clust_labels, true_labels,
                        exclude_from_true = NULL,
                        prec_rec = FALSE) {
-
   clust_nas <- is.na(clust_labels)
   clust_labels[clust_nas] <- max(clust_labels[!clust_nas]) + 1
 
   if (!is.null(exclude_from_true)) {
-    excluded   <- true_labels %in% exclude_from_true
-    true_labels  <- true_labels[!excluded]
+    excluded <- true_labels %in% exclude_from_true
+    true_labels <- true_labels[!excluded]
     clust_labels <- clust_labels[!excluded]
     if (is.factor(true_labels)) {
       true_labels <- droplevels(true_labels)
@@ -29,7 +28,7 @@ compute_f1 <- function(clust_labels, true_labels,
     }
   }
 
-  true_num  <- length(unique(true_labels))
+  true_num <- length(unique(true_labels))
   clust_num <- length(unique(clust_labels))
 
 
@@ -43,13 +42,15 @@ compute_f1 <- function(clust_labels, true_labels,
 
   if (true_num <= clust_num) {
     true_to_clust <- as.numeric(clue::solve_LSAP(f1_mat[1:true_num, ],
-                                                 maximum = TRUE))
-    other_clust   <- setdiff(1:clust_num, true_to_clust)
+      maximum = TRUE
+    ))
+    other_clust <- setdiff(1:clust_num, true_to_clust)
     true_to_clust <- c(true_to_clust, other_clust)
   } else {
     clust_to_true <- as.numeric(clue::solve_LSAP(t(f1_mat[1:true_num, ]),
-                                                 maximum = TRUE))
-    other_true    <- setdiff(1:true_num, clust_to_true)
+      maximum = TRUE
+    ))
+    other_true <- setdiff(1:true_num, clust_to_true)
     true_to_clust <- (1:true_num)[order(c(clust_to_true, other_true))]
     true_to_clust[true_to_clust > clust_num] <- NA
   }
@@ -74,8 +75,10 @@ compute_f1 <- function(clust_labels, true_labels,
   matched_vals <- vec_sums / sum(!is.na(true_to_clust))
   names(matched_vals) <- c("f1", "pr", "re")
 
-  out <- list(f1_mat = f1_mat2,
-              f1_vec = f1_vec)
+  out <- list(
+    f1_mat = f1_mat2,
+    f1_vec = f1_vec
+  )
 
   if (prec_rec) {
     out$pr_vec <- pr_vec

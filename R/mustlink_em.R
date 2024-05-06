@@ -18,19 +18,17 @@
 #' vector of log-likelihood values for each iteration.
 #' @export
 mustlink_em <- function(
-  data,
-  block_labels,
-  params,
-  clust_num,
-  zone_num,
-  burnin = 2,
-  maxit = 1e4,
-  eps = 1e-10,
-  print_freq = 1,
-  model = c("vm", "ns"),
-  drop_cluster = FALSE
-) {
-
+    data,
+    block_labels,
+    params,
+    clust_num,
+    zone_num,
+    burnin = 2,
+    maxit = 1e4,
+    eps = 1e-10,
+    print_freq = 1,
+    model = c("vm", "ns"),
+    drop_cluster = FALSE) {
   model <- rlang::arg_match(model)
 
   it <- 0
@@ -39,36 +37,46 @@ mustlink_em <- function(
   event_num <- nrow(data)
   var_num <- ncol(params$mu)
 
-  block <- list(labels = block_labels,
-                num = length(unique(block_labels)),
-                size = as.numeric(table(block_labels)),
-                zone_num = zone_num)
+  block <- list(
+    labels = block_labels,
+    num = length(unique(block_labels)),
+    size = as.numeric(table(block_labels)),
+    zone_num = zone_num
+  )
 
   repeat {
     it <- it + 1
 
-    e_out <- mustlink_estep(data, block = block, params = params,
-                            event_num = event_num, var_num = var_num,
-                            clust_num = clust_num,
-                            model = model)
+    e_out <- mustlink_estep(data,
+      block = block, params = params,
+      event_num = event_num, var_num = var_num,
+      clust_num = clust_num,
+      model = model
+    )
 
     loglike <- append(loglike, e_out$loglike)
 
     if ((it %% print_freq) == 0) {
-      cat(paste0(format(Sys.time(), "%H:%M:%S"),
-                 "\t E-Step Number: ", it,
-                 ",\t Log-likelihood: ", round(loglike[it], digits = 5), "\n"))
+      cat(paste0(
+        format(Sys.time(), "%H:%M:%S"),
+        "\t E-Step Number: ", it,
+        ",\t Log-likelihood: ", round(loglike[it], digits = 5), "\n"
+      ))
     }
 
     # loglike_crit is the relative increase in the log-likelihood.
-    loglike_crit <- compute_loglike_crit(it = it, burnin = burnin,
-                                         loglike = loglike)
+    loglike_crit <- compute_loglike_crit(
+      it = it, burnin = burnin,
+      loglike = loglike
+    )
 
     # EM has converged if the relative difference between consecutive values
     # of the log-likelihood, i.e. loglike_crit, is not NA and is less than eps.
     if (it == maxit) {
-      warning(paste0("EM algorithm did not converge before ",
-                     maxit, " iterations."))
+      warning(paste0(
+        "EM algorithm did not converge before ",
+        maxit, " iterations."
+      ))
       cat(paste0("...EM stopped at ", Sys.time(), "\n"))
       break
     } else if (!is.na(loglike_crit) && loglike_crit < eps) {
@@ -76,7 +84,7 @@ mustlink_em <- function(
       break
     }
 
-    params <-  mustlink_mstep(
+    params <- mustlink_mstep(
       data,
       postprob_event = e_out$postprob_event,
       postprob_block = e_out$postprob_block,
@@ -95,9 +103,11 @@ mustlink_em <- function(
     clust_num <- length(params$prop)
   }
 
-  return(list(postprob_block = e_out$postprob_block,
-              params = params,
-              loglike = loglike))
+  return(list(
+    postprob_block = e_out$postprob_block,
+    params = params,
+    loglike = loglike
+  ))
 }
 
 
@@ -114,7 +124,7 @@ compute_loglike_crit <- function(it, burnin, loglike) {
       loglike_crit <- NA
     } else if (loglike_diff == Inf) { ## (-Inf, R), (-Inf, +Inf), (R, +Inf)
       loglike_crit <- Inf
-    }  else { ## (R, R), (R, +Inf)
+    } else { ## (R, R), (R, +Inf)
       loglike_crit <- loglike_diff / abs(loglike[it - 1])
     }
   } else {

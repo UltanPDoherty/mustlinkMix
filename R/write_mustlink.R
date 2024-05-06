@@ -21,52 +21,58 @@ write_mustlink <- function(mustlink_out, file_prefix,
                            block_labels = TRUE, linked_set_labels = TRUE,
                            times = TRUE, em_loglike = TRUE,
                            em_postprob_block = TRUE, em_params = TRUE) {
-
   if (clust_labels) {
     utils::write.table(mustlink_out$clust_labels,
-                       file = paste0(file_prefix, "_clust_labels.txt"),
-                       row.names = FALSE, col.names = FALSE)
+      file = paste0(file_prefix, "_clust_labels.txt"),
+      row.names = FALSE, col.names = FALSE
+    )
   }
 
   if (init_labels) {
     utils::write.table(mustlink_out$init_labels,
-                       file = paste0(file_prefix, "_init_labels.txt"),
-                       row.names = FALSE, col.names = FALSE)
+      file = paste0(file_prefix, "_init_labels.txt"),
+      row.names = FALSE, col.names = FALSE
+    )
   }
 
   if (block_labels) {
     utils::write.table(mustlink_out$block_labels,
-                       file = paste0(file_prefix, "_block_labels.txt"),
-                       row.names = FALSE, col.names = FALSE)
+      file = paste0(file_prefix, "_block_labels.txt"),
+      row.names = FALSE, col.names = FALSE
+    )
   }
 
   if (linked_set_labels) {
     utils::write.table(mustlink_out$linked_set_labels,
-                       file = paste0(file_prefix, "_link_labels.txt"),
-                       row.names = FALSE, col.names = FALSE)
+      file = paste0(file_prefix, "_link_labels.txt"),
+      row.names = FALSE, col.names = FALSE
+    )
   }
 
   if (times) {
     utils::write.table(mustlink_out$times,
-                       file = paste0(file_prefix, "_times.txt"),
-                       row.names = TRUE)
+      file = paste0(file_prefix, "_times.txt"),
+      row.names = TRUE
+    )
   }
 
   if (em_loglike) {
     utils::write.table(mustlink_out$em$loglike,
-                       file = paste0(file_prefix, "_loglike.txt"),
-                       row.names = FALSE, col.names = FALSE)
+      file = paste0(file_prefix, "_loglike.txt"),
+      row.names = FALSE, col.names = FALSE
+    )
   }
 
   if (em_postprob_block) {
     utils::write.table(mustlink_out$em$postprob_block,
-                       file = paste0(file_prefix, "_postprob_block.txt"),
-                       row.names = FALSE, col.names = FALSE)
+      file = paste0(file_prefix, "_postprob_block.txt"),
+      row.names = FALSE, col.names = FALSE
+    )
   }
 
   if (em_params) {
     saveRDS(mustlink_out$em$params,
-            file = paste0(file_prefix, "_params.rds"))
+      file = paste0(file_prefix, "_params.rds")
+    )
   }
-
 }

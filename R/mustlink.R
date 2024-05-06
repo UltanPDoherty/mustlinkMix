@@ -30,13 +30,14 @@
 mustlink <- function(data, clust_num,
                      zone_matrix = NULL, zone_percent = 100,
                      maxit = 1e4, eps = 1e-10, init_seed = NULL,
-                     init_method = c("mlkmpp", "mlkm",
-                                     "kmpp", "km",
-                                     "old_mlkm", "old_mlkmpp"),
+                     init_method = c(
+                       "mlkmpp", "mlkm",
+                       "kmpp", "km",
+                       "old_mlkm", "old_mlkmpp"
+                     ),
                      init_labels = NULL,
                      print_freq = 10, burnin = 2,
                      model = c("vm", "ns")) {
-
   model <- rlang::arg_match(model)
   init_method <- rlang::arg_match(init_method)
 
@@ -47,8 +48,10 @@ mustlink <- function(data, clust_num,
     } else {
       zone_num <- ncol(zone_matrix)
 
-      constraints <- label_constraints(data = data, zone_matrix = zone_matrix,
-                                       zone_percent = zone_percent)
+      constraints <- label_constraints(
+        data = data, zone_matrix = zone_matrix,
+        zone_percent = zone_percent
+      )
       block_labels <- constraints$block
       linked_set_labels <- constraints$linked_set
     }
@@ -62,20 +65,24 @@ mustlink <- function(data, clust_num,
     }
 
     if (is.null(init_labels)) {
-      init_labels <- initial_partition(data, clust_num = clust_num,
-                                       linked_set_labels = linked_set_labels,
-                                       init_seed = init_seed,
-                                       init_method = init_method)
+      init_labels <- initial_partition(data,
+        clust_num = clust_num,
+        linked_set_labels = linked_set_labels,
+        init_seed = init_seed,
+        init_method = init_method
+      )
     }
     init_params <- initial_parameters(data, init_labels = init_labels)
   })
 
   em_time <- system.time({
-    em <- mustlink_em(data = data, block_labels = block_labels,
-                      params = init_params,
-                      clust_num = clust_num, zone_num = zone_num,
-                      maxit = maxit, eps = eps, burnin = burnin,
-                      print_freq = print_freq, model = model)
+    em <- mustlink_em(
+      data = data, block_labels = block_labels,
+      params = init_params,
+      clust_num = clust_num, zone_num = zone_num,
+      maxit = maxit, eps = eps, burnin = burnin,
+      print_freq = print_freq, model = model
+    )
   })
 
   label_time <- system.time({
@@ -86,10 +93,12 @@ mustlink <- function(data, clust_num,
   times <- rbind(setup_time, em_time, label_time)
   rownames(times) <- c("setup", "em", "label")
 
-  return(list(clust_labels = clust_labels,
-              init_labels = init_labels,
-              linked_set_labels = linked_set_labels,
-              block_labels = block_labels,
-              em = em,
-              times = times))
+  return(list(
+    clust_labels = clust_labels,
+    init_labels = init_labels,
+    linked_set_labels = linked_set_labels,
+    block_labels = block_labels,
+    em = em,
+    times = times
+  ))
 }

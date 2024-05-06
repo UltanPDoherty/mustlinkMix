@@ -12,18 +12,19 @@
 #'         matrices.
 #' @export
 initial_parameters <- function(data, init_labels) {
-
-  stopifnot(length(init_labels) == nrow(data),
-            min(table(init_labels)) > 1)
+  stopifnot(
+    length(init_labels) == nrow(data),
+    min(table(init_labels)) > 1
+  )
 
   params <- list()
 
   sizes <- as.numeric(table(init_labels))
   names <- sort(unique(init_labels))
 
-  params$prop  <- sizes / sum(sizes)
+  params$prop <- sizes / sum(sizes)
 
-  params$mu    <- rowsum(data, group = init_labels) / sizes
+  params$mu <- rowsum(data, group = init_labels) / sizes
 
   clust_num <- length(unique(init_labels))
   var_num <- ncol(data)

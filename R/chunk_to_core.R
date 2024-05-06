@@ -10,7 +10,6 @@
 #' @export
 
 chunk_to_core <- function(chunk_labels) {
-
   # Table counting number of events with each chunklet label.
   chunk_tab <- table(chunk_labels)
 

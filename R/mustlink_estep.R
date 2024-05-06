@@ -20,28 +20,32 @@ mustlink_estep <- function(data, block, params,
                            event_num = nrow(data), var_num = ncol(params$mu),
                            clust_num = nrow(params$mu),
                            model = c("vm", "ns")) {
-
   model <- rlang::arg_match(model)
 
-  lpdf_block <- compute_lpdf_block(data = data, block = block, params = params,
-                                   event_num = event_num, clust_num = clust_num)
+  lpdf_block <- compute_lpdf_block(
+    data = data, block = block, params = params,
+    event_num = event_num, clust_num = clust_num
+  )
 
   # for loop computes the block posterior probability matrix, postprob_block
   block_unnorm <- postprob_block <- matrix(nrow = block$num, ncol = clust_num)
-  log_maxes <- loglike_vec <- block_unnorm_sums <- vector(mode = "numeric",
-                                                          length = block$num)
+  log_maxes <- loglike_vec <- block_unnorm_sums <- vector(
+    mode = "numeric",
+    length = block$num
+  )
 
   prop_exponent <- switch(model,
-                          vm = block$size,
-                          ns = rep(1, block$num))
+    vm = block$size,
+    ns = rep(1, block$num)
+  )
   for (l in 1:block$num) {
     # Add the log mixing proportions and then un-log this sum with exp.
     # Subtract lpdf_block row maxes to prevent exp mapping large values to Inf.
-    log_maxes[l]      <- max(lpdf_block[l, ]
-                             + prop_exponent[l] * log(params$prop))
+    log_maxes[l] <- max(lpdf_block[l, ]
+    + prop_exponent[l] * log(params$prop))
     block_unnorm[l, ] <- exp(lpdf_block[l, ]
-                             + prop_exponent[l] * log(params$prop)
-                             - log_maxes[l])
+    + prop_exponent[l] * log(params$prop)
+      - log_maxes[l])
 
     # Normalise rows of block_unnorm to obtain postprob_block.
     block_unnorm_sums[l] <- sum(block_unnorm[l, ])
@@ -50,13 +54,15 @@ mustlink_estep <- function(data, block, params,
     loglike_vec[l] <- log(block_unnorm_sums[l]) + log_maxes[l]
   }
 
-  loglike  <- sum(loglike_vec)
+  loglike <- sum(loglike_vec)
 
   postprob_event <- postprob_block[block$labels, ]
 
-  return(list(loglike = loglike,
-              postprob_block = postprob_block,
-              postprob_event = postprob_event))
+  return(list(
+    loglike = loglike,
+    postprob_block = postprob_block,
+    postprob_event = postprob_event
+  ))
 }
 
 

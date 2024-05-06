@@ -20,7 +20,6 @@ read_mustlink <- function(file_prefix,
                           block_labels = TRUE, linked_set_labels = TRUE,
                           times = TRUE, em_loglike = TRUE,
                           em_postprob_block = TRUE, em_params = TRUE) {
-
   out <- list()
 
   if (clust_labels) {

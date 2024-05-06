@@ -10,7 +10,6 @@
 #'         0, chunks with all non-core points given their own chunklet label.
 #' @export
 label_constraints <- function(data, zone_matrix, zone_percent) {
-
   zone_num <- ncol(zone_matrix)
 
   if (length(zone_percent) == 1) {
@@ -36,11 +35,12 @@ label_constraints <- function(data, zone_matrix, zone_percent) {
     zones[[l]] <- data[zone_matrix[, l], ]
 
     densities[[l]] <- mvtnorm::dmvnorm(zones[[l]],
-                                       mean = colMeans(zones[[l]]),
-                                       sigma = stats::cov(zones[[l]]))
+      mean = colMeans(zones[[l]]),
+      sigma = stats::cov(zones[[l]])
+    )
     quantiles[l] <- stats::quantile(densities[[l]], prob[l])
 
-    linked_set_matrix[zone_matrix[, l], l]  <- densities[[l]] >= quantiles[l]
+    linked_set_matrix[zone_matrix[, l], l] <- densities[[l]] >= quantiles[l]
   }
 
   # zones may overlap but cores are prevented from doing so
@@ -48,19 +48,23 @@ label_constraints <- function(data, zone_matrix, zone_percent) {
     linked_set_labels <- as.integer(linked_set_matrix[, 1])
   } else if (zone_num > 1) {
     check_linked_set_overlap(linked_set_matrix)
-    linked_set_labels <- apply(X = linked_set_matrix, MARGIN = 1,
-                               FUN = function(x) {
-                                 label <- which(x == max(x))
-                                 ifelse(length(label) == 1, label, 0)
-                               })
+    linked_set_labels <- apply(
+      X = linked_set_matrix, MARGIN = 1,
+      FUN = function(x) {
+        label <- which(x == max(x))
+        ifelse(length(label) == 1, label, 0)
+      }
+    )
   }
 
   block_labels <- linked_set_labels
   block_labels[linked_set_labels == 0] <-
     zone_num + seq_len(sum(linked_set_labels == 0))
 
-  return(list(linked_set = linked_set_labels,
-              block = block_labels))
+  return(list(
+    linked_set = linked_set_labels,
+    block = block_labels
+  ))
 }
 
 check_linked_set_overlap <- function(linked_set_matrix) {
@@ -68,17 +72,23 @@ check_linked_set_overlap <- function(linked_set_matrix) {
   check_overlap <- rowSums(unique_rows) > 1
 
   if (any(check_overlap)) {
-
     unique_overlaps <- unique_rows[check_overlap, , drop = FALSE]
-    overlap_names <- apply(unique_overlaps, MARGIN = 1,
-                           FUN = function(x) {
-                             paste(colnames(linked_set_matrix)[x],
-                                   collapse = " & ")
-                           })
+    overlap_names <- apply(unique_overlaps,
+      MARGIN = 1,
+      FUN = function(x) {
+        paste(colnames(linked_set_matrix)[x],
+          collapse = " & "
+        )
+      }
+    )
 
-    message(paste0("Initial constrained sets overlapped for these populations:",
-                   paste("\n\t", overlap_names, collapse = ",\n")))
-    message(paste0("Points in intersections were excluded from all final ",
-                   "constrained sets."))
+    message(paste0(
+      "Initial constrained sets overlapped for these populations:",
+      paste("\n\t", overlap_names, collapse = ",\n")
+    ))
+    message(paste0(
+      "Points in intersections were excluded from all final ",
+      "constrained sets."
+    ))
   }
 }
