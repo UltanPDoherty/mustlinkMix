@@ -29,7 +29,8 @@
 #'         and a vector of times.
 #' @export
 mustlink <- function(
-    data, clust_num,
+    data,
+    clust_num,
     zone_matrix = NULL,
     zone_percent = 100,
     maxit = 1e4,
