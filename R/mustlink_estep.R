@@ -41,11 +41,10 @@ mustlink_estep <- function(data, block, params,
   for (l in 1:block$num) {
     # Add the log mixing proportions and then un-log this sum with exp.
     # Subtract lpdf_block row maxes to prevent exp mapping large values to Inf.
-    log_maxes[l] <- max(lpdf_block[l, ]
-    + prop_exponent[l] * log(params$prop))
-    block_unnorm[l, ] <- exp(lpdf_block[l, ]
-    + prop_exponent[l] * log(params$prop)
-      - log_maxes[l])
+    log_maxes[l] <- max(lpdf_block[l, ] + prop_exponent[l] * log(params$prop))
+    block_unnorm[l, ] <- exp(
+      lpdf_block[l, ] + prop_exponent[l] * log(params$prop) - log_maxes[l]
+    )
 
     # Normalise rows of block_unnorm to obtain postprob_block.
     block_unnorm_sums[l] <- sum(block_unnorm[l, ])
