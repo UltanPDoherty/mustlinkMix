@@ -21,7 +21,6 @@ mustlink_mstep <- function(
     clust_num = ncol(postprob_block),
     event_num = nrow(data),
     var_num = ncol(data),
-    model = c("vm", "ns"),
     drop_cluster = FALSE) {
   model <- rlang::arg_match(model)
 
@@ -38,10 +37,7 @@ mustlink_mstep <- function(
   }
 
   # block mixing proportions
-  prop <- switch(model,
-    vm = postprob_event_sums / event_num,
-    ns = colSums(postprob_block) / block_num
-  )
+  prop <- postprob_event_sums / event_num
 
   postprob_event_div <- sweep(
     x = postprob_event, MARGIN = 2,

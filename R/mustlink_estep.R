@@ -14,8 +14,7 @@
 #' @export
 mustlink_estep <- function(data, block, params,
                            event_num = nrow(data), var_num = ncol(params$mu),
-                           clust_num = nrow(params$mu),
-                           model = c("vm", "ns")) {
+                           clust_num = nrow(params$mu)) {
   model <- rlang::arg_match(model)
 
   lpdf_block <- compute_lpdf_block(
@@ -30,16 +29,12 @@ mustlink_estep <- function(data, block, params,
     length = block$num
   )
 
-  prop_exponent <- switch(model,
-    vm = block$size,
-    ns = rep(1, block$num)
-  )
   for (l in 1:block$num) {
     # Add the log mixing proportions and then un-log this sum with exp.
     # Subtract lpdf_block row maxes to prevent exp mapping large values to Inf.
-    log_maxes[l] <- max(lpdf_block[l, ] + prop_exponent[l] * log(params$prop))
+    log_maxes[l] <- max(lpdf_block[l, ] + block$size[l] * log(params$prop))
     block_unnorm[l, ] <- exp(
-      lpdf_block[l, ] + prop_exponent[l] * log(params$prop) - log_maxes[l]
+      lpdf_block[l, ] + block$size[l] * log(params$prop) - log_maxes[l]
     )
 
     # Normalise rows of block_unnorm to obtain postprob_block.

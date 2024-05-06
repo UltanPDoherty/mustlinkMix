@@ -10,8 +10,7 @@ mustlink_estep(
   params,
   event_num = nrow(data),
   var_num = ncol(params$mu),
-  clust_num = nrow(params$mu),
-  model = c("vm", "ns")
+  clust_num = nrow(params$mu)
 )
 }
 \arguments{
@@ -26,9 +25,6 @@ mustlink_estep(
 \item{var_num}{Number of varibles in the dataset.}
 
 \item{clust_num}{Number of clusters / components.}
-
-\item{model}{Model to be used. Either "vm" for Melnykov et al. or "ns" for
-Shental et al.}
 }
 \value{
 A list containing a log-likelihood value

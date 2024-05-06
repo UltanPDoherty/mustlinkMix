@@ -16,7 +16,6 @@ mustlink(
   init_labels = NULL,
   print_freq = 10,
   burnin = 2,
-  model = c("vm", "ns"),
   drop_cluster = FALSE
 )
 }
@@ -46,9 +45,6 @@ printed in the EM loop.}
 
 \item{burnin}{Controls how many loops are completed before testing for
 likelihood convergence.}
-
-\item{model}{Model to be used. Either "vm" for Melnykov et al. or "ns" for
-Shental et al.}
 
 \item{drop_cluster}{Should empty clusters be dropped.}
 }

@@ -12,7 +12,6 @@ mustlink_mstep(
   clust_num = ncol(postprob_block),
   event_num = nrow(data),
   var_num = ncol(data),
-  model = c("vm", "ns"),
   drop_cluster = FALSE
 )
 }
@@ -30,9 +29,6 @@ mustlink_mstep(
 \item{event_num}{Number of observations in the dataset.}
 
 \item{var_num}{Number of variables in the dataset.}
-
-\item{model}{Model to be used. Either "vm" for Melnykov et al. or "ns" for
-Shental et al.}
 
 \item{drop_cluster}{Should empty clusters be dropped.}
 }

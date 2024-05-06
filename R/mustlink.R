@@ -18,8 +18,6 @@
 #'                   printed in the EM loop.
 #' @param burnin Controls how many loops are completed before testing for
 #'               likelihood convergence.
-#' @param model Model to be used. Either "vm" for Melnykov et al. or "ns" for
-#'              Shental et al.
 #' @param drop_cluster Should empty clusters be dropped.
 #'
 #' @return A list
@@ -42,9 +40,7 @@ mustlink <- function(
     init_labels = NULL,
     print_freq = 10,
     burnin = 2,
-    model = c("vm", "ns"),
     drop_cluster = FALSE) {
-  model <- rlang::arg_match(model)
   init_method <- rlang::arg_match(init_method)
 
   setup_time <- system.time({
@@ -92,7 +88,6 @@ mustlink <- function(
       eps = eps,
       burnin = burnin,
       print_freq = print_freq,
-      model = model,
       drop_cluster = drop_cluster
     )
   })

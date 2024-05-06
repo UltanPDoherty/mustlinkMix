@@ -14,7 +14,6 @@ mustlink_em(
   maxit = 10000,
   eps = 1e-10,
   print_freq = 1,
-  model = c("vm", "ns"),
   drop_cluster = FALSE
 )
 }
@@ -39,9 +38,6 @@ likelihood convergence.}
 
 \item{print_freq}{Controls how frequently the log-likelihood and time are
 printed in the EM loop.}
-
-\item{model}{Model to be used. Either "vm" for Melnykov et al. or "ns" for
-Shental et al.}
 
 \item{drop_cluster}{Should empty clusters be dropped.}
 }
