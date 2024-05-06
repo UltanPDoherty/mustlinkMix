@@ -60,9 +60,6 @@ mustlink_estep <- function(data, block, params,
   ))
 }
 
-
-
-
 compute_lpdf_block <- function(data, block, params,
                                event_num = nrow(data),
                                clust_num = nrow(params$mu)) {
