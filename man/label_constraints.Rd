@@ -7,9 +7,9 @@
 label_constraints(data, zone_matrix, zone_percent)
 }
 \arguments{
-\item{data}{Dataset in matrix or data.frame form.}
+\item{data}{Dataset in matrix or data.frame format.}
 
-\item{zone_matrix}{Output from construct_zones.}
+\item{zone_matrix}{Logical matrix with a column per zone and a row per event.}
 
 \item{zone_percent}{Percentage of events in zone to be included in each
 chunklet, either one value for all chunklets or one value

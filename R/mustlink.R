@@ -20,6 +20,7 @@
 #' likelihood convergence.
 #' @param model Model to be used. Either "vm" for Melnykov et al. or "ns" for
 #' Shental et al.
+#' @param drop_cluster Should empty clusters be dropped.
 #'
 #' @return A list consisting of a vector of cluster labels,
 #'         a matrix of chunklet to cluster assignment probabilities,
@@ -27,17 +28,19 @@
 #'         a vector of log-likelihood values,
 #'         and a vector of times.
 #' @export
-mustlink <- function(data, clust_num,
-                     zone_matrix = NULL, zone_percent = 100,
-                     maxit = 1e4, eps = 1e-10, init_seed = NULL,
-                     init_method = c(
-                       "mlkmpp", "mlkm",
-                       "kmpp", "km",
-                       "old_mlkm", "old_mlkmpp"
-                     ),
-                     init_labels = NULL,
-                     print_freq = 10, burnin = 2,
-                     model = c("vm", "ns")) {
+mustlink <- function(
+    data, clust_num,
+    zone_matrix = NULL,
+    zone_percent = 100,
+    maxit = 1e4,
+    eps = 1e-10,
+    init_seed = NULL,
+    init_method = c("mlkmpp", "mlkm", "kmpp", "km", "old_mlkm", "old_mlkmpp"),
+    init_labels = NULL,
+    print_freq = 10,
+    burnin = 2,
+    model = c("vm", "ns"),
+    drop_cluster = FALSE) {
   model <- rlang::arg_match(model)
   init_method <- rlang::arg_match(init_method)
 
@@ -77,11 +80,17 @@ mustlink <- function(data, clust_num,
 
   em_time <- system.time({
     em <- mustlink_em(
-      data = data, block_labels = block_labels,
+      data = data,
+      block_labels = block_labels,
       params = init_params,
-      clust_num = clust_num, zone_num = zone_num,
-      maxit = maxit, eps = eps, burnin = burnin,
-      print_freq = print_freq, model = model
+      clust_num = clust_num,
+      zone_num = zone_num,
+      maxit = maxit,
+      eps = eps,
+      burnin = burnin,
+      print_freq = print_freq,
+      model = model,
+      drop_cluster = drop_cluster
     )
   })
 

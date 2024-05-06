@@ -1,10 +1,6 @@
 #' Convert +/- Table Labels into Chunklets
 #'
-#' @param data Dataset in matrix or data.frame form.
-#' @param zone_matrix Output from construct_zones.
-#' @param zone_percent Percentage of events in zone to be included in each
-#'                     chunklet, either one value for all chunklets or one value
-#'                     per chunklet.
+#' @inheritParams mustlink
 #'
 #' @return A list of two label vectors, labels with all non-core points labelled
 #'         0, chunks with all non-core points given their own chunklet label.

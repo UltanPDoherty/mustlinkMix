@@ -4,16 +4,12 @@
 #' Implement M-step of EM algorithm for GMM with positive / must-link
 #' constraints.
 #'
-#' @param data Dataset being clustered in matrix form.
+#' @inheritParams mustlink_em
 #' @param postprob_event Expanded observation posterior probability matrix.
 #' @param postprob_block block posterior probability matrix.
 #' @param block_num Number of blocks.
-#' @param clust_num Number of clusters pre-specified.
 #' @param event_num Number of observations in the dataset.
 #' @param var_num Number of variables in the dataset.
-#' @param model Model to be used. Either "vm" for Melnykov et al. or "ns" for
-#' Shental et al.
-#' @param drop_cluster Should empty clusters be dropped.
 #'
 #' @return List containing prop, mu, sigma.
 #' @export

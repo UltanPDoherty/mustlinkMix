@@ -17,7 +17,7 @@ mustlink_mstep(
 )
 }
 \arguments{
-\item{data}{Dataset being clustered in matrix form.}
+\item{data}{Dataset in matrix or data.frame format.}
 
 \item{postprob_event}{Expanded observation posterior probability matrix.}
 
@@ -25,7 +25,7 @@ mustlink_mstep(
 
 \item{block_num}{Number of blocks.}
 
-\item{clust_num}{Number of clusters pre-specified.}
+\item{clust_num}{Number of clusters / components.}
 
 \item{event_num}{Number of observations in the dataset.}
 

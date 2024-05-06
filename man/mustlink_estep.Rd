@@ -15,17 +15,17 @@ mustlink_estep(
 )
 }
 \arguments{
-\item{data}{Dataset being clustered in matrix form.}
+\item{data}{Dataset in matrix or data.frame format.}
 
 \item{block}{Object from make_block.}
 
-\item{params}{List containing prop, mu, sigma.}
+\item{params}{Model parameters, for example, output from initialise_model.}
 
 \item{event_num}{Number of observations in the dataset.}
 
 \item{var_num}{Number of varibles in the dataset.}
 
-\item{clust_num}{Number of clusters pre-specified.}
+\item{clust_num}{Number of clusters / components.}
 
 \item{model}{Model to be used. Either "vm" for Melnykov et al. or "ns" for
 Shental et al.}

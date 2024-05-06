@@ -19,28 +19,31 @@ mustlink_em(
 )
 }
 \arguments{
-\item{data}{Dataset in matrix form.}
+\item{data}{Dataset in matrix or data.frame format.}
 
 \item{block_labels}{Each event in a particular linked set has the same
 number and every non-linked event has its own number.}
 
 \item{params}{Model parameters, for example, output from initialise_model.}
 
-\item{clust_num}{Number of clusters.}
+\item{clust_num}{Number of clusters / components.}
 
 \item{zone_num}{Number of zones.}
 
-\item{burnin}{Number of iterations before likelihood convergence criterion is
-checked.}
+\item{burnin}{Controls how many loops are completed before testing for
+likelihood convergence.}
 
 \item{maxit}{Maximum number of EM iterations.}
 
-\item{eps}{Likelihood convergence criterion threshold.}
+\item{eps}{Convergence criterion for relative difference in log-likelihood.}
 
-\item{print_freq}{Number of iterations between print statements during EM.}
+\item{print_freq}{Controls how frequently the log-likelihood and time are
+printed in the EM loop.}
 
 \item{model}{Model to be used. Either "vm" for Melnykov et al. or "ns" for
 Shental et al.}
+
+\item{drop_cluster}{Should empty clusters be dropped.}
 }
 \value{
 List of chunklet posterior probability matrix, model parameters, and

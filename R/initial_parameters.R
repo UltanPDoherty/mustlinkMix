@@ -4,8 +4,7 @@
 #' @description
 #' Initialise a Gaussian Mixture Model.
 #'
-#' @param data Matrix or dataframe.
-#' @param init_labels Set of initial labels.
+#' @inheritParams mustlink
 #'
 #' @return A list consisting of a mixing proportions vector, a matrix of
 #'         component means, and an array containing component covariance

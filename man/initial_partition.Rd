@@ -13,17 +13,16 @@ initial_partition(
 )
 }
 \arguments{
-\item{data}{Matrix or dataframe.}
+\item{data}{Dataset in matrix or data.frame format.}
 
-\item{clust_num}{Number of clusters.}
+\item{clust_num}{Number of clusters / components.}
 
 \item{linked_set_labels}{Label indicating which linked set an event
 belongs to, 0 for unconstrained events.}
 
 \item{init_seed}{Seed.}
 
-\item{init_method}{Initialisation option. One of "mlkmpp",
-"mlkm", "kmpp", or "km".}
+\item{init_method}{Initialisation option.}
 }
 \value{
 An integer vector.

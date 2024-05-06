@@ -8,9 +8,9 @@ labels.}
 initial_parameters(data, init_labels)
 }
 \arguments{
-\item{data}{Matrix or dataframe.}
+\item{data}{Dataset in matrix or data.frame format.}
 
-\item{init_labels}{Set of initial labels.}
+\item{init_labels}{Initial labels.}
 }
 \value{
 A list consisting of a mixing proportions vector, a matrix of

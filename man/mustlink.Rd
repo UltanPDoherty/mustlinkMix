@@ -16,7 +16,8 @@ mustlink(
   init_labels = NULL,
   print_freq = 10,
   burnin = 2,
-  model = c("vm", "ns")
+  model = c("vm", "ns"),
+  drop_cluster = FALSE
 )
 }
 \arguments{
@@ -48,6 +49,8 @@ likelihood convergence.}
 
 \item{model}{Model to be used. Either "vm" for Melnykov et al. or "ns" for
 Shental et al.}
+
+\item{drop_cluster}{Should empty clusters be dropped.}
 }
 \value{
 A list consisting of a vector of cluster labels,

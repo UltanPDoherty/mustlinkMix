@@ -1,18 +1,10 @@
 #' @title Must-Link / Positive Constraint EM GMM.
 #'
-#' @param data Dataset in matrix form.
+#' @inheritParams mustlink
 #' @param block_labels Each event in a particular linked set has the same
 #'                     number and every non-linked event has its own number.
 #' @param params Model parameters, for example, output from initialise_model.
-#' @param clust_num Number of clusters.
 #' @param zone_num Number of zones.
-#' @param burnin Number of iterations before likelihood convergence criterion is
-#'               checked.
-#' @param print_freq Number of iterations between print statements during EM.
-#' @param maxit Maximum number of EM iterations.
-#' @param eps Likelihood convergence criterion threshold.
-#' @param model Model to be used. Either "vm" for Melnykov et al. or "ns" for
-#' Shental et al.
 #'
 #' @return List of chunklet posterior probability matrix, model parameters, and
 #' vector of log-likelihood values for each iteration.

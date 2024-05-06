@@ -4,14 +4,10 @@
 #' Implement E-step of EM algorithm for GMM
 #' with positive / must-link constraints.
 #'
-#' @param data Dataset being clustered in matrix form.
-#' @param params List containing prop, mu, sigma.
+#' @inheritParams mustlink_em
 #' @param block Object from make_block.
 #' @param event_num Number of observations in the dataset.
 #' @param var_num Number of varibles in the dataset.
-#' @param clust_num Number of clusters pre-specified.
-#' @param model Model to be used. Either "vm" for Melnykov et al. or "ns" for
-#' Shental et al.
 #'
 #' @return A list containing a log-likelihood value
 #'         and a posterior probability matrix.

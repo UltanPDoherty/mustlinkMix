@@ -3,13 +3,9 @@
 #' @description
 #' Partition the data.
 #'
-#' @param data Matrix or dataframe.
-#' @param clust_num Number of clusters.
+#' @inheritParams mustlink
 #' @param linked_set_labels Label indicating which linked set an event
 #' belongs to, 0 for unconstrained events.
-#' @param init_method Initialisation option. One of "mlkmpp",
-#' "mlkm", "kmpp", or "km".
-#' @param init_seed Seed.
 #'
 #' @return An integer vector.
 #' @export
