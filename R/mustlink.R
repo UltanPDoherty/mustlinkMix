@@ -15,18 +15,20 @@
 #' @param init_labels Initial labels.
 #' @param init_seed Seed.
 #' @param print_freq Controls how frequently the log-likelihood and time are
-#' printed in the EM loop.
+#'                   printed in the EM loop.
 #' @param burnin Controls how many loops are completed before testing for
-#' likelihood convergence.
+#'               likelihood convergence.
 #' @param model Model to be used. Either "vm" for Melnykov et al. or "ns" for
-#' Shental et al.
+#'              Shental et al.
 #' @param drop_cluster Should empty clusters be dropped.
 #'
-#' @return A list consisting of a vector of cluster labels,
-#'         a matrix of chunklet to cluster assignment probabilities,
-#'         a list of model parameters,
-#'         a vector of log-likelihood values,
-#'         and a vector of times.
+#' @return A list
+#' * clust_labels: vector of cluster labels
+#' * init_labels: vector of initial labels
+#' * linked_set_labels: vector of constrained set labels
+#' * block_labels: vector of block labelss
+#' * em: list
+#' * times: runtimes
 #' @export
 mustlink <- function(
     data,

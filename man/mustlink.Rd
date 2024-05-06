@@ -53,11 +53,15 @@ Shental et al.}
 \item{drop_cluster}{Should empty clusters be dropped.}
 }
 \value{
-A list consisting of a vector of cluster labels,
-a matrix of chunklet to cluster assignment probabilities,
-a list of model parameters,
-a vector of log-likelihood values,
-and a vector of times.
+A list
+\itemize{
+\item clust_labels: vector of cluster labels
+\item init_labels: vector of initial labels
+\item linked_set_labels: vector of constrained set labels
+\item block_labels: vector of block labelss
+\item em: list
+\item times: runtimes
+}
 }
 \description{
 Only requires flowFrame dataset, cell type - marker table, number of
