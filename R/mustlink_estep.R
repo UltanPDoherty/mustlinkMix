@@ -6,20 +6,29 @@
 #'
 #' @inheritParams mustlink_em
 #' @param block Object from make_block.
-#' @param event_num Number of observations in the dataset.
-#' @param var_num Number of varibles in the dataset.
+#' @param event_num Number of observations in the data set.
+#' @param var_num Number of variables in the data set.
 #'
-#' @return A list containing a log-likelihood value
-#'         and a posterior probability matrix.
+#' @return List:
+#' * loglike: log likelihood value
+#' * postprob_block: posterior probability matrix
+#' * postprob_event: posterior probability matrix
 #' @export
-mustlink_estep <- function(data, block, params,
-                           event_num = nrow(data), var_num = ncol(params$mu),
-                           clust_num = nrow(params$mu)) {
+mustlink_estep <- function(
+    data,
+    block,
+    params,
+    event_num = nrow(data),
+    var_num = ncol(params$mu),
+    clust_num = nrow(params$mu)) {
   model <- rlang::arg_match(model)
 
   lpdf_block <- compute_lpdf_block(
-    data = data, block = block, params = params,
-    event_num = event_num, clust_num = clust_num
+    data = data,
+    block = block,
+    params = params,
+    event_num = event_num,
+    clust_num = clust_num
   )
 
   # for loop computes the block posterior probability matrix, postprob_block
@@ -55,9 +64,12 @@ mustlink_estep <- function(data, block, params,
   ))
 }
 
-compute_lpdf_block <- function(data, block, params,
-                               event_num = nrow(data),
-                               clust_num = nrow(params$mu)) {
+compute_lpdf_block <- function(
+    data,
+    block,
+    params,
+    event_num = nrow(data),
+    clust_num = nrow(params$mu)) {
   # lpdf_event is an event_num x clust_num matrix
   # it is the log pdf for each component evaluated at every point
   lpdf_event <- vapply(

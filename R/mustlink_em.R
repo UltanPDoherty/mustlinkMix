@@ -6,8 +6,10 @@
 #' @param params Model parameters, for example, output from initialise_model.
 #' @param zone_num Number of zones.
 #'
-#' @return List of chunklet posterior probability matrix, model parameters, and
-#' vector of log-likelihood values for each iteration.
+#' @return List:
+#' * postprob_block:
+#' * params:
+#' * loglike: vector of log-likelihood values for each iteration
 #' @export
 mustlink_em <- function(
     data,
@@ -36,9 +38,12 @@ mustlink_em <- function(
   repeat {
     it <- it + 1
 
-    e_out <- mustlink_estep(data,
-      block = block, params = params,
-      event_num = event_num, var_num = var_num,
+    e_out <- mustlink_estep(
+      data,
+      block = block,
+      params = params,
+      event_num = event_num,
+      var_num = var_num,
       clust_num = clust_num
     )
 
@@ -54,7 +59,8 @@ mustlink_em <- function(
 
     # loglike_crit is the relative increase in the log-likelihood.
     loglike_crit <- compute_loglike_crit(
-      it = it, burnin = burnin,
+      it = it,
+      burnin = burnin,
       loglike = loglike
     )
 
@@ -96,9 +102,6 @@ mustlink_em <- function(
     loglike = loglike
   ))
 }
-
-
-
 
 compute_loglike_crit <- function(it, burnin, loglike) {
   # if tree accounts for the log-likelihoods being Inf or -Inf.

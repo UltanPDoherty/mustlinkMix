@@ -42,8 +42,12 @@ printed in the EM loop.}
 \item{drop_cluster}{Should empty clusters be dropped.}
 }
 \value{
-List of chunklet posterior probability matrix, model parameters, and
-vector of log-likelihood values for each iteration.
+List:
+\itemize{
+\item postprob_block:
+\item params:
+\item loglike: vector of log-likelihood values for each iteration
+}
 }
 \description{
 Must-Link / Positive Constraint EM GMM.

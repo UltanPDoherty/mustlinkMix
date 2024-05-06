@@ -51,7 +51,8 @@ mustlink <- function(
       zone_num <- ncol(zone_matrix)
 
       constraints <- label_constraints(
-        data = data, zone_matrix = zone_matrix,
+        data = data,
+        zone_matrix = zone_matrix,
         zone_percent = zone_percent
       )
       block_labels <- constraints$block
@@ -67,7 +68,8 @@ mustlink <- function(
     }
 
     if (is.null(init_labels)) {
-      init_labels <- initial_partition(data,
+      init_labels <- initial_partition(
+        data,
         clust_num = clust_num,
         linked_set_labels = linked_set_labels,
         init_seed = init_seed,

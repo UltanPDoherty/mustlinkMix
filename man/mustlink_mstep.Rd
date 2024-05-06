@@ -26,14 +26,19 @@ mustlink_mstep(
 
 \item{clust_num}{Number of clusters / components.}
 
-\item{event_num}{Number of observations in the dataset.}
+\item{event_num}{Number of observations in the data set.}
 
-\item{var_num}{Number of variables in the dataset.}
+\item{var_num}{Number of variables in the data set.}
 
 \item{drop_cluster}{Should empty clusters be dropped.}
 }
 \value{
-List containing prop, mu, sigma.
+List:
+\itemize{
+\item prop
+\item mu
+\item sigma
+}
 }
 \description{
 Implement M-step of EM algorithm for GMM with positive / must-link

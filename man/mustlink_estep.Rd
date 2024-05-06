@@ -20,15 +20,19 @@ mustlink_estep(
 
 \item{params}{Model parameters, for example, output from initialise_model.}
 
-\item{event_num}{Number of observations in the dataset.}
+\item{event_num}{Number of observations in the data set.}
 
-\item{var_num}{Number of varibles in the dataset.}
+\item{var_num}{Number of variables in the data set.}
 
 \item{clust_num}{Number of clusters / components.}
 }
 \value{
-A list containing a log-likelihood value
-and a posterior probability matrix.
+List:
+\itemize{
+\item loglike: log likelihood value
+\item postprob_block: posterior probability matrix
+\item postprob_event: posterior probability matrix
+}
 }
 \description{
 Implement E-step of EM algorithm for GMM

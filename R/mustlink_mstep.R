@@ -5,13 +5,15 @@
 #' constraints.
 #'
 #' @inheritParams mustlink_em
+#' @inheritParams mustlink_estep
 #' @param postprob_event Expanded observation posterior probability matrix.
 #' @param postprob_block block posterior probability matrix.
 #' @param block_num Number of blocks.
-#' @param event_num Number of observations in the dataset.
-#' @param var_num Number of variables in the dataset.
 #'
-#' @return List containing prop, mu, sigma.
+#' @return List:
+#' * prop
+#' * mu
+#' * sigma
 #' @export
 mustlink_mstep <- function(
     data,
@@ -51,10 +53,8 @@ mustlink_mstep <- function(
   data_mu <- array(dim = c(event_num, var_num, clust_num))
   sigma <- array(dim = c(var_num, var_num, clust_num))
   for (k in 1:clust_num) {
-    data_mu[, , k] <- sqrt(postprob_event_div[, k]) * scale(data,
-      center = mu[k, ],
-      scale = FALSE
-    )
+    data_mu[, , k] <-
+      sqrt(postprob_event_div[, k]) * scale(data, mu[k, ], FALSE)
     sigma[, , k] <- crossprod(data_mu[, , k])
   }
 
