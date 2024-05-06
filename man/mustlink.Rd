@@ -12,7 +12,7 @@ mustlink(
   maxit = 10000,
   eps = 1e-10,
   init_seed = NULL,
-  init_method = c("k-Means++", "k-Means", "Must-Link k-Means++", "Must-Link k-Means"),
+  init_method = c("mlkmpp", "mlkm", "kmpp", "km", "old_mlkm", "old_mlkmpp"),
   init_labels = NULL,
   print_freq = 10,
   burnin = 2,

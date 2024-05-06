@@ -14,7 +14,8 @@ mustlink_em(
   maxit = 10000,
   eps = 1e-10,
   print_freq = 1,
-  model = c("vm", "ns")
+  model = c("vm", "ns"),
+  drop_cluster = FALSE
 )
 }
 \arguments{

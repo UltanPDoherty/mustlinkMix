@@ -12,7 +12,8 @@ mustlink_mstep(
   clust_num = ncol(postprob_block),
   event_num = nrow(data),
   var_num = ncol(data),
-  model = c("vm", "ns")
+  model = c("vm", "ns"),
+  drop_cluster = FALSE
 )
 }
 \arguments{
@@ -32,6 +33,8 @@ mustlink_mstep(
 
 \item{model}{Model to be used. Either "vm" for Melnykov et al. or "ns" for
 Shental et al.}
+
+\item{drop_cluster}{Should empty clusters be dropped.}
 }
 \value{
 List containing prop, mu, sigma.

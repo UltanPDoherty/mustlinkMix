@@ -56,8 +56,8 @@ label_constraints <- function(data, zone_matrix, zone_percent) {
   }
 
   block_labels <- linked_set_labels
-  block_labels[linked_set_labels == 0] <- zone_num +
-                                            seq_len(sum(linked_set_labels == 0))
+  block_labels[linked_set_labels == 0] <-
+    zone_num + seq_len(sum(linked_set_labels == 0))
 
   return(list(linked_set = linked_set_labels,
               block = block_labels))
@@ -76,9 +76,9 @@ check_linked_set_overlap <- function(linked_set_matrix) {
                                    collapse = " & ")
                            })
 
-    message(paste0("Initial constrained sets overlapped for these populations:\n",
-                   paste("\t", overlap_names,
-                         collapse = ",\n")))
-    message("Points in intersections were excluded from all final constrained sets.")
+    message(paste0("Initial constrained sets overlapped for these populations:",
+                   paste("\n\t", overlap_names, collapse = ",\n")))
+    message(paste0("Points in intersections were excluded from all final ",
+                   "constrained sets."))
   }
 }

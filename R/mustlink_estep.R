@@ -67,12 +67,17 @@ compute_lpdf_block <- function(data, block, params,
                                clust_num = nrow(params$mu)) {
   # lpdf_event is an event_num x clust_num matrix
   # it is the log pdf for each component evaluated at every point
-  lpdf_event <- vapply(1:clust_num, FUN.VALUE = double(event_num),
-                       FUN = function(k) {
-                         mvtnorm::dmvnorm(data, log = TRUE,
-                                          mean = params$mu[k, ],
-                                          sigma = params$sigma[, , k])
-                       }
+  lpdf_event <- vapply(
+    1:clust_num,
+    FUN.VALUE = double(event_num),
+    FUN = function(k) {
+      mvtnorm::dmvnorm(
+        data,
+        log = TRUE,
+        mean = params$mu[k, ],
+        sigma = params$sigma[, , k]
+      )
+    }
   )
 
   linked_blocks <- seq_len(block$zone_num)
@@ -84,8 +89,10 @@ compute_lpdf_block <- function(data, block, params,
   # lpdf_block is the sum of lpdf_event values within each block
   lpdf_block <- matrix(NA, nrow = block$num, ncol = clust_num)
   lpdf_block[unlinked_blocks, ] <- lpdf_event[unlinked_events, ]
-  lpdf_block[linked_blocks, ] <- rowsum(lpdf_event[linked_events, , drop = FALSE],
-                                         group = block$labels[linked_events])
+  lpdf_block[linked_blocks, ] <- rowsum(
+    lpdf_event[linked_events, , drop = FALSE],
+    group = block$labels[linked_events]
+  )
 
   return(lpdf_block)
 }

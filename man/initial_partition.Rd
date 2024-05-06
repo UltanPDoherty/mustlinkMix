@@ -9,7 +9,7 @@ initial_partition(
   clust_num,
   linked_set_labels = NULL,
   init_seed = NULL,
-  init_method = c("k-Means++", "k-Means", "Must-Link k-Means++", "Must-Link k-Means")
+  init_method = c("mlkmpp", "mlkm", "kmpp", "km", "old_mlkmpp", "old_mlkm")
 )
 }
 \arguments{
@@ -22,8 +22,8 @@ belongs to, 0 for unconstrained events.}
 
 \item{init_seed}{Seed.}
 
-\item{init_method}{Initialisation option. One of "Must-Link k-Means++",
-"Must-Link k-Means", "k-Means++", or "k-Means".}
+\item{init_method}{Initialisation option. One of "mlkmpp",
+"mlkm", "kmpp", or "km".}
 }
 \value{
 An integer vector.

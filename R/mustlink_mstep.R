@@ -13,27 +13,35 @@
 #' @param var_num Number of variables in the dataset.
 #' @param model Model to be used. Either "vm" for Melnykov et al. or "ns" for
 #' Shental et al.
+#' @param drop_cluster Should empty clusters be dropped.
 #'
 #' @return List containing prop, mu, sigma.
 #' @export
-mustlink_mstep <- function(data, postprob_event, postprob_block,
-                           block_num = nrow(postprob_block),
-                           clust_num = ncol(postprob_block),
-                           event_num = nrow(data),
-                           var_num = ncol(data),
-                           model = c("vm", "ns")) {
+mustlink_mstep <- function(
+  data,
+  postprob_event,
+  postprob_block,
+  block_num = nrow(postprob_block),
+  clust_num = ncol(postprob_block),
+  event_num = nrow(data),
+  var_num = ncol(data),
+  model = c("vm", "ns"),
+  drop_cluster = FALSE
+) {
 
   model <- rlang::arg_match(model)
 
   postprob_event_sums <- colSums(postprob_event)
 
-  # empty_clusters <- postprob_event_sums < 2
-  # if (any(empty_clusters)) {
-  #   clust_num <- sum(!empty_clusters)
-  #   postprob_event_sums <- postprob_event_sums[!empty_clusters]
-  #   postprob_block <- postprob_block[, !empty_clusters, drop = FALSE]
-  #   postprob_event <- postprob_event[, !empty_clusters, drop = FALSE]
-  # }
+  if (drop_cluster) {
+    empty_clusters <- postprob_event_sums < 2
+    if (any(empty_clusters)) {
+      clust_num <- sum(!empty_clusters)
+      postprob_event_sums <- postprob_event_sums[!empty_clusters]
+      postprob_block <- postprob_block[, !empty_clusters, drop = FALSE]
+      postprob_event <- postprob_event[, !empty_clusters, drop = FALSE]
+    }
+  }
 
   # block mixing proportions
   prop <- switch(model,
@@ -56,9 +64,5 @@ mustlink_mstep <- function(data, postprob_event, postprob_block,
     sigma[, , k] <- crossprod(data_mu[, , k])
   }
 
-  return(list(prop = prop,
-              mu = mu,
-              sigma = sigma
-  )
-  )
+  return(list(prop = prop, mu = mu, sigma = sigma))
 }

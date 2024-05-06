@@ -17,12 +17,19 @@
 #' @return List of chunklet posterior probability matrix, model parameters, and
 #' vector of log-likelihood values for each iteration.
 #' @export
-
-
-mustlink_em <- function(data, block_labels, params, clust_num, zone_num,
-                        burnin = 2, maxit = 1e4, eps = 1e-10,
-                        print_freq = 1,
-                        model = c("vm", "ns")) {
+mustlink_em <- function(
+  data,
+  block_labels,
+  params,
+  clust_num,
+  zone_num,
+  burnin = 2,
+  maxit = 1e4,
+  eps = 1e-10,
+  print_freq = 1,
+  model = c("vm", "ns"),
+  drop_cluster = FALSE
+) {
 
   model <- rlang::arg_match(model)
 
@@ -69,15 +76,21 @@ mustlink_em <- function(data, block_labels, params, clust_num, zone_num,
       break
     }
 
-    params <-  mustlink_mstep(data,
-                              postprob_event = e_out$postprob_event,
-                              postprob_block = e_out$postprob_block,
-                              block_num = block$num, clust_num = clust_num,
-                              event_num = event_num, var_num = var_num,
-                              model = model)
+    params <-  mustlink_mstep(
+      data,
+      postprob_event = e_out$postprob_event,
+      postprob_block = e_out$postprob_block,
+      block_num = block$num,
+      clust_num = clust_num,
+      event_num = event_num,
+      var_num = var_num,
+      model = model,
+      drop_cluster = drop_cluster
+    )
 
-    params_NA <- all(!is.na(params$mu)) & all(!is.na(params$sigma))
-    stopifnot("No NA parameter values" = params_NA)
+    params_na <- all(!is.na(params$mu)) & all(!is.na(params$sigma))
+
+    stopifnot("No NA parameter values" = params_na)
 
     clust_num <- length(params$prop)
   }
