@@ -1,5 +1,6 @@
-#' All-inclusive function for must-link GMM.
+#' @title All-inclusive function for must-link GMM.
 #'
+#' @description
 #' Only requires flowFrame dataset, cell type - marker table, number of
 #' clusters, and size of chunklets.
 #'

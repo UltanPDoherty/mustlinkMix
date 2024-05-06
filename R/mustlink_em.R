@@ -1,5 +1,8 @@
 #' @title Must-Link / Positive Constraint EM GMM.
 #'
+#' @description
+#' EM algorithm
+#'
 #' @inheritParams mustlink
 #' @param block_labels Each event in a particular linked set has the same
 #'                     number and every non-linked event has its own number.

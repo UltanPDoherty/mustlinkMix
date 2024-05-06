@@ -50,5 +50,5 @@ List:
 }
 }
 \description{
-Must-Link / Positive Constraint EM GMM.
+EM algorithm
 }
