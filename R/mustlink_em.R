@@ -13,7 +13,6 @@
 #' * postprob_block:
 #' * params:
 #' * loglike: vector of log-likelihood values for each iteration
-#' * lpdf_constrained: matrix of log probability densitities
 #' @export
 mustlink_em <- function(
     data,
@@ -100,19 +99,10 @@ mustlink_em <- function(
     clust_num <- length(params$prop)
   }
 
-  lpdf_constrained <- compute_lpdf_constrained(
-    data = data,
-    constraints_info = constraints_info,
-    params = params,
-    event_num = event_num,
-    clust_num = clust_num
-  )
-
   return(list(
     postprob_sets = e_out$postprob_sets,
     params = params,
-    loglike = loglike,
-    lpdf_constrained = lpdf_constrained
+    loglike = loglike
   ))
 }
 

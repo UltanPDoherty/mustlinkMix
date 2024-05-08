@@ -16,8 +16,7 @@ mustlink(
   init_labels = NULL,
   print_freq = 10,
   burnin = 2,
-  drop_cluster = FALSE,
-  prob_minimum = 0
+  drop_cluster = FALSE
 )
 }
 \arguments{
@@ -48,9 +47,6 @@ printed in the EM loop.}
 likelihood convergence.}
 
 \item{drop_cluster}{Whether empty clusters should be dropped.}
-
-\item{prob_minimum}{Remove any event whose component assignment probability
-is less than this threshold and classify as an outlier.}
 }
 \value{
 A list

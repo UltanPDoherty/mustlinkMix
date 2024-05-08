@@ -21,8 +21,6 @@
 #' @param burnin Controls how many loops are completed before testing for
 #'               likelihood convergence.
 #' @param drop_cluster Whether empty clusters should be dropped.
-#' @param prob_minimum Remove any event whose component assignment probability
-#'                     is less than this threshold and classify as an outlier.
 #'
 #' @return A list
 #' * clust_labels: vector of cluster labels
@@ -46,8 +44,7 @@ mustlink <- function(
     init_labels = NULL,
     print_freq = 10,
     burnin = 2,
-    drop_cluster = FALSE,
-    prob_minimum = 0) {
+    drop_cluster = FALSE) {
   init_method <- rlang::arg_match(init_method)
 
   setup_time <- system.time({
@@ -105,9 +102,6 @@ mustlink <- function(
     sets_to_clust <- apply(X = em$postprob_sets, MARGIN = 1, FUN = which.max)
     clust_labels <- sets_to_clust[constraints_unique]
   })
-
-  outliers <- apply(em$postprob_sets, 1, max) < prob_minimum
-  clust_labels[outliers] <- 0
 
   times <- rbind(setup_time, em_time, label_time)
   rownames(times) <- c("setup", "em", "label")
