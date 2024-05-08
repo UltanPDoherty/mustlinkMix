@@ -47,6 +47,7 @@ List:
 \item postprob_block:
 \item params:
 \item loglike: vector of log-likelihood values for each iteration
+\item lpdf_constrained: matrix of log probability densitities
 }
 }
 \description{
