@@ -90,7 +90,7 @@ GGally::ggpairs(hfd1,
 ``` r
 hfd1_mustlink <- mustlinkMix::mustlink(
   hfd1,
-  clust_num = 4,
+  clust_num = 5,
   zone_matrix = hfd1_gatetree$subsetter,
   zone_percent = 100,
   init_seed = 123,
@@ -98,8 +98,8 @@ hfd1_mustlink <- mustlinkMix::mustlink(
 )
 ```
 
-    ## 17:51:44  E-Step Number: 10,  Log-likelihood: -25064.87475
-    ## ...EM converged at 2024-05-08 17:51:44.58696
+    ## 18:12:17  E-Step Number: 10,  Log-likelihood: -22469.94594
+    ## ...EM converged at 2024-05-08 18:12:17.530034
 
 ## Plot the data, coloured according to the mustlink labels.
 
@@ -109,8 +109,8 @@ GGally::ggpairs(hfd1,
   upper = list(continuous = "density"),
   ggplot2::aes(colour = as.factor(hfd1_mustlink$clust_labels))
 ) +
-  ggokabeito::scale_colour_okabe_ito(order = c(1, 2, 3, 5)) +
-  ggokabeito::scale_fill_okabe_ito(order = c(1, 2, 3, 5))
+  ggokabeito::scale_colour_okabe_ito(order = c(1, 2, 3, 5, 6)) +
+  ggokabeito::scale_fill_okabe_ito(order = c(1, 2, 3, 5, 6))
 ```
 
 ![](README_files/figure-gfm/ggpairs_mustlink-1.png)<!-- -->
