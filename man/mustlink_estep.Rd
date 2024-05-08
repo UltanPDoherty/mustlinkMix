@@ -14,7 +14,7 @@ mustlink_estep(
 )
 }
 \arguments{
-\item{data}{Dataset in matrix or data.frame format.}
+\item{data}{Dataset in \code{matrix} or \code{data.frame} format.}
 
 \item{constraints_info}{.}
 
@@ -35,6 +35,6 @@ List:
 }
 }
 \description{
-Implement E-step of EM algorithm for GMM
-with positive / must-link constraints.
+Implement E-step of EM algorithm for GMM with positive / must-link
+constraints.
 }

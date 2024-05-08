@@ -8,7 +8,7 @@ labels.}
 initial_parameters(data, init_labels)
 }
 \arguments{
-\item{data}{Dataset in matrix or data.frame format.}
+\item{data}{Dataset in \code{matrix} or \code{data.frame} format.}
 
 \item{init_labels}{Initial labels.}
 }

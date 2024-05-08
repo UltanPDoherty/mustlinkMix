@@ -2,7 +2,7 @@
 % Please edit documentation in R/mustlink.R
 \name{mustlink}
 \alias{mustlink}
-\title{All-inclusive function for must-link GMM.}
+\title{Fit a constrained Gaussian mixture model.}
 \usage{
 mustlink(
   data,
@@ -20,15 +20,15 @@ mustlink(
 )
 }
 \arguments{
-\item{data}{Dataset in matrix or data.frame format.}
+\item{data}{Dataset in \code{matrix} or \code{data.frame} format.}
 
 \item{clust_num}{Number of clusters / components.}
 
 \item{zone_matrix}{Logical matrix with a column per zone and a row per event.}
 
 \item{zone_percent}{Percentage of events in zone to be included in each
-chunklet, either one value for all chunklets or one value
-per chunklet.}
+constrained set, either one value for all constrained
+sets or one value per constrained set.}
 
 \item{maxit}{Maximum number of EM iterations.}
 
@@ -46,7 +46,7 @@ printed in the EM loop.}
 \item{burnin}{Controls how many loops are completed before testing for
 likelihood convergence.}
 
-\item{drop_cluster}{Should empty clusters be dropped.}
+\item{drop_cluster}{Whether empty clusters should be dropped.}
 }
 \value{
 A list
@@ -57,11 +57,12 @@ A list
 (unconstrained events have common label 0).
 \item constraints_unique: vector of constrained set labels,
 (unconstrained events have unique labels).
-\item em: list
-\item times: runtimes
+\item em: list, output from \code{mustlink_em}.
+\item times: runtimes for setup, em, and labelling.
 }
 }
 \description{
-Only requires flowFrame dataset, cell type - marker table, number of
-clusters, and size of chunklets.
+Given a logical \code{zone_matrix} indicating which events are in each region for
+which a constrained set should be constructed, choose \code{zone_percent}\% of
+those events to include in each constrained set.
 }

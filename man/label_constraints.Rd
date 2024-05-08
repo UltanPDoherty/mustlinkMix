@@ -7,13 +7,13 @@
 label_constraints(data, zone_matrix, zone_percent)
 }
 \arguments{
-\item{data}{Dataset in matrix or data.frame format.}
+\item{data}{Dataset in \code{matrix} or \code{data.frame} format.}
 
 \item{zone_matrix}{Logical matrix with a column per zone and a row per event.}
 
 \item{zone_percent}{Percentage of events in zone to be included in each
-chunklet, either one value for all chunklets or one value
-per chunklet.}
+constrained set, either one value for all constrained
+sets or one value per constrained set.}
 }
 \value{
 List:

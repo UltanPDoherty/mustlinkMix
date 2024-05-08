@@ -18,7 +18,7 @@ mustlink_em(
 )
 }
 \arguments{
-\item{data}{Dataset in matrix or data.frame format.}
+\item{data}{Dataset in \code{matrix} or \code{data.frame} format.}
 
 \item{constraints_unique}{vector of constrained set labels,
 (unconstrained events have unique labels).}
@@ -39,7 +39,7 @@ likelihood convergence.}
 \item{print_freq}{Controls how frequently the log-likelihood and time are
 printed in the EM loop.}
 
-\item{drop_cluster}{Should empty clusters be dropped.}
+\item{drop_cluster}{Whether empty clusters should be dropped.}
 }
 \value{
 List:

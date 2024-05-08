@@ -1,15 +1,16 @@
-#' @title All-inclusive function for must-link GMM.
+#' @title Fit a constrained Gaussian mixture model.
 #'
 #' @description
-#' Only requires flowFrame dataset, cell type - marker table, number of
-#' clusters, and size of chunklets.
+#' Given a logical `zone_matrix` indicating which events are in each region for
+#' which a constrained set should be constructed, choose `zone_percent`% of
+#' those events to include in each constrained set.
 #'
-#' @param data Dataset in matrix or data.frame format.
+#' @param data Dataset in `matrix` or `data.frame` format.
 #' @param clust_num Number of clusters / components.
 #' @param zone_matrix Logical matrix with a column per zone and a row per event.
 #' @param zone_percent Percentage of events in zone to be included in each
-#'                     chunklet, either one value for all chunklets or one value
-#'                     per chunklet.
+#'                     constrained set, either one value for all constrained
+#'                     sets or one value per constrained set.
 #' @param maxit Maximum number of EM iterations.
 #' @param eps Convergence criterion for relative difference in log-likelihood.
 #' @param init_method Initialisation option.
@@ -19,7 +20,7 @@
 #'                   printed in the EM loop.
 #' @param burnin Controls how many loops are completed before testing for
 #'               likelihood convergence.
-#' @param drop_cluster Should empty clusters be dropped.
+#' @param drop_cluster Whether empty clusters should be dropped.
 #'
 #' @return A list
 #' * clust_labels: vector of cluster labels
@@ -28,8 +29,8 @@
 #'                       (unconstrained events have common label 0).
 #' * constraints_unique: vector of constrained set labels,
 #'                       (unconstrained events have unique labels).
-#' * em: list
-#' * times: runtimes
+#' * em: list, output from `mustlink_em`.
+#' * times: runtimes for setup, em, and labelling.
 #' @export
 mustlink <- function(
     data,

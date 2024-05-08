@@ -13,7 +13,7 @@ initial_partition(
 )
 }
 \arguments{
-\item{data}{Dataset in matrix or data.frame format.}
+\item{data}{Dataset in \code{matrix} or \code{data.frame} format.}
 
 \item{clust_num}{Number of clusters / components.}
 

@@ -1,8 +1,8 @@
 #' @title E-Step for Must-link Constrained GMM.
 #'
 #' @description
-#' Implement E-step of EM algorithm for GMM
-#' with positive / must-link constraints.
+#' Implement E-step of EM algorithm for GMM with positive / must-link
+#' constraints.
 #'
 #' @inheritParams mustlink_em
 #' @param constraints_info .

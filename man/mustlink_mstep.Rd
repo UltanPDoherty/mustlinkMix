@@ -16,7 +16,7 @@ mustlink_mstep(
 )
 }
 \arguments{
-\item{data}{Dataset in matrix or data.frame format.}
+\item{data}{Dataset in \code{matrix} or \code{data.frame} format.}
 
 \item{postprob_events}{Expanded observation posterior probability matrix.}
 
@@ -30,7 +30,7 @@ mustlink_mstep(
 
 \item{var_num}{Number of variables in the data set.}
 
-\item{drop_cluster}{Should empty clusters be dropped.}
+\item{drop_cluster}{Whether empty clusters should be dropped.}
 }
 \value{
 List:
