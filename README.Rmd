@@ -1,17 +1,21 @@
-mustlinkMix
-================
-Ultán P. Doherty
-2024-05-08
+---
+title: "mustlinkMix"
+author: "Ultán P. Doherty"
+date: "2024-05-08"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 ## Install `mustlinkMix`.
-
-``` r
+```{r, eval=FALSE}
 remotes::install_github("UltanPDoherty/mustlinkMix")
 ```
 
 ## Load and plot data from the `healthyFlowData` package.
-
-``` r
+```{r hfd1_setup, message=FALSE, warning=FALSE}
 library(healthyFlowData)
 data(hd)
 hfd1 <- hd.flowSet[[1]]@exprs
@@ -19,15 +23,13 @@ hfd1 <- hd.flowSet[[1]]@exprs
 GGally::ggpairs(hfd1, upper = list(continuous = "density"), progress = FALSE)
 ```
 
-![](README_files/figure-gfm/hfd1_setup-1.png)<!-- -->
-
 ## Prepare a plusminus table which describes three populations.
 
-- CD4+ T Cells (CD4+CD8-CD3+CD19-)
-- CD8+ T Cells (CD4-CD8+CD3+CD19-)
-- B Cells (CD4-CD8-CD3-CD19+)
+* CD4+ T Cells (CD4+CD8-CD3+CD19-)
+* CD8+ T Cells (CD4-CD8+CD3+CD19-)
+* B Cells      (CD4-CD8-CD3-CD19+)
 
-``` r
+```{r plusminus, message=FALSE, warning=FALSE}
 plusminus1 <- as.data.frame(rbind(
   "CD4+_T" = c(+1, -1, +1, -1),
   "CD8+_T" = c(-1, +1, +1, -1),
@@ -37,14 +39,8 @@ colnames(plusminus1) <- colnames(hfd1)
 plusminus1
 ```
 
-    ##        CD4 CD8 CD3 CD19
-    ## CD4+_T   1  -1   1   -1
-    ## CD8+_T  -1   1   1   -1
-    ## B       -1  -1  -1    1
-
 ## Excel can be used to save or create tables (`openxlsx` package).
-
-``` r
+```{r openxlsx}
 openxlsx::write.xlsx(
   plusminus1,
   "~/plusminus.xlsx",
@@ -60,8 +56,7 @@ plusminus2 <- openxlsx::read.xlsx(
 ```
 
 ## Use the `gatetree` function from the `gateTree` package.
-
-``` r
+```{r gatetree, message=FALSE, warning=FALSE}
 hfd1_gatetree <- gateTree::gatetree(
   hfd1,
   plusminus2,
@@ -72,8 +67,7 @@ hfd1_gatetree <- gateTree::gatetree(
 ```
 
 ## Plot the data, coloured according to the `gateTree` labels.
-
-``` r
+```{r ggpairs_gatetree, message=FALSE, warning=FALSE}
 GGally::ggpairs(hfd1,
   progress = FALSE,
   upper = list(continuous = "density"),
@@ -83,11 +77,8 @@ GGally::ggpairs(hfd1,
   ggokabeito::scale_fill_okabe_ito(order = c(9, 1, 2, 3))
 ```
 
-![](README_files/figure-gfm/ggpairs_gatetree-1.png)<!-- -->
-
 ## Apply mustlink.
-
-``` r
+```{r tree_plot, message=FALSE, warning=FALSE}
 hfd1_mustlink <- mustlinkMix::mustlink(
   hfd1,
   clust_num = 4,
@@ -98,12 +89,8 @@ hfd1_mustlink <- mustlinkMix::mustlink(
 )
 ```
 
-    ## 14:59:15  E-Step Number: 10,  Log-likelihood: -25064.87475
-    ## ...EM converged at 2024-05-08 14:59:15.991651
-
 ## Plot the data, coloured according to the mustlink labels.
-
-``` r
+```{r ggpairs_mustlink, message=FALSE, warning=FALSE}
 GGally::ggpairs(hfd1,
   progress = FALSE,
   upper = list(continuous = "density"),
@@ -112,5 +99,3 @@ GGally::ggpairs(hfd1,
   ggokabeito::scale_colour_okabe_ito(order = c(9, 1, 2, 3, 5, 6)) +
   ggokabeito::scale_fill_okabe_ito(order = c(9, 1, 2, 3, 5, 6))
 ```
-
-![](README_files/figure-gfm/ggpairs_mustlink-1.png)<!-- -->
