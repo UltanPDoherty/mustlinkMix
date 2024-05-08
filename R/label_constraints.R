@@ -1,9 +1,12 @@
-#' Convert +/- Table Labels into Chunklets
+#' Produce constraint label vectors based on `zone_matrix`.
 #'
 #' @inheritParams mustlink
 #'
-#' @return A list of two label vectors, labels with all non-core points labelled
-#'         0, chunks with all non-core points given their own chunklet label.
+#' @return List:
+#' * common: vector of constrained set labels,
+#'           (unconstrained events have common label 0).
+#' * unique: vector of constrained set labels,
+#'           (unconstrained events have unique labels).
 #' @export
 label_constraints <- function(data, zone_matrix, zone_percent) {
   zone_num <- ncol(zone_matrix)
@@ -22,7 +25,7 @@ label_constraints <- function(data, zone_matrix, zone_percent) {
   }
 
   zones <- densities <- list()
-  linked_set_matrix <- zone_matrix
+  constraints_matrix <- zone_matrix
   quantiles <- vector("numeric", length = zone_num)
 
   # only points in zone l can be assigned to chunklet l
@@ -36,16 +39,16 @@ label_constraints <- function(data, zone_matrix, zone_percent) {
     )
     quantiles[l] <- stats::quantile(densities[[l]], prob[l])
 
-    linked_set_matrix[zone_matrix[, l], l] <- densities[[l]] >= quantiles[l]
+    constraints_matrix[zone_matrix[, l], l] <- densities[[l]] >= quantiles[l]
   }
 
   # zones may overlap but cores are prevented from doing so
   if (zone_num == 1) {
-    linked_set_labels <- as.integer(linked_set_matrix[, 1])
+    constraints_common <- as.integer(constraints_matrix[, 1])
   } else if (zone_num > 1) {
-    check_linked_set_overlap(linked_set_matrix)
-    linked_set_labels <- apply(
-      X = linked_set_matrix, MARGIN = 1,
+    check_constraints_overlap(constraints_matrix)
+    constraints_common <- apply(
+      X = constraints_matrix, MARGIN = 1,
       FUN = function(x) {
         label <- which(x == max(x))
         ifelse(length(label) == 1, label, 0)
@@ -53,18 +56,18 @@ label_constraints <- function(data, zone_matrix, zone_percent) {
     )
   }
 
-  block_labels <- linked_set_labels
-  block_labels[linked_set_labels == 0] <-
-    zone_num + seq_len(sum(linked_set_labels == 0))
+  constraints_unique <- constraints_common
+  constraints_unique[constraints_common == 0] <-
+    zone_num + seq_len(sum(constraints_common == 0))
 
   return(list(
-    linked_set = linked_set_labels,
-    block = block_labels
+    common = constraints_common,
+    unique = constraints_unique
   ))
 }
 
-check_linked_set_overlap <- function(linked_set_matrix) {
-  unique_rows <- unique(linked_set_matrix)
+check_constraints_overlap <- function(constraints_matrix) {
+  unique_rows <- unique(constraints_matrix)
   check_overlap <- rowSums(unique_rows) > 1
 
   if (any(check_overlap)) {
@@ -72,7 +75,7 @@ check_linked_set_overlap <- function(linked_set_matrix) {
     overlap_names <- apply(unique_overlaps,
       MARGIN = 1,
       FUN = function(x) {
-        paste(colnames(linked_set_matrix)[x],
+        paste(colnames(constraints_matrix)[x],
           collapse = " & "
         )
       }

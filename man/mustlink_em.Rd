@@ -6,7 +6,7 @@
 \usage{
 mustlink_em(
   data,
-  block_labels,
+  constraints_unique,
   params,
   clust_num,
   zone_num,
@@ -20,10 +20,10 @@ mustlink_em(
 \arguments{
 \item{data}{Dataset in matrix or data.frame format.}
 
-\item{block_labels}{Each event in a particular linked set has the same
-number and every non-linked event has its own number.}
+\item{constraints_unique}{vector of constrained set labels,
+(unconstrained events have unique labels).}
 
-\item{params}{Model parameters, for example, output from initialise_model.}
+\item{params}{Model parameters, e.g., output from \code{initial_parameters}.}
 
 \item{clust_num}{Number of clusters / components.}
 

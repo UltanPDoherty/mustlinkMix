@@ -24,8 +24,10 @@
 #' @return A list
 #' * clust_labels: vector of cluster labels
 #' * init_labels: vector of initial labels
-#' * linked_set_labels: vector of constrained set labels
-#' * block_labels: vector of block labelss
+#' * constraints_common: vector of constrained set labels,
+#'                       (unconstrained events have common label 0).
+#' * constraints_unique: vector of constrained set labels,
+#'                       (unconstrained events have unique labels).
 #' * em: list
 #' * times: runtimes
 #' @export
@@ -46,7 +48,7 @@ mustlink <- function(
 
   setup_time <- system.time({
     if (is.null(zone_matrix)) {
-      block_labels <- linked_set_labels <- seq_len(nrow(data))
+      constraints_unique <- constraints_common <- seq_len(nrow(data))
       zone_num <- 0
     } else {
       zone_num <- ncol(zone_matrix)
@@ -56,8 +58,8 @@ mustlink <- function(
         zone_matrix = zone_matrix,
         zone_percent = zone_percent
       )
-      block_labels <- constraints$block
-      linked_set_labels <- constraints$linked_set
+      constraints_unique <- constraints$unique
+      constraints_common <- constraints$common
     }
 
     if (!is.matrix(data)) {
@@ -72,7 +74,7 @@ mustlink <- function(
       init_labels <- initial_partition(
         data,
         clust_num = clust_num,
-        linked_set_labels = linked_set_labels,
+        constraints_common = constraints_common,
         init_seed = init_seed,
         init_method = init_method
       )
@@ -83,7 +85,7 @@ mustlink <- function(
   em_time <- system.time({
     em <- mustlink_em(
       data = data,
-      block_labels = block_labels,
+      constraints_unique = constraints_unique,
       params = init_params,
       clust_num = clust_num,
       zone_num = zone_num,
@@ -96,8 +98,8 @@ mustlink <- function(
   })
 
   label_time <- system.time({
-    block_to_clust <- apply(X = em$postprob_block, MARGIN = 1, FUN = which.max)
-    clust_labels <- block_to_clust[block_labels]
+    sets_to_clust <- apply(X = em$postprob_sets, MARGIN = 1, FUN = which.max)
+    clust_labels <- sets_to_clust[constraints_unique]
   })
 
   times <- rbind(setup_time, em_time, label_time)
@@ -106,8 +108,8 @@ mustlink <- function(
   return(list(
     clust_labels = clust_labels,
     init_labels = init_labels,
-    linked_set_labels = linked_set_labels,
-    block_labels = block_labels,
+    constraints_common = constraints_common,
+    constraints_unique = constraints_unique,
     em = em,
     times = times
   ))

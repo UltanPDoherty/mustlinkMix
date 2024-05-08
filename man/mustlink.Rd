@@ -53,8 +53,10 @@ A list
 \itemize{
 \item clust_labels: vector of cluster labels
 \item init_labels: vector of initial labels
-\item linked_set_labels: vector of constrained set labels
-\item block_labels: vector of block labelss
+\item constraints_common: vector of constrained set labels,
+(unconstrained events have common label 0).
+\item constraints_unique: vector of constrained set labels,
+(unconstrained events have unique labels).
 \item em: list
 \item times: runtimes
 }

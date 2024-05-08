@@ -6,7 +6,7 @@
 \usage{
 mustlink_estep(
   data,
-  block,
+  constraints_info,
   params,
   event_num = nrow(data),
   var_num = ncol(params$mu),
@@ -16,9 +16,9 @@ mustlink_estep(
 \arguments{
 \item{data}{Dataset in matrix or data.frame format.}
 
-\item{block}{Object from make_block.}
+\item{constraints_info}{.}
 
-\item{params}{Model parameters, for example, output from initialise_model.}
+\item{params}{Model parameters, e.g., output from \code{initial_parameters}.}
 
 \item{event_num}{Number of observations in the data set.}
 
@@ -30,8 +30,8 @@ mustlink_estep(
 List:
 \itemize{
 \item loglike: log likelihood value
-\item postprob_block: posterior probability matrix
-\item postprob_event: posterior probability matrix
+\item postprob_sets: posterior probability matrix
+\item postprob_events: posterior probability matrix
 }
 }
 \description{

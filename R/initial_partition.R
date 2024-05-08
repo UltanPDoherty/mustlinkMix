@@ -4,12 +4,12 @@
 #' Partition the data.
 #'
 #' @inheritParams mustlink
-#' @param linked_set_labels Label indicating which linked set an event
-#' belongs to, 0 for unconstrained events.
+#' @param constraints_common vector of constrained set labels,
+#'                          (unconstrained events have common label 0).
 #'
 #' @return An integer vector.
 #' @export
-initial_partition <- function(data, clust_num, linked_set_labels = NULL,
+initial_partition <- function(data, clust_num, constraints_common = NULL,
                               init_seed = NULL,
                               init_method = c(
                                 "mlkmpp", "mlkm",
@@ -33,7 +33,7 @@ initial_partition <- function(data, clust_num, linked_set_labels = NULL,
   } else if (init_method == "mlkm") {
     partition <- mustlink_kmeans(
       data,
-      linked_set_labels,
+      constraints_common,
       clust_num,
       init_seed,
       plusplus = FALSE
@@ -41,7 +41,7 @@ initial_partition <- function(data, clust_num, linked_set_labels = NULL,
   } else if (init_method == "mlkmpp") {
     partition <- mustlink_kmeans(
       data,
-      linked_set_labels,
+      constraints_common,
       clust_num,
       init_seed,
       plusplus = TRUE
@@ -49,7 +49,7 @@ initial_partition <- function(data, clust_num, linked_set_labels = NULL,
   } else if (init_method == "old_mlkm") {
     partition <- old_mustlink_kmeans(
       data,
-      linked_set_labels,
+      constraints_common,
       clust_num,
       init_seed,
       plusplus = FALSE
@@ -57,7 +57,7 @@ initial_partition <- function(data, clust_num, linked_set_labels = NULL,
   } else if (init_method == "old_mlkmpp") {
     partition <- old_mustlink_kmeans(
       data,
-      linked_set_labels,
+      constraints_common,
       clust_num,
       init_seed,
       plusplus = TRUE
@@ -70,11 +70,11 @@ initial_partition <- function(data, clust_num, linked_set_labels = NULL,
 
 mustlink_kmeans <- function(
     data,
-    linked_set_labels,
+    constraints_common,
     clust_num,
     init_seed,
     plusplus = FALSE) {
-  linked_num <- length(unique(linked_set_labels)) - 1
+  zone_num <- length(unique(constraints_common)) - 1
 
   big_k <- 2 * clust_num
   if (plusplus) {
@@ -95,33 +95,33 @@ mustlink_kmeans <- function(
   well <- rep(0, nrow(data))
   for (k in seq_len(big_k)) {
     big_kmeans_k <- big_kmeans$cluster == k
-    for (p in seq_len(linked_num)) {
-      linked_p <- linked_set_labels == p
-      if (sum(linked_p & big_kmeans_k) > sum(big_kmeans_k) / 2) {
+    for (p in seq_len(zone_num)) {
+      constraints_p <- constraints_common == p
+      if (sum(constraints_p & big_kmeans_k) > sum(big_kmeans_k) / 2) {
         well[big_kmeans_k] <- p
       }
     }
   }
 
   partition <- well
-  partition[linked_set_labels != 0] <- linked_set_labels[linked_set_labels != 0]
+  partition[constraints_common != 0] <- constraints_common[constraints_common != 0]
 
   if (plusplus) {
     small_kmeans <- ClusterR::KMeans_rcpp(
       data[partition == 0, ],
-      clusters = clust_num - linked_num,
+      clusters = clust_num - zone_num,
       seed = init_seed
     )
   } else {
     set.seed(init_seed)
     small_kmeans <- kmeans(
       data[partition == 0, ],
-      centers = clust_num - linked_num,
+      centers = clust_num - zone_num,
       nstart = 3
     )
   }
 
-  partition[partition == 0] <- small_kmeans$cluster + linked_num
+  partition[partition == 0] <- small_kmeans$cluster + zone_num
 
   return(partition)
 }
@@ -131,11 +131,11 @@ mustlink_kmeans <- function(
 
 old_mustlink_kmeans <- function(
     data,
-    linked_set_labels,
+    constraints_common,
     clust_num,
     init_seed,
     plusplus = FALSE) {
-  linked_num <- length(unique(linked_set_labels[linked_set_labels != 0]))
+  linked_num <- length(unique(constraints_common[constraints_common != 0]))
 
   if (clust_num <= linked_num) {
     message(paste0(
@@ -143,23 +143,23 @@ old_mustlink_kmeans <- function(
       "km is not implemented.\n",
       "Constrained sets are used for initialisation.\n"
     ))
-    partition <- linked_set_labels
+    partition <- constraints_common
   } else {
     set.seed(init_seed)
     if (plusplus) {
       km <- ClusterR::KMeans_rcpp(
-        data[linked_set_labels == 0, ],
+        data[constraints_common == 0, ],
         clusters = clust_num - linked_num,
         seed = init_seed
       )$clusters
     } else {
       km <- stats::kmeans(
-        data[linked_set_labels == 0, ],
+        data[constraints_common == 0, ],
         centers = clust_num - linked_num
       )$cluster
     }
 
-    partition <- linked_set_labels
+    partition <- constraints_common
     partition[partition == 0] <- km + linked_num
   }
 

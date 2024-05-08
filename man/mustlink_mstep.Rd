@@ -6,10 +6,10 @@
 \usage{
 mustlink_mstep(
   data,
-  postprob_event,
-  postprob_block,
-  block_num = nrow(postprob_block),
-  clust_num = ncol(postprob_block),
+  postprob_events,
+  postprob_sets,
+  sets_num = nrow(postprob_sets),
+  clust_num = ncol(postprob_sets),
   event_num = nrow(data),
   var_num = ncol(data),
   drop_cluster = FALSE
@@ -18,11 +18,11 @@ mustlink_mstep(
 \arguments{
 \item{data}{Dataset in matrix or data.frame format.}
 
-\item{postprob_event}{Expanded observation posterior probability matrix.}
+\item{postprob_events}{Expanded observation posterior probability matrix.}
 
-\item{postprob_block}{block posterior probability matrix.}
+\item{postprob_sets}{Posterior probability matrix for constrained sets.}
 
-\item{block_num}{Number of blocks.}
+\item{sets_num}{Number of constrained sets including unconstrained events.}
 
 \item{clust_num}{Number of clusters / components.}
 

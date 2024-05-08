@@ -4,9 +4,9 @@
 #' EM algorithm
 #'
 #' @inheritParams mustlink
-#' @param block_labels Each event in a particular linked set has the same
-#'                     number and every non-linked event has its own number.
-#' @param params Model parameters, for example, output from initialise_model.
+#' @param constraints_unique vector of constrained set labels,
+#'                           (unconstrained events have unique labels).
+#' @param params Model parameters, e.g., output from `initial_parameters`.
 #' @param zone_num Number of zones.
 #'
 #' @return List:
@@ -16,7 +16,7 @@
 #' @export
 mustlink_em <- function(
     data,
-    block_labels,
+    constraints_unique,
     params,
     clust_num,
     zone_num,
@@ -31,10 +31,10 @@ mustlink_em <- function(
   event_num <- nrow(data)
   var_num <- ncol(params$mu)
 
-  block <- list(
-    labels = block_labels,
-    num = length(unique(block_labels)),
-    size = as.numeric(table(block_labels)),
+  constraints_info <- list(
+    labels = constraints_unique,
+    num = length(unique(constraints_unique)),
+    size = as.numeric(table(constraints_unique)),
     zone_num = zone_num
   )
 
@@ -43,7 +43,7 @@ mustlink_em <- function(
 
     e_out <- mustlink_estep(
       data,
-      block = block,
+      constraints_info = constraints_info,
       params = params,
       event_num = event_num,
       var_num = var_num,
@@ -83,9 +83,9 @@ mustlink_em <- function(
 
     params <- mustlink_mstep(
       data,
-      postprob_event = e_out$postprob_event,
-      postprob_block = e_out$postprob_block,
-      block_num = block$num,
+      postprob_events = e_out$postprob_events,
+      postprob_sets = e_out$postprob_sets,
+      sets_num = constraints_info$num,
       clust_num = clust_num,
       event_num = event_num,
       var_num = var_num,
@@ -100,7 +100,7 @@ mustlink_em <- function(
   }
 
   return(list(
-    postprob_block = e_out$postprob_block,
+    postprob_sets = e_out$postprob_sets,
     params = params,
     loglike = loglike
   ))

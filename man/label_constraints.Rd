@@ -2,7 +2,7 @@
 % Please edit documentation in R/label_constraints.R
 \name{label_constraints}
 \alias{label_constraints}
-\title{Convert +/- Table Labels into Chunklets}
+\title{Produce constraint label vectors based on \code{zone_matrix}.}
 \usage{
 label_constraints(data, zone_matrix, zone_percent)
 }
@@ -16,9 +16,14 @@ chunklet, either one value for all chunklets or one value
 per chunklet.}
 }
 \value{
-A list of two label vectors, labels with all non-core points labelled
-0, chunks with all non-core points given their own chunklet label.
+List:
+\itemize{
+\item common: vector of constrained set labels,
+(unconstrained events have common label 0).
+\item unique: vector of constrained set labels,
+(unconstrained events have unique labels).
+}
 }
 \description{
-Convert +/- Table Labels into Chunklets
+Produce constraint label vectors based on \code{zone_matrix}.
 }

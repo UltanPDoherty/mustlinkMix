@@ -7,7 +7,7 @@
 initial_partition(
   data,
   clust_num,
-  linked_set_labels = NULL,
+  constraints_common = NULL,
   init_seed = NULL,
   init_method = c("mlkmpp", "mlkm", "kmpp", "km", "old_mlkmpp", "old_mlkm")
 )
@@ -17,8 +17,8 @@ initial_partition(
 
 \item{clust_num}{Number of clusters / components.}
 
-\item{linked_set_labels}{Label indicating which linked set an event
-belongs to, 0 for unconstrained events.}
+\item{constraints_common}{vector of constrained set labels,
+(unconstrained events have common label 0).}
 
 \item{init_seed}{Seed.}
 
