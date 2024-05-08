@@ -94,8 +94,8 @@ hfd1_mustlink <- mustlinkMix::mustlink(
 GGally::ggpairs(hfd1,
   progress = FALSE,
   upper = list(continuous = "density"),
-  ggplot2::aes(colour = as.factor(1 + hfd1_mustlink$clust_labels))
+  ggplot2::aes(colour = as.factor(hfd1_mustlink$clust_labels))
 ) +
-  ggokabeito::scale_colour_okabe_ito(order = c(9, 1, 2, 3, 5, 6)) +
-  ggokabeito::scale_fill_okabe_ito(order = c(9, 1, 2, 3, 5, 6))
+  ggokabeito::scale_colour_okabe_ito(order = c(1, 2, 3, 5, 6)) +
+  ggokabeito::scale_fill_okabe_ito(order = c(1, 2, 3, 5, 6))
 ```
