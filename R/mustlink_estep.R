@@ -21,7 +21,6 @@ mustlink_estep <- function(
     event_num = nrow(data),
     var_num = ncol(params$mu),
     clust_num = nrow(params$mu)) {
-
   lpdf_constrained <- compute_lpdf_constrained(
     data = data,
     constraints_info = constraints_info,
@@ -31,8 +30,10 @@ mustlink_estep <- function(
   )
 
   # for loop computes the block posterior probability matrix, postprob_sets
-  sets_unnorm <- postprob_sets <- matrix(nrow = constraints_info$num,
-                                         ncol = clust_num)
+  sets_unnorm <- postprob_sets <- matrix(
+    nrow = constraints_info$num,
+    ncol = clust_num
+  )
   log_maxes <- loglike_vec <- sets_unnorm_sums <- vector(
     mode = "numeric",
     length = constraints_info$num
@@ -48,7 +49,7 @@ mustlink_estep <- function(
     sets_unnorm[l, ] <- exp(
       lpdf_constrained[l, ]
       + constraints_info$size[l] * log(params$prop)
-      - log_maxes[l]
+        - log_maxes[l]
     )
 
     # Normalise rows of block_unnorm to obtain postprob_sets.
