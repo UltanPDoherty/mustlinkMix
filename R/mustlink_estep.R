@@ -32,7 +32,7 @@ mustlink_estep <- function(
 
   # for loop computes the block posterior probability matrix, postprob_sets
   sets_unnorm <- postprob_sets <- matrix(nrow = constraints_info$num,
-                                           ncol = clust_num)
+                                         ncol = clust_num)
   log_maxes <- loglike_vec <- sets_unnorm_sums <- vector(
     mode = "numeric",
     length = constraints_info$num
@@ -40,7 +40,8 @@ mustlink_estep <- function(
 
   for (l in 1:constraints_info$num) {
     # Add the log mixing proportions and then un-log this sum with exp.
-    # Subtract lpdf_constrained row maxes to prevent exp mapping large values to Inf.
+    # Subtract lpdf_constrained row maxes to prevent exp mapping large values to
+    # Inf.
     log_maxes[l] <- max(
       lpdf_constrained[l, ] + constraints_info$size[l] * log(params$prop)
     )

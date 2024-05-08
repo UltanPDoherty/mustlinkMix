@@ -104,7 +104,8 @@ mustlink_kmeans <- function(
   }
 
   partition <- well
-  partition[constraints_common != 0] <- constraints_common[constraints_common != 0]
+  partition[constraints_common != 0] <-
+    constraints_common[constraints_common != 0]
 
   if (plusplus) {
     small_kmeans <- ClusterR::KMeans_rcpp(
