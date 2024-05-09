@@ -85,7 +85,8 @@ hfd1_mustlink <- mustlinkMix::mustlink(
   zone_matrix = hfd1_gatetree$subsetter,
   zone_percent = 100,
   init_seed = 123,
-  init_method = "mlkmpp"
+  init_method = "mlkmpp",
+  print_freq = 1
 )
 ```
 
