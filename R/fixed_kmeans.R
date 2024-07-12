@@ -35,14 +35,13 @@ constrained_kmeans <- function(
 #' @param centres .
 #' @param clust_num .
 #' @param init_seed .
-#' @param eps .
+#' @param max_changes .
 #'
 #' @return label vector
 #' @export
 fixed_kmeans <- function(
     data, centres, clust_num, init_seed = 123, max_changes = 0) {
   obs_num <- nrow(data)
-  var_num <- ncol(data)
   fixed_num <- nrow(centres)
 
   extra_num <- clust_num - fixed_num

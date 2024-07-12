@@ -4,7 +4,7 @@
 \alias{fixed_kmeans}
 \title{k-Means with some fixed centres provided.}
 \usage{
-fixed_kmeans(data, centres, clust_num, init_seed = 123, eps = 0.01)
+fixed_kmeans(data, centres, clust_num, init_seed = 123, max_changes = 0)
 }
 \arguments{
 \item{data}{.}
@@ -15,7 +15,7 @@ fixed_kmeans(data, centres, clust_num, init_seed = 123, eps = 0.01)
 
 \item{init_seed}{.}
 
-\item{eps}{.}
+\item{max_changes}{.}
 }
 \value{
 label vector
