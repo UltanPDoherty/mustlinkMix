@@ -72,12 +72,18 @@ mustlink <- function(
     }
 
     if (is.null(init_labels)) {
-      init_labels <- initial_partition(
+      # init_labels <- initial_partition(
+      #   data,
+      #   clust_num = clust_num,
+      #   constraints_common = constraints_common,
+      #   init_seed = init_seed,
+      #   init_method = init_method
+      # )
+      init_labels <- constrained_kmeans(
         data,
-        clust_num = clust_num,
         constraints_common = constraints_common,
-        init_seed = init_seed,
-        init_method = init_method
+        clust_num = clust_num,
+        init_seed = init_seed
       )
     }
     init_params <- initial_parameters(data, init_labels = init_labels)

@@ -9,13 +9,12 @@
 #'
 #' @return An integer vector.
 #' @export
-initial_partition <- function(data, clust_num, constraints_common = NULL,
-                              init_seed = NULL,
-                              init_method = c(
-                                "mlkmpp", "mlkm",
-                                "kmpp", "km",
-                                "old_mlkmpp", "old_mlkm"
-                              )) {
+initial_partition <- function(
+    data,
+    clust_num,
+    constraints_common = NULL,
+    init_seed = NULL,
+    init_method = c("mlkmpp", "mlkm", "kmpp", "km", "old_mlkmpp", "old_mlkm")) {
   init_method <- rlang::arg_match(init_method)
 
   if (is.null(init_seed)) {
