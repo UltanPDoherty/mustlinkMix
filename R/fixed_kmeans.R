@@ -39,7 +39,8 @@ constrained_kmeans <- function(
 #'
 #' @return label vector
 #' @export
-fixed_kmeans <- function(data, centres, clust_num, init_seed = 123, eps = 0.01) {
+fixed_kmeans <- function(
+    data, centres, clust_num, init_seed = 123, max_changes = 0) {
   obs_num <- nrow(data)
   var_num <- ncol(data)
   fixed_num <- nrow(centres)
@@ -54,35 +55,38 @@ fixed_kmeans <- function(data, centres, clust_num, init_seed = 123, eps = 0.01) 
     centres <- rbind(fixed_centres, added_centres)
   }
 
-  change <- Inf
+  label_changes <- Inf
   iter_count <- 0
-  while (change > eps) {
+  while (label_changes > max_changes) {
     dists <- matrix(nrow = obs_num, ncol = clust_num)
     for (k in seq_len(clust_num)) {
       dists[, k] <- apply(data, 1, function(x) sqrt(sum((x - centres[k, ])^2)))
     }
 
-    labels <- apply(dists, 1, which.min)
+    new_labels <- apply(dists, 1, which.min)
+
+    if (extra_num == 0) {
+      label_changes <- 0
+    } else if (iter_count == 0) {
+      label_changes <- Inf
+    } else {
+      label_changes <- sum(label_vec != new_labels)
+    }
+
+    label_vec <- new_labels
 
     if (extra_num > 0) {
-      new_centres <- matrix(nrow = extra_num, ncol = var_num)
       for (k in seq_len(extra_num)) {
-        new_centres[k, ] <- colMeans(data[labels == (k + fixed_num), ])
+        added_centres[k, ] <- colMeans(data[label_vec == (k + fixed_num), ])
       }
-
-      change <- mean(sqrt(rowSums((added_centres - new_centres)^2)))
-
-      added_centres <- new_centres
-      colnames(added_centres) <- colnames(fixed_centres)
-
       centres <- rbind(fixed_centres, added_centres)
-    } else {
-      change <- 0
     }
 
     iter_count <- iter_count + 1
-    cat(paste0("Iteration ", iter_count, ", Change = ", change, "\n"))
+    cat(paste0(
+      "Iteration ", iter_count, ", Label Changes = ", label_changes, "\n"
+    ))
   }
 
-  return(labels)
+  return(label_vec)
 }
