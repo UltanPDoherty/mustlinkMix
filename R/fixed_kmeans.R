@@ -65,7 +65,7 @@ fixed_kmeans <- function(
     new_labels <- apply(dists, 1, which.min)
 
     if (extra_num == 0) {
-      label_changes <- 0
+      label_changes <- -Inf
     } else if (iter_count == 0) {
       label_changes <- Inf
     } else {
@@ -83,7 +83,7 @@ fixed_kmeans <- function(
 
     iter_count <- iter_count + 1
     cat(paste0(
-      "Iteration ", iter_count, ", Label Changes = ", label_changes, "\n"
+      "Fixed k-Means Iteration ", iter_count, ", Label Changes = ", label_changes, "\n"
     ))
   }
 
