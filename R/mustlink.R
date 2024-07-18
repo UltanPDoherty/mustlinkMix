@@ -49,7 +49,9 @@ mustlink <- function(
 
   setup_time <- system.time({
     if (is.null(zone_matrix)) {
-      constraints_unique <- constraints_common <- seq_len(nrow(data))
+      # constraints_unique <- constraints_common <- seq_len(nrow(data))
+      constraints_unique <- seq_len(nrow(data))
+      constraints_common <- rep(0, nrow(data))
       zone_num <- 0
     } else {
       zone_num <- ncol(zone_matrix)
