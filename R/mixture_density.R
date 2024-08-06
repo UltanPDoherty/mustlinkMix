@@ -1,3 +1,4 @@
+#' @export
 mixture_density <- function(data, params) {
   clust_num <- length(params$prop)
   obs_num <- nrow(data)
@@ -11,7 +12,7 @@ mixture_density <- function(data, params) {
     )
   }
 
-  dens_vec <- params$prop %*% dens_mat
+  dens_vec <- as.numeric(dens_mat %*% params$prop)
 
   return(dens_vec)
 }
