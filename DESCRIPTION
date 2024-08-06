@@ -1,6 +1,6 @@
 Package: mustlinkMix
 Title: Must-Link Constrained Model-Based Clustering
-Version: 0.0.1.0010
+Version: 0.0.1.0011
 Authors@R: 
     person("Ultán", "Doherty", , "dohertyu@tcd.ie", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-1791-395X"))
@@ -10,7 +10,7 @@ Description: Gaussian Mixture Modelling clustering with positive / must-link con
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
