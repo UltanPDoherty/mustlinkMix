@@ -31,7 +31,7 @@ label_constraints <- function(data, zone_matrix, zone_percent) {
   # only points in zone l can be assigned to chunklet l
   # the highest Gaussian density points in region l are selected
   for (l in 1:zone_num) {
-    zones[[l]] <- data[zone_matrix[, l], ]
+    zones[[l]] <- data[as.logical(zone_matrix[, l]), ]
 
     densities[[l]] <- mvtnorm::dmvnorm(zones[[l]],
       mean = colMeans(zones[[l]]),
@@ -39,7 +39,7 @@ label_constraints <- function(data, zone_matrix, zone_percent) {
     )
     quantiles[l] <- stats::quantile(densities[[l]], prob[l])
 
-    constraints_matrix[zone_matrix[, l], l] <- densities[[l]] >= quantiles[l]
+    constraints_matrix[as.logical(zone_matrix[, l]), l] <- densities[[l]] >= quantiles[l]
   }
 
   # zones may overlap but cores are prevented from doing so

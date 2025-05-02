@@ -9,8 +9,8 @@
 #' @export
 constrained_kmeans <- function(
     data, constraints_common, clust_num, init_seed = 123) {
-  unconstrained_data <- data[constraints_common == 0, ]
-  constrained_data <- data[constraints_common != 0, ]
+  unconstrained_data <- data[constraints_common == 0, , drop = FALSE]
+  constrained_data <- data[constraints_common != 0, , drop = FALSE]
 
   constrained_labels <- constraints_common[constraints_common != 0]
 
@@ -57,6 +57,7 @@ fixed_kmeans <- function(
   label_changes <- Inf
   iter_count <- 0
   while (label_changes > max_changes) {
+
     dists <- matrix(nrow = obs_num, ncol = clust_num)
     for (k in seq_len(clust_num)) {
       dists[, k] <- apply(data, 1, function(x) sqrt(sum((x - centres[k, ])^2)))
